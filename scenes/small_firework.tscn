@@ -1,0 +1,66 @@
+[gd_scene load_steps=15 format=3 uid="uid://c5fusjfoephdq"]
+
+[ext_resource type="Texture2D" uid="uid://cvxyjrwhdg4xk" path="res://gfx/firework_frame_01.svg" id="1_5jt7h"]
+[ext_resource type="Script" uid="uid://d0spy8jdu0clt" path="res://scripts/small_firework.gd" id="2_2d7sf"]
+[ext_resource type="Texture2D" uid="uid://uqg3w70qslhk" path="res://gfx/firework_frame_02.svg" id="2_ifjql"]
+[ext_resource type="Texture2D" uid="uid://b4ufv3ss7utp4" path="res://gfx/firework_frame_03.svg" id="3_0nort"]
+[ext_resource type="Texture2D" uid="uid://nmn3nme3vo3g" path="res://gfx/firework_frame_04.svg" id="4_vhhas"]
+[ext_resource type="Texture2D" uid="uid://fm3jlpjysnxl" path="res://gfx/firework_frame_05.svg" id="5_33xvc"]
+[ext_resource type="Texture2D" uid="uid://cc5mi1ba76otl" path="res://gfx/firework_frame_06.svg" id="6_4fu6n"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c6dot"]
+atlas = ExtResource("1_5jt7h")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yhixa"]
+atlas = ExtResource("2_ifjql")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hg2ar"]
+atlas = ExtResource("3_0nort")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1vve"]
+atlas = ExtResource("4_vhhas")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_phbcj"]
+atlas = ExtResource("5_33xvc")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vrtdc"]
+atlas = ExtResource("6_4fu6n")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bk1p3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c6dot")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yhixa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hg2ar")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k1vve")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_phbcj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vrtdc")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="small_firework" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_bk1p3")
+autoplay = "default"
+frame = 5
+frame_progress = 1.0
+script = ExtResource("2_2d7sf")

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvi5113gdrypn"]
+
+[ext_resource type="SpriteFrames" uid="uid://cn7jjppdvb1m3" path="res://gfx/firework_animation.tres" id="1_8k4j2"]
+
+[node name="FireworkAnimation" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("1_8k4j2")
+animation = &"new_animation"
+autoplay = "default"
+frame_progress = 0.509304
