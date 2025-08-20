@@ -4,32 +4,48 @@ extends AnimatedSprite2D
 var initial_x:float = 0
 
 
-# Custom signal emitted when player changes status
-signal status_changed(new_status: flip_status)
-
-# Custom signal emitted when player changes column
+signal flip(new_status: flip_status)
 signal column_changed(new_column: int)
-
-# Custom signal emitted when player forces gravity
 signal force_gravity
+
 
 # Player status enum
 enum flip_status { FRONT, BACK }
 var player_status: flip_status = flip_status.FRONT  # Start in FRONT status
-
-# Player movement variables
+var is_playing: bool = true
 var current_column: int = 0  # Start in a center column (0-3 for 4 columns)
 
+
+@onready var game_timer: Timer = get_parent().get_node("GameTimer")
+@onready var game_manager: GameManagerSprite = get_parent()
 
 func _init() -> void:
 	initial_x = position.x
 	# Connect to animation finished signal to handle animation transitions
+	
+func _ready() -> void:
 	animation_finished.connect(_on_animation_finished)
+	game_manager.player_paused.connect(_on_player_paused)
+	game_manager.player_resumed.connect(_on_player_resumed)
+
+
+func _on_player_paused() -> void:
+	# Pause player animations and logic
+	is_playing = false
+	print("Player paused")
+
+func _on_player_resumed() -> void:
+	# Resume player animations and logic
+	is_playing = true
+	print("Player resumed")
 
 # Handle input for column movement (keyboard and joystick)
 func _input(event: InputEvent) -> void:
+	if !is_playing:
+		return	
+
 	# Handle keyboard input
-	if event is InputEventKey and event.pressed:
+	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_LEFT, KEY_A:
 				move_left()
@@ -84,7 +100,7 @@ func move_left():
 
 		
 		# Animate position over 0.25 seconds
-		tween.tween_property(self, "position:x", target_x, 0.1)
+		tween.tween_property(self, "position:x", target_x, 0.2)
 		
 		# Play the move_left_front animation
 		if player_status == flip_status.FRONT:
@@ -110,7 +126,7 @@ func move_right():
 
 		
 		# Animate position over 0.25 seconds
-		tween.tween_property(self, "position:x", target_x, 0.1)
+		tween.tween_property(self, "position:x", target_x, 0.2)
 		
 		# Play the move_right_front animation
 		if player_status == flip_status.FRONT:
@@ -124,12 +140,12 @@ func move_right():
 func flip_switch_status():
 	if player_status == flip_status.FRONT:
 		player_status = flip_status.BACK
-		status_changed.emit(player_status)
+		flip.emit(player_status)
 		play("flip_f2b")
 		print("Player status switched to BACK")
 	else:
 		player_status = flip_status.FRONT
-		status_changed.emit(player_status)
+		flip.emit(player_status)
 		play("flip_b2f")
 		print("Player status switched to FRONT")
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=308 format=3 uid="uid://csrrbgq4oiab5"]
+[gd_scene load_steps=309 format=3 uid="uid://csrrbgq4oiab5"]
 
 [ext_resource type="Texture2D" uid="uid://trxayolmwddc" path="res://gfx/light_test.png" id="2_ir15t"]
 [ext_resource type="FontFile" uid="uid://dkd1ks3kdq65r" path="res://fonts/courier-bold.ttf" id="2_lbhrr"]
@@ -23,6 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://c10je1e1xr5dk" path="res://gfx/fireworks/Fireworks/Rocket_Blue.png-sheet.png" id="18_ssvqc"]
 [ext_resource type="Texture2D" uid="uid://de5fcy8siltm3" path="res://gfx/fireworks/Fireworks/Explosion_Crystals_Blue-sheet.png" id="19_1kice"]
 [ext_resource type="Texture2D" uid="uid://bk3nmv683sqvr" path="res://gfx/fireworks/Fireworks/Explosion_Long_Orange-sheet.png" id="20_37s47"]
+[ext_resource type="Texture2D" uid="uid://bf8kdjxmom3j" path="res://gfx/shells/bomb.png" id="21_5newe"]
 
 [sub_resource type="Curve2D" id="Curve2D_37s47"]
 _data = {
@@ -2067,7 +2068,6 @@ texture = ExtResource("2_p57ef")
 centered = false
 
 [node name="TestStuff" type="Node2D" parent="."]
-visible = false
 
 [node name="PointLight2D" type="PointLight2D" parent="TestStuff"]
 position = Vector2(320, -2.99999)
@@ -2112,6 +2112,11 @@ animation = &"new_animation_1"
 autoplay = "new_animation_1"
 frame_progress = 0.658694
 
+[node name="Bomb" type="Sprite2D" parent="TestStuff"]
+position = Vector2(340, 88)
+scale = Vector2(1, 1)
+texture = ExtResource("21_5newe")
+
 [node name="AnimatedSprite2D3" parent="TestStuff" instance=ExtResource("10_e1j6l")]
 position = Vector2(383, 27)
 scale = Vector2(1, 1)
@@ -2120,13 +2125,13 @@ scale = Vector2(1, 1)
 script = ExtResource("2_u5sy4")
 
 [node name="GameTimer" type="Timer" parent="GameManagerSprite"]
-wait_time = 0.1
+wait_time = 0.5
 autostart = true
 
 [node name="Player" type="AnimatedSprite2D" parent="GameManagerSprite"]
 position = Vector2(32, 145)
 sprite_frames = SubResource("SpriteFrames_u5sy4")
-animation = &"flip_f2b"
+animation = &"flip_b2f"
 autoplay = "front"
 centered = false
 script = ExtResource("2_lnu2h")
@@ -2150,7 +2155,6 @@ text = "<0><1>   <1>
 "
 scroll_active = false
 script = ExtResource("13_kvuet")
-metadata/_edit_use_anchors_ = true
 
 [node name="DebugGrid" type="Sprite2D" parent="GameManagerSprite"]
 visible = false
@@ -2165,7 +2169,6 @@ offset_right = 96.0
 offset_bottom = 144.0
 rotation = 0.000628789
 color = Color(1, 1, 1, 0.196078)
-metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect2" type="ColorRect" parent="GameManagerSprite"]
 offset_left = 111.0
@@ -2173,7 +2176,6 @@ offset_top = 15.0
 offset_right = 159.0
 offset_bottom = 47.0
 color = Color(1, 1, 1, 0.196078)
-metadata/_edit_use_anchors_ = true
 
 [node name="Score" type="Label" parent="GameManagerSprite"]
 offset_left = 112.0
@@ -2184,7 +2186,6 @@ theme_override_colors/font_color = Color(0, 0.976471, 0, 1)
 theme_override_fonts/font = ExtResource("16_ca42v")
 theme_override_font_sizes/font_size = 6
 text = "SCORE : 0"
-metadata/_edit_use_anchors_ = true
 
 [node name="GameManagerSprite2" type="Node2D" parent="."]
 visible = false
