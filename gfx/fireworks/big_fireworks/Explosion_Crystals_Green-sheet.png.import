@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bhb78rtcmn0w0"
-path="res://.godot/imported/Explosion_Crystals_Green-sheet.png-2bdbe334f8a69e714c42cf7ae9111acc.ctex"
+path="res://.godot/imported/Explosion_Crystals_Green-sheet.png-86ea71ffa8cda8fd7e9624aa673ac0fa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gfx/fireworks/Fireworks/Explosion_Crystals_Green-sheet.png"
-dest_files=["res://.godot/imported/Explosion_Crystals_Green-sheet.png-2bdbe334f8a69e714c42cf7ae9111acc.ctex"]
+source_file="res://gfx/fireworks/big_fireworks/Explosion_Crystals_Green-sheet.png"
+dest_files=["res://.godot/imported/Explosion_Crystals_Green-sheet.png-86ea71ffa8cda8fd7e9624aa673ac0fa.ctex"]
 
 [params]
 

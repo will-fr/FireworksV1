@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://de5fcy8siltm3"
-path="res://.godot/imported/Explosion_Crystals_Blue-sheet.png-d7c08b50fa7a5368b5b20506e7f75302.ctex"
+uid="uid://bewhqcou7ca5f"
+path="res://.godot/imported/Explosion_Crystals_Orange-sheet.png-353946fc5749c0a908d9fa1936f0d744.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gfx/fireworks/Fireworks/Explosion_Crystals_Blue-sheet.png"
-dest_files=["res://.godot/imported/Explosion_Crystals_Blue-sheet.png-d7c08b50fa7a5368b5b20506e7f75302.ctex"]
+source_file="res://gfx/fireworks/big_fireworks/Explosion_Crystals_Orange-sheet.png"
+dest_files=["res://.godot/imported/Explosion_Crystals_Orange-sheet.png-353946fc5749c0a908d9fa1936f0d744.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://omx3ilcbepgt"
-path="res://.godot/imported/Explosion_Default_Orange-sheet.png-3e9e67a70f5128d2c2e4265a63e129f0.ctex"
+uid="uid://bk3nmv683sqvr"
+path="res://.godot/imported/Explosion_Long_Orange-sheet.png-bf07a319babaf3a6dd4058fa7e614d57.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gfx/fireworks/Fireworks/Explosion_Default_Orange-sheet.png"
-dest_files=["res://.godot/imported/Explosion_Default_Orange-sheet.png-3e9e67a70f5128d2c2e4265a63e129f0.ctex"]
+source_file="res://gfx/fireworks/big_fireworks/Explosion_Long_Orange-sheet.png"
+dest_files=["res://.godot/imported/Explosion_Long_Orange-sheet.png-bf07a319babaf3a6dd4058fa7e614d57.ctex"]
 
 [params]
 

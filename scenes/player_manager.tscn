@@ -1,141 +1,142 @@
-[gd_scene load_steps=46 format=3 uid="uid://csrrbgq4oiab5"]
+[gd_scene load_steps=47 format=3 uid="uid://dllkavdpsbs5r"]
 
-[ext_resource type="Script" uid="uid://bxjsqbgpo8r6y" path="res://scripts/player_manager.gd" id="2_ir15t"]
-[ext_resource type="FontFile" uid="uid://dkd1ks3kdq65r" path="res://fonts/courier-bold.ttf" id="2_lbhrr"]
-[ext_resource type="Script" uid="uid://cp1dsq1k8suxt" path="res://scripts/player.gd" id="2_lnu2h"]
-[ext_resource type="Texture2D" uid="uid://yck6ej33xnws" path="res://gfx/background_1.png" id="2_p57ef"]
-[ext_resource type="Texture2D" uid="uid://dqgubj22jk13f" path="res://gfx/character/carry_back_idle.png" id="3_p57ef"]
-[ext_resource type="Texture2D" uid="uid://6dybrhijy144" path="res://gfx/character/flip_b2f.png" id="4_dinhu"]
-[ext_resource type="Texture2D" uid="uid://0i88ejgv0aga" path="res://gfx/character/flip_f2b.png" id="4_vtaks"]
-[ext_resource type="Texture2D" uid="uid://b5a7yhjg1newl" path="res://gfx/character/move_left_front.png" id="5_gee14"]
-[ext_resource type="Texture2D" uid="uid://dt5jkur4324j7" path="res://gfx/character/move_right_front.png" id="5_u5sy4"]
-[ext_resource type="Texture2D" uid="uid://bs8555tceqafv" path="res://gfx/character/move_right_back.png" id="6_0tnpc"]
-[ext_resource type="Texture2D" uid="uid://bcn2raryo2vos" path="res://gfx/character/move_left_back.png" id="6_kvpfn"]
-[ext_resource type="Texture2D" uid="uid://t2bn07mabr8y" path="res://gfx/character/carry_front_idle.png" id="6_p57ef"]
-[ext_resource type="Script" uid="uid://cajqk4votqbim" path="res://scripts/will_debug.gd" id="13_kvuet"]
-[ext_resource type="FontFile" uid="uid://dgj6kbvxj2hu4" path="res://fonts/pixel.ttf" id="16_ca42v"]
+[ext_resource type="Script" uid="uid://di2sfjt5wdw8" path="res://scripts/game_manager_sprite.gd" id="1_pk1l5"]
+[ext_resource type="Texture2D" uid="uid://6urbjxgiaq6u" path="res://gfx/shells/test_pattern.png" id="2_8q8fb"]
+[ext_resource type="Texture2D" uid="uid://dqgubj22jk13f" path="res://gfx/character/carry_back_idle.png" id="3_c35j7"]
+[ext_resource type="Texture2D" uid="uid://6dybrhijy144" path="res://gfx/character/flip_b2f.png" id="4_xro25"]
+[ext_resource type="Texture2D" uid="uid://0i88ejgv0aga" path="res://gfx/character/flip_f2b.png" id="5_lrkpp"]
+[ext_resource type="Texture2D" uid="uid://t2bn07mabr8y" path="res://gfx/character/carry_front_idle.png" id="6_8ha2q"]
+[ext_resource type="Texture2D" uid="uid://bcn2raryo2vos" path="res://gfx/character/move_left_back.png" id="7_ca7nc"]
+[ext_resource type="Texture2D" uid="uid://b5a7yhjg1newl" path="res://gfx/character/move_left_front.png" id="8_kt3tl"]
+[ext_resource type="Texture2D" uid="uid://bs8555tceqafv" path="res://gfx/character/move_right_back.png" id="9_yyrmv"]
+[ext_resource type="Texture2D" uid="uid://dt5jkur4324j7" path="res://gfx/character/move_right_front.png" id="10_oao8e"]
+[ext_resource type="Script" uid="uid://cp1dsq1k8suxt" path="res://scripts/player.gd" id="11_qr7g4"]
+[ext_resource type="FontFile" uid="uid://dkd1ks3kdq65r" path="res://fonts/courier-bold.ttf" id="12_k66q8"]
+[ext_resource type="Script" uid="uid://cajqk4votqbim" path="res://scripts/will_debug.gd" id="13_d65lg"]
+[ext_resource type="Texture2D" uid="uid://sfv402kma3vn" path="res://gfx/debug_grid.png" id="14_xja83"]
+[ext_resource type="FontFile" uid="uid://dgj6kbvxj2hu4" path="res://fonts/pixel.ttf" id="15_tc00w"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5sy4"]
-atlas = ExtResource("3_p57ef")
+atlas = ExtResource("3_c35j7")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gee14"]
-atlas = ExtResource("3_p57ef")
+atlas = ExtResource("3_c35j7")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0tnpc"]
-atlas = ExtResource("3_p57ef")
+atlas = ExtResource("3_c35j7")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vtaks"]
-atlas = ExtResource("3_p57ef")
+atlas = ExtResource("3_c35j7")
 region = Rect2(96, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_js0lu"]
-atlas = ExtResource("4_dinhu")
+atlas = ExtResource("4_xro25")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gxtfn"]
-atlas = ExtResource("4_dinhu")
+atlas = ExtResource("4_xro25")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_twgab"]
-atlas = ExtResource("4_dinhu")
+atlas = ExtResource("4_xro25")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qnb83"]
-atlas = ExtResource("4_vtaks")
+atlas = ExtResource("5_lrkpp")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sww3w"]
-atlas = ExtResource("4_vtaks")
+atlas = ExtResource("5_lrkpp")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_suyxu"]
-atlas = ExtResource("4_vtaks")
+atlas = ExtResource("5_lrkpp")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kvpfn"]
-atlas = ExtResource("6_p57ef")
+atlas = ExtResource("6_8ha2q")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dinhu"]
-atlas = ExtResource("6_p57ef")
+atlas = ExtResource("6_8ha2q")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kvuet"]
-atlas = ExtResource("6_p57ef")
+atlas = ExtResource("6_8ha2q")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trtic"]
-atlas = ExtResource("6_p57ef")
+atlas = ExtResource("6_8ha2q")
 region = Rect2(96, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sgl2t"]
-atlas = ExtResource("6_kvpfn")
+atlas = ExtResource("7_ca7nc")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qouja"]
-atlas = ExtResource("6_kvpfn")
+atlas = ExtResource("7_ca7nc")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wljb1"]
-atlas = ExtResource("6_kvpfn")
+atlas = ExtResource("7_ca7nc")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v2yb1"]
-atlas = ExtResource("6_kvpfn")
+atlas = ExtResource("7_ca7nc")
 region = Rect2(96, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_264po"]
-atlas = ExtResource("5_gee14")
+atlas = ExtResource("8_kt3tl")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1kice"]
-atlas = ExtResource("5_gee14")
+atlas = ExtResource("8_kt3tl")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5newe"]
-atlas = ExtResource("5_gee14")
+atlas = ExtResource("8_kt3tl")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_37s47"]
-atlas = ExtResource("5_gee14")
+atlas = ExtResource("8_kt3tl")
 region = Rect2(96, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bt5mj"]
-atlas = ExtResource("6_0tnpc")
+atlas = ExtResource("9_yyrmv")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e1j6l"]
-atlas = ExtResource("6_0tnpc")
+atlas = ExtResource("9_yyrmv")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pl11u"]
-atlas = ExtResource("6_0tnpc")
+atlas = ExtResource("9_yyrmv")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bhx41"]
-atlas = ExtResource("6_0tnpc")
+atlas = ExtResource("9_yyrmv")
 region = Rect2(96, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ir15t"]
-atlas = ExtResource("5_u5sy4")
+atlas = ExtResource("10_oao8e")
 region = Rect2(0, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ca42v"]
-atlas = ExtResource("5_u5sy4")
+atlas = ExtResource("10_oao8e")
 region = Rect2(32, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rysoc"]
-atlas = ExtResource("5_u5sy4")
+atlas = ExtResource("10_oao8e")
 region = Rect2(64, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ssvqc"]
-atlas = ExtResource("5_u5sy4")
+atlas = ExtResource("10_oao8e")
 region = Rect2(96, 0, 32, 21)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_ca42v"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_u5sy4"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -268,51 +269,54 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Game" type="Node2D"]
+[node name="PlayerManager" type="Node2D"]
+script = ExtResource("1_pk1l5")
 
-[node name="background" type="Sprite2D" parent="."]
-z_index = -100
-rotation = -0.000955061
-texture = ExtResource("2_p57ef")
-centered = false
-metadata/_edit_lock_ = true
+[node name="TestPattern" type="Sprite2D" parent="."]
+position = Vector2(-85, 87)
+scale = Vector2(16, 16)
+texture = ExtResource("2_8q8fb")
 
-[node name="PlayerManager1" type="Node2D" parent="."]
-script = ExtResource("2_ir15t")
-
-[node name="GameTimer" type="Timer" parent="PlayerManager1"]
+[node name="GameTimer" type="Timer" parent="."]
 autostart = true
 
-[node name="Player" type="AnimatedSprite2D" parent="PlayerManager1"]
+[node name="Player" type="AnimatedSprite2D" parent="."]
 position = Vector2(32, 145)
-sprite_frames = SubResource("SpriteFrames_ca42v")
+sprite_frames = SubResource("SpriteFrames_u5sy4")
 animation = &"flip_f2b"
 autoplay = "front"
 centered = false
-script = ExtResource("2_lnu2h")
+script = ExtResource("11_qr7g4")
+metadata/_edit_lock_ = true
 
-[node name="Line2D" type="Line2D" parent="PlayerManager1"]
+[node name="Line2D" type="Line2D" parent="."]
 position = Vector2(32, 32)
 points = PackedVector2Array(-0.0776958, 0, 64, 0)
 width = 2.0
 default_color = Color(0.53334, 0.0374465, 1, 1)
 
-[node name="WillDebug" type="RichTextLabel" parent="PlayerManager1"]
-offset_left = -82.0
-offset_top = 29.0
-offset_right = -11.0
-offset_bottom = 158.0
-theme_override_fonts/normal_font = ExtResource("2_lbhrr")
+[node name="WillDebug" type="RichTextLabel" parent="."]
+offset_left = 109.0
+offset_top = 50.0
+offset_right = 180.0
+offset_bottom = 179.0
+theme_override_fonts/normal_font = ExtResource("12_k66q8")
 theme_override_font_sizes/normal_font_size = 5
 bbcode_enabled = true
 text = "<0><1>   <1>
 ------------
 "
 scroll_active = false
-script = ExtResource("13_kvuet")
+script = ExtResource("13_d65lg")
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect" type="ColorRect" parent="PlayerManager1"]
+[node name="DebugGrid" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(16, 16)
+texture = ExtResource("14_xja83")
+centered = false
+
+[node name="ColorRect" type="ColorRect" parent="."]
 offset_left = 31.0
 offset_top = 17.0
 offset_right = 95.0
@@ -320,8 +324,9 @@ offset_bottom = 145.0
 rotation = 0.000628789
 color = Color(1, 1, 1, 0.196078)
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
-[node name="ColorRect2" type="ColorRect" parent="PlayerManager1"]
+[node name="ColorRect2" type="ColorRect" parent="."]
 offset_left = 111.0
 offset_top = 15.0
 offset_right = 159.0
@@ -329,83 +334,15 @@ offset_bottom = 47.0
 color = Color(1, 1, 1, 0.196078)
 metadata/_edit_use_anchors_ = true
 
-[node name="Score" type="Label" parent="PlayerManager1"]
+[node name="Score" type="Label" parent="."]
 offset_left = 112.0
 offset_top = 12.0
 offset_right = 170.0
 offset_bottom = 24.0
 theme_override_colors/font_color = Color(0, 0.976471, 0, 1)
-theme_override_fonts/font = ExtResource("16_ca42v")
+theme_override_fonts/font = ExtResource("15_tc00w")
 theme_override_font_sizes/font_size = 6
 text = "SCORE : 0"
 metadata/_edit_use_anchors_ = true
 
-[node name="PlayerManager2" type="Node2D" parent="."]
-position = Vector2(200, 1)
-script = ExtResource("2_ir15t")
-
-[node name="GameTimer" type="Timer" parent="PlayerManager2"]
-autostart = true
-
-[node name="Player" type="AnimatedSprite2D" parent="PlayerManager2"]
-position = Vector2(32, 145)
-sprite_frames = SubResource("SpriteFrames_ca42v")
-animation = &"flip_f2b"
-autoplay = "front"
-centered = false
-script = ExtResource("2_lnu2h")
-player_type = 2
-cpu_difficulty_level = 2
-
-[node name="Line2D" type="Line2D" parent="PlayerManager2"]
-position = Vector2(32, 32)
-points = PackedVector2Array(-0.0776958, 0, 64, 0)
-width = 2.0
-default_color = Color(0.53334, 0.0374465, 1, 1)
-
-[node name="WillDebug" type="RichTextLabel" parent="PlayerManager2"]
-offset_left = 140.0
-offset_top = 30.0
-offset_right = 211.0
-offset_bottom = 159.0
-theme_override_fonts/normal_font = ExtResource("2_lbhrr")
-theme_override_font_sizes/normal_font_size = 5
-bbcode_enabled = true
-text = "<0><1>   <1>
-------------
-"
-scroll_active = false
-script = ExtResource("13_kvuet")
-metadata/_edit_use_anchors_ = true
-
-[node name="ColorRect" type="ColorRect" parent="PlayerManager2"]
-offset_left = 31.0
-offset_top = 17.0
-offset_right = 95.0
-offset_bottom = 145.0
-rotation = 0.000628789
-color = Color(1, 1, 1, 0.196078)
-metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
-
-[node name="ColorRect2" type="ColorRect" parent="PlayerManager2"]
-offset_left = -32.0
-offset_top = 15.0
-offset_right = 16.0
-offset_bottom = 47.0
-color = Color(1, 1, 1, 0.196078)
-metadata/_edit_use_anchors_ = true
-
-[node name="Score" type="Label" parent="PlayerManager2"]
-offset_left = -31.0
-offset_top = 12.0
-offset_right = 27.0
-offset_bottom = 24.0
-theme_override_colors/font_color = Color(0, 0.976471, 0, 1)
-theme_override_fonts/font = ExtResource("16_ca42v")
-theme_override_font_sizes/font_size = 6
-text = "SCORE : 0"
-metadata/_edit_use_anchors_ = true
-
-[connection signal="timeout" from="PlayerManager1/GameTimer" to="PlayerManager1" method="_on_game_timer_timeout"]
-[connection signal="timeout" from="PlayerManager2/GameTimer" to="PlayerManager2" method="_on_game_timer_timeout"]
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]

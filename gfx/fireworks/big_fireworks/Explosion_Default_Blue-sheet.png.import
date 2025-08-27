@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c10je1e1xr5dk"
-path="res://.godot/imported/Rocket_Blue.png-sheet.png-6cb317e16ad8cf9104b0d73cfc1c9cea.ctex"
+uid="uid://biimxehqoouck"
+path="res://.godot/imported/Explosion_Default_Blue-sheet.png-d5f3e8747f3796c017822cf826a2bc6a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gfx/fireworks/Fireworks/Rocket_Blue.png-sheet.png"
-dest_files=["res://.godot/imported/Rocket_Blue.png-sheet.png-6cb317e16ad8cf9104b0d73cfc1c9cea.ctex"]
+source_file="res://gfx/fireworks/big_fireworks/Explosion_Default_Blue-sheet.png"
+dest_files=["res://.godot/imported/Explosion_Default_Blue-sheet.png-d5f3e8747f3796c017822cf826a2bc6a.ctex"]
 
 [params]
 
