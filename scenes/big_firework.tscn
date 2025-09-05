@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c43f5xl0jkvqj"]
 
-[ext_resource type="Script" uid="uid://cv8abckj8pjfi" path="res://scripts/big_firework.gd" id="4_16b8e"]
+[ext_resource type="Script" uid="uid://cmp0x47ep2lgv" path="res://scripts/big_firework.gd" id="4_16b8e"]
 
-[node name="BigFirework" type="Node2D"]
+[node name="BigFirework" type="Node2D" groups=["firework"]]
 script = ExtResource("4_16b8e")

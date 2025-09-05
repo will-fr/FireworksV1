@@ -1,19 +1,45 @@
-[gd_scene load_steps=46 format=3 uid="uid://csrrbgq4oiab5"]
+[gd_scene load_steps=77 format=3 uid="uid://csrrbgq4oiab5"]
 
+[ext_resource type="Script" uid="uid://4og7s3efp4o0" path="res://scripts/game_manager.gd" id="1_ir15t"]
 [ext_resource type="Script" uid="uid://bxjsqbgpo8r6y" path="res://scripts/player_manager.gd" id="2_ir15t"]
 [ext_resource type="FontFile" uid="uid://dkd1ks3kdq65r" path="res://fonts/courier-bold.ttf" id="2_lbhrr"]
 [ext_resource type="Script" uid="uid://cp1dsq1k8suxt" path="res://scripts/player.gd" id="2_lnu2h"]
-[ext_resource type="Texture2D" uid="uid://yck6ej33xnws" path="res://gfx/background_1.png" id="2_p57ef"]
+[ext_resource type="PackedScene" uid="uid://b8v1c0fsxfjrl" path="res://scenes/background.tscn" id="2_ssvqc"]
 [ext_resource type="Texture2D" uid="uid://dqgubj22jk13f" path="res://gfx/character/carry_back_idle.png" id="3_p57ef"]
 [ext_resource type="Texture2D" uid="uid://6dybrhijy144" path="res://gfx/character/flip_b2f.png" id="4_dinhu"]
 [ext_resource type="Texture2D" uid="uid://0i88ejgv0aga" path="res://gfx/character/flip_f2b.png" id="4_vtaks"]
+[ext_resource type="Script" uid="uid://0i2qmm0j501t" path="res://scripts/game_timer.gd" id="5_e1j6l"]
 [ext_resource type="Texture2D" uid="uid://b5a7yhjg1newl" path="res://gfx/character/move_left_front.png" id="5_gee14"]
 [ext_resource type="Texture2D" uid="uid://dt5jkur4324j7" path="res://gfx/character/move_right_front.png" id="5_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://bs8555tceqafv" path="res://gfx/character/move_right_back.png" id="6_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://d2mj0va8aptt7" path="res://scenes/player.tscn" id="6_37s47"]
 [ext_resource type="Texture2D" uid="uid://bcn2raryo2vos" path="res://gfx/character/move_left_back.png" id="6_kvpfn"]
-[ext_resource type="Texture2D" uid="uid://t2bn07mabr8y" path="res://gfx/character/carry_front_idle.png" id="6_p57ef"]
+[ext_resource type="Texture2D" uid="uid://bqsddn54dql7o" path="res://gfx/character/sprBlockyUnconscious.png" id="7_1kice"]
+[ext_resource type="Texture2D" uid="uid://v1dkm30glyg6" path="res://gfx/character/carry_front_idle_2.png" id="7_ssvqc"]
+[ext_resource type="Texture2D" uid="uid://q3hycvkwdrgj" path="res://gfx/character/frog_front_idle.png" id="10_5newe"]
 [ext_resource type="Script" uid="uid://cajqk4votqbim" path="res://scripts/will_debug.gd" id="13_kvuet"]
+[ext_resource type="Texture2D" uid="uid://l2hc2oubtw5a" path="res://gfx/character/sprBlockyVictory.png" id="15_5newe"]
 [ext_resource type="FontFile" uid="uid://dgj6kbvxj2hu4" path="res://fonts/pixel.ttf" id="16_ca42v"]
+[ext_resource type="FontFile" uid="uid://dh8vtie46ogmc" path="res://fonts/8-bit Arcade In.ttf" id="16_rysoc"]
+[ext_resource type="PackedScene" uid="uid://dp2yqkt023ljt" path="res://scenes/count_down.tscn" id="17_rysoc"]
+[ext_resource type="Texture2D" uid="uid://dfmysfhcn6cjk" path="res://gfx/shells/junk.png" id="23_bt5mj"]
+[ext_resource type="Texture2D" uid="uid://bmtujb2m05pbr" path="res://gfx/character/toad.png" id="24_e1j6l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37s47"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.196078, 0.196078, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bt5mj"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.196078, 0.196078, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5sy4"]
 atlas = ExtResource("3_p57ef")
@@ -30,6 +56,22 @@ region = Rect2(64, 0, 32, 21)
 [sub_resource type="AtlasTexture" id="AtlasTexture_vtaks"]
 atlas = ExtResource("3_p57ef")
 region = Rect2(96, 0, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ool0"]
+atlas = ExtResource("7_1kice")
+region = Rect2(0, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pr1ej"]
+atlas = ExtResource("7_1kice")
+region = Rect2(16, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_05nbr"]
+atlas = ExtResource("7_1kice")
+region = Rect2(32, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0sl42"]
+atlas = ExtResource("7_1kice")
+region = Rect2(48, 0, 16, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_js0lu"]
 atlas = ExtResource("4_dinhu")
@@ -55,20 +97,36 @@ region = Rect2(32, 0, 32, 21)
 atlas = ExtResource("4_vtaks")
 region = Rect2(64, 0, 32, 21)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kvpfn"]
-atlas = ExtResource("6_p57ef")
+[sub_resource type="AtlasTexture" id="AtlasTexture_8qswn"]
+atlas = ExtResource("10_5newe")
 region = Rect2(0, 0, 32, 21)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dinhu"]
-atlas = ExtResource("6_p57ef")
+[sub_resource type="AtlasTexture" id="AtlasTexture_rm0al"]
+atlas = ExtResource("10_5newe")
 region = Rect2(32, 0, 32, 21)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kvuet"]
-atlas = ExtResource("6_p57ef")
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4re6"]
+atlas = ExtResource("10_5newe")
 region = Rect2(64, 0, 32, 21)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_trtic"]
-atlas = ExtResource("6_p57ef")
+[sub_resource type="AtlasTexture" id="AtlasTexture_pf7vy"]
+atlas = ExtResource("10_5newe")
+region = Rect2(96, 0, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_02fa5"]
+atlas = ExtResource("7_ssvqc")
+region = Rect2(0, 0, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nepv3"]
+atlas = ExtResource("7_ssvqc")
+region = Rect2(32, 0, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7025r"]
+atlas = ExtResource("7_ssvqc")
+region = Rect2(64, 0, 32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m4url"]
+atlas = ExtResource("7_ssvqc")
 region = Rect2(96, 0, 32, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sgl2t"]
@@ -135,6 +193,22 @@ region = Rect2(64, 0, 32, 21)
 atlas = ExtResource("5_u5sy4")
 region = Rect2(96, 0, 32, 21)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_oaba0"]
+atlas = ExtResource("15_5newe")
+region = Rect2(0, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_458eo"]
+atlas = ExtResource("15_5newe")
+region = Rect2(16, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3rex"]
+atlas = ExtResource("15_5newe")
+region = Rect2(32, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fedci"]
+atlas = ExtResource("15_5newe")
+region = Rect2(48, 0, 16, 24)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_ca42v"]
 animations = [{
 "frames": [{
@@ -153,6 +227,23 @@ animations = [{
 "loop": true,
 "name": &"back",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ool0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pr1ej")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_05nbr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0sl42")
+}],
+"loop": true,
+"name": &"defeat",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -184,16 +275,33 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kvpfn")
+"texture": SubResource("AtlasTexture_8qswn")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dinhu")
+"texture": SubResource("AtlasTexture_rm0al")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kvuet")
+"texture": SubResource("AtlasTexture_i4re6")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_trtic")
+"texture": SubResource("AtlasTexture_pf7vy")
+}],
+"loop": true,
+"name": &"frog_front",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_02fa5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nepv3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7025r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m4url")
 }],
 "loop": true,
 "name": &"front",
@@ -266,42 +374,207 @@ animations = [{
 "loop": false,
 "name": &"move_right_front",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oaba0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_458eo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h3rex")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fedci")
+}],
+"loop": true,
+"name": &"victory",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o8ni1"]
+atlas = ExtResource("24_e1j6l")
+region = Rect2(7, 0, 25, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3hbvx"]
+atlas = ExtResource("24_e1j6l")
+region = Rect2(32, 0, 25, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q8j3a"]
+atlas = ExtResource("24_e1j6l")
+region = Rect2(57, 0, 25, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ms3bu"]
+atlas = ExtResource("24_e1j6l")
+region = Rect2(82, 0, 25, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ixpq"]
+atlas = ExtResource("24_e1j6l")
+region = Rect2(107, 0, 25, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bk1p3"]
+atlas = ExtResource("24_e1j6l")
+region = Rect2(132, 0, 25, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n8ral"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o8ni1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3hbvx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q8j3a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ms3bu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ixpq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bk1p3")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
 }]
 
 [node name="Game" type="Node2D"]
 
-[node name="background" type="Sprite2D" parent="."]
-z_index = -100
+[node name="GameManager" type="Node2D" parent="."]
 rotation = -0.000955061
-texture = ExtResource("2_p57ef")
-centered = false
-metadata/_edit_lock_ = true
+script = ExtResource("1_ir15t")
+
+[node name="Background2" parent="." instance=ExtResource("2_ssvqc")]
+
+[node name="Gui" type="Node2D" parent="."]
+
+[node name="LoseLabel" type="Label" parent="Gui"]
+z_index = 5
+offset_left = 216.0
+offset_top = -29.0
+offset_right = 311.0
+offset_bottom = -6.0
+text = "Defeat"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="WinLabel" type="Label" parent="Gui"]
+z_index = 5
+offset_left = 8.0
+offset_top = -28.0
+offset_right = 103.0
+offset_bottom = -5.0
+text = "Victory!"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ScoreColorRect" type="ColorRect" parent="Gui"]
+offset_left = 112.0
+offset_top = 16.0
+offset_right = 208.0
+offset_bottom = 40.0
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
+
+[node name="TimerColorRect" type="ColorRect" parent="Gui"]
+offset_left = 112.0
+offset_top = 46.0
+offset_right = 208.0
+offset_bottom = 70.0
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
+
+[node name="ScoreText" type="Label" parent="Gui"]
+anchors_preset = -1
+anchor_left = -1.575
+anchor_right = -1.575
+offset_left = 140.0
+offset_top = 14.0
+offset_right = 180.0
+offset_bottom = 39.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "SCORE"
+metadata/_edit_use_anchors_ = true
+
+[node name="GameTimerLabel" type="Label" parent="Gui"]
+anchors_preset = -1
+anchor_left = -1.575
+anchor_right = -1.575
+offset_left = 115.0
+offset_top = 49.0
+offset_right = 155.0
+offset_bottom = 74.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "Time"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="GameTimerText" type="Label" parent="Gui"]
+anchors_preset = -1
+anchor_left = -1.575
+anchor_right = -1.575
+offset_left = 168.0
+offset_top = 42.0
+offset_right = 208.0
+offset_bottom = 67.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "1'30"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="GameTimer" type="Timer" parent="Gui"]
+script = ExtResource("5_e1j6l")
 
 [node name="PlayerManager1" type="Node2D" parent="."]
 script = ExtResource("2_ir15t")
 
-[node name="GameTimer" type="Timer" parent="PlayerManager1"]
-autostart = true
+[node name="ShellsColorRect" type="ColorRect" parent="PlayerManager1"]
+offset_left = 8.0
+offset_top = 16.0
+offset_right = 104.0
+offset_bottom = 148.0
+rotation = 0.000628789
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
 
-[node name="Player" type="AnimatedSprite2D" parent="PlayerManager1"]
-position = Vector2(32, 145)
-sprite_frames = SubResource("SpriteFrames_ca42v")
-animation = &"flip_f2b"
+[node name="Panel" type="Panel" parent="PlayerManager1"]
+offset_left = 6.0
+offset_top = 14.0
+offset_right = 105.0
+offset_bottom = 149.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_37s47")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerTimer" type="Timer" parent="PlayerManager1"]
+wait_time = 0.5
+
+[node name="Player" parent="PlayerManager1" instance=ExtResource("6_37s47")]
+z_index = 5
+position = Vector2(8, 149)
 autoplay = "front"
-centered = false
-script = ExtResource("2_lnu2h")
-
-[node name="Line2D" type="Line2D" parent="PlayerManager1"]
-position = Vector2(32, 32)
-points = PackedVector2Array(-0.0776958, 0, 64, 0)
-width = 2.0
-default_color = Color(0.53334, 0.0374465, 1, 1)
 
 [node name="WillDebug" type="RichTextLabel" parent="PlayerManager1"]
-offset_left = -82.0
-offset_top = 29.0
-offset_right = -11.0
-offset_bottom = 158.0
+offset_left = -69.0
+offset_top = 19.0
+offset_right = 2.0
+offset_bottom = 148.0
 theme_override_fonts/normal_font = ExtResource("2_lbhrr")
 theme_override_font_sizes/normal_font_size = 5
 bbcode_enabled = true
@@ -312,62 +585,83 @@ scroll_active = false
 script = ExtResource("13_kvuet")
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect" type="ColorRect" parent="PlayerManager1"]
-offset_left = 31.0
-offset_top = 17.0
-offset_right = 95.0
-offset_bottom = 145.0
+[node name="Line2D" type="Line2D" parent="PlayerManager1"]
+position = Vector2(32, 32)
+points = PackedVector2Array(-24, 1, 72, 1)
+width = 2.0
+default_color = Color(0.196078, 0.196078, 1, 1)
+
+[node name="Junk" type="Label" parent="PlayerManager1"]
+offset_left = 8.0
+offset_top = 2.0
+offset_right = 56.0
+offset_bottom = 25.0
+theme_override_fonts/font = ExtResource("16_ca42v")
+theme_override_font_sizes/font_size = 6
+text = "JUNK: "
+metadata/_edit_use_anchors_ = true
+
+[node name="CountDown" parent="PlayerManager1" instance=ExtResource("17_rysoc")]
+
+[node name="Score" type="Label" parent="PlayerManager1"]
+offset_left = 114.0
+offset_top = 25.0
+offset_right = 154.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "00000"
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerManager2" type="Node2D" parent="."]
+position = Vector2(208, 0)
+script = ExtResource("2_ir15t")
+
+[node name="ShellsColorRect2" type="ColorRect" parent="PlayerManager2"]
+offset_left = 8.0
+offset_top = 16.0
+offset_right = 104.0
+offset_bottom = 148.0
 rotation = 0.000628789
 color = Color(1, 1, 1, 0.196078)
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect2" type="ColorRect" parent="PlayerManager1"]
-offset_left = 111.0
-offset_top = 15.0
-offset_right = 159.0
-offset_bottom = 47.0
-color = Color(1, 1, 1, 0.196078)
+[node name="Panel" type="Panel" parent="PlayerManager2"]
+offset_left = 6.0
+offset_top = 14.0
+offset_right = 105.0
+offset_bottom = 149.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bt5mj")
 metadata/_edit_use_anchors_ = true
 
-[node name="Score" type="Label" parent="PlayerManager1"]
-offset_left = 112.0
-offset_top = 12.0
-offset_right = 170.0
-offset_bottom = 24.0
-theme_override_colors/font_color = Color(0, 0.976471, 0, 1)
-theme_override_fonts/font = ExtResource("16_ca42v")
-theme_override_font_sizes/font_size = 6
-text = "SCORE : 0"
-metadata/_edit_use_anchors_ = true
+[node name="Line2D2" type="Line2D" parent="PlayerManager2"]
+position = Vector2(37, 34)
+points = PackedVector2Array(-30, 1, 67, 1)
+width = 2.0
+default_color = Color(1, 0.196078, 0.196078, 1)
 
-[node name="PlayerManager2" type="Node2D" parent="."]
-position = Vector2(200, 1)
-script = ExtResource("2_ir15t")
-
-[node name="GameTimer" type="Timer" parent="PlayerManager2"]
-autostart = true
+[node name="PlayerTimer" type="Timer" parent="PlayerManager2"]
+wait_time = 0.5
 
 [node name="Player" type="AnimatedSprite2D" parent="PlayerManager2"]
-position = Vector2(32, 145)
+position = Vector2(8, 149)
 sprite_frames = SubResource("SpriteFrames_ca42v")
-animation = &"flip_f2b"
+animation = &"front"
 autoplay = "front"
 centered = false
 script = ExtResource("2_lnu2h")
 player_type = 2
 cpu_difficulty_level = 2
 
-[node name="Line2D" type="Line2D" parent="PlayerManager2"]
-position = Vector2(32, 32)
-points = PackedVector2Array(-0.0776958, 0, 64, 0)
-width = 2.0
-default_color = Color(0.53334, 0.0374465, 1, 1)
-
 [node name="WillDebug" type="RichTextLabel" parent="PlayerManager2"]
-offset_left = 140.0
-offset_top = 30.0
-offset_right = 211.0
-offset_bottom = 159.0
+offset_left = 156.0
+offset_top = 40.0
+offset_right = 227.0
+offset_bottom = 169.0
+theme_override_colors/table_border = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("2_lbhrr")
 theme_override_font_sizes/normal_font_size = 5
 bbcode_enabled = true
@@ -378,34 +672,44 @@ scroll_active = false
 script = ExtResource("13_kvuet")
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect" type="ColorRect" parent="PlayerManager2"]
-offset_left = 31.0
-offset_top = 17.0
-offset_right = 95.0
-offset_bottom = 145.0
-rotation = 0.000628789
-color = Color(1, 1, 1, 0.196078)
-metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
-
-[node name="ColorRect2" type="ColorRect" parent="PlayerManager2"]
-offset_left = -32.0
-offset_top = 15.0
-offset_right = 16.0
-offset_bottom = 47.0
-color = Color(1, 1, 1, 0.196078)
-metadata/_edit_use_anchors_ = true
-
 [node name="Score" type="Label" parent="PlayerManager2"]
-offset_left = -31.0
-offset_top = 12.0
-offset_right = 27.0
-offset_bottom = 24.0
-theme_override_colors/font_color = Color(0, 0.976471, 0, 1)
+offset_left = -43.0
+offset_top = 25.0
+offset_right = 15.0
+offset_bottom = 37.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "00000"
+metadata/_edit_use_anchors_ = true
+
+[node name="CountDown" parent="PlayerManager2" instance=ExtResource("17_rysoc")]
+offset_left = 41.0
+offset_top = 51.0
+offset_right = 81.0
+offset_bottom = 94.0
+theme_override_colors/font_color = Color(1, 0.196078, 0.196078, 1)
+
+[node name="Junk" type="Label" parent="PlayerManager2"]
+offset_left = 9.0
+offset_top = 2.0
+offset_right = 57.0
+offset_bottom = 25.0
 theme_override_fonts/font = ExtResource("16_ca42v")
 theme_override_font_sizes/font_size = 6
-text = "SCORE : 0"
+text = "JUNK: "
 metadata/_edit_use_anchors_ = true
 
-[connection signal="timeout" from="PlayerManager1/GameTimer" to="PlayerManager1" method="_on_game_timer_timeout"]
-[connection signal="timeout" from="PlayerManager2/GameTimer" to="PlayerManager2" method="_on_game_timer_timeout"]
+[node name="Junk" type="Sprite2D" parent="."]
+position = Vector2(101, 8)
+texture = ExtResource("23_bt5mj")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-34, 151)
+sprite_frames = SubResource("SpriteFrames_n8ral")
+autoplay = "default"
+frame_progress = 0.411715
+
+[connection signal="timeout" from="PlayerManager1/PlayerTimer" to="PlayerManager1" method="_on_player_timer_timeout"]
+[connection signal="timeout" from="PlayerManager2/PlayerTimer" to="PlayerManager2" method="_on_player_timer_timeout"]

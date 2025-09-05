@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://b8v1c0fsxfjrl"]
+
+[ext_resource type="Script" uid="uid://b6ii82cpmoy2d" path="res://scripts/background.gd" id="2_jougr"]
+[ext_resource type="Texture2D" uid="uid://c3fkrq2vljt5f" path="res://gfx/backgrounds/background.png" id="2_wax1t"]
+[ext_resource type="Texture2D" uid="uid://bnl2h6emyy8v3" path="res://gfx/backgrounds/clouds.png" id="3_1tmhi"]
+[ext_resource type="Texture2D" uid="uid://0gygil652pbt" path="res://gfx/backgrounds/middleground.png" id="3_wisxt"]
+[ext_resource type="Texture2D" uid="uid://3rcw0wduxna4" path="res://gfx/backgrounds/foreground3.png" id="5_1tmhi"]
+
+[node name="Background" type="Node2D"]
+script = ExtResource("2_jougr")
+
+[node name="Background2" type="Sprite2D" parent="."]
+z_index = -2
+texture = ExtResource("2_wax1t")
+centered = false
+
+[node name="Clouds" type="Sprite2D" parent="."]
+modulate = Color(0.486275, 0.486275, 0.486275, 0.388235)
+texture = ExtResource("3_1tmhi")
+centered = false
+
+[node name="Middleground" type="Sprite2D" parent="."]
+modulate = Color(0.462291, 0.462291, 0.462291, 1)
+texture = ExtResource("3_wisxt")
+centered = false
+
+[node name="Foreground2" type="Sprite2D" parent="."]
+modulate = Color(0.501961, 0.501961, 0.501961, 1)
+texture = ExtResource("5_1tmhi")
+centered = false

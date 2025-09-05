@@ -83,7 +83,7 @@ region = Rect2(48, 35, 16, 35)
 atlas = ExtResource("3_qqijv")
 region = Rect2(0, 0, 16, 20)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jf6aw"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_hehv8"]
 atlas = ExtResource("4_qqijv")
 region = Rect2(0, 0, 16, 20)
 
@@ -199,7 +199,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jf6aw")
+"texture": SubResource("AtlasTexture_hehv8")
 }],
 "loop": true,
 "name": &"2_falling",
@@ -272,9 +272,7 @@ animations = [{
 
 [node name="Shell" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_8ool0")
-animation = &"1_light"
+animation = &"1_falling"
 autoplay = "2_dropped"
-frame = 3
-frame_progress = 1.0
 centered = false
 script = ExtResource("2_6fq18")

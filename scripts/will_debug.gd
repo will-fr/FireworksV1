@@ -1,10 +1,10 @@
 class_name WillDebug extends RichTextLabel
 
-@onready var game_manager: GameManagerSprite = get_parent()
+@onready var player_manager: PlayerManager = get_parent()
 
 
 func _process(_delta: float) -> void:
-	update_text(game_manager.shells_grid, game_manager.player, game_manager.even_loop)
+	update_text(player_manager.shells_grid, player_manager.player, player_manager.even_loop)
 
 
 # Update the debug display with current game state

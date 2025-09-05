@@ -1,3 +1,13 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Adobe Photoshop files
+*.psd
+*.psb
+
+# Other design files (optional)
+*.ai
+*.sketch
+*.fig
+*.xd

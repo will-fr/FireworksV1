@@ -1,12 +1,11 @@
-class_name Player
-extends AnimatedSprite2D
+class_name Player  extends AnimatedSprite2D
 
 var initial_x:float = 0
 
 
-signal flip(new_status: flip_status)
+signal player_flipped(new_status: flip_status)
 signal column_changed(new_column: int)
-signal force_gravity
+signal gravity_forced
 
 
 # Player status enum
@@ -20,166 +19,50 @@ enum cpu_difficulty { EASY, MEDIUM, HARD }
 
 enum flip_status { FRONT, BACK }
 var player_status: flip_status = flip_status.FRONT  # Start in FRONT status
-var is_playing: bool = true
+var player_is_active: bool = true
 var current_column: int = 0  # Start in a center column (0-3 for 4 columns)
+var cpu_player : CpuPlayer
 
-
-@onready var game_timer: Timer = get_parent().get_node("GameTimer")
-@onready var game_manager: GameManagerSprite = get_parent()
+@onready var player_timer: Timer = get_parent().get_node("PlayerTimer")
+@onready var player_manager: PlayerManager = get_parent()
 
 func _init() -> void:
-	initial_x = position.x
+	#initial_x = position.x
+	initial_x = 8
 	# Connect to animation finished signal to handle animation transitions
+	pass
+
 	
 func _ready() -> void:
 	animation_finished.connect(_on_animation_finished)
-	game_manager.player_paused.connect(_on_player_paused)
-	game_manager.player_resumed.connect(_on_player_resumed)
+	player_manager.player_paused.connect(_on_player_paused)
+	player_manager.player_resumed.connect(_on_player_resumed)
 	
-	# Set up CPU player timer if this is a CPU player
+	# Set up CPU behavior only for CPU players
 	if player_type == player_dic.CPU:
-		_setup_cpu_timer()
-
-# Set up the CPU player timer for intelligent moves
-func _setup_cpu_timer():
-	var cpu_timer = Timer.new()
-	add_child(cpu_timer)
-	cpu_timer.wait_time = 0.2  # CPU makes a move every 0.2 seconds
-	cpu_timer.timeout.connect(_cpu_make_move)
-	cpu_timer.start()
-
-# CPU makes a move based on difficulty level
-func _cpu_make_move():
-	if not is_playing:
-		return
-	
-	match cpu_difficulty_level:
-		cpu_difficulty.EASY:
-			# 70% random, 30% strategic
-			if randf() < 0.7:
-				_cpu_make_random_move()
-			else:
-				_cpu_make_basic_move()
-		
-		cpu_difficulty.MEDIUM:
-			# 40% random, 60% strategic
-			if randf() < 0.4:
-				_cpu_make_random_move()
-			else:
-				_cpu_make_strategic_move()
-		
-		cpu_difficulty.HARD:
-			# Always strategic with advanced planning
-			_cpu_make_strategic_move()
-
-# CPU makes a completely random move
-func _cpu_make_random_move():
-	var random_action = randi() % 4
-	match random_action:
-		0:
-			move_left()
-		1:
-			move_right()
-		2:
-			flip_switch_status()
-		3:
-			force_gravity.emit()
-
-# CPU makes basic strategic decisions
-func _cpu_make_basic_move():
-	# Basic strategy: avoid dangerous columns
-	var current_shells = _count_shells_in_current_column()
-	
-	# If current column is getting full, try to move
-	if current_shells >= Globals.NUM_ROWS - 2:
-		if current_column > 0:
-			move_left()
-		elif current_column < Globals.NUM_COLUMNS - 1:
-			move_right()
-		else:
-			force_gravity.emit()  # Force gravity if no safe move
-	else:
-		# Safe position, random move
-		_cpu_make_random_move()
-
-# CPU makes strategic decisions with planning
-func _cpu_make_strategic_move():
-	# Check for immediate threats
-	if _is_in_immediate_danger():
-		_escape_danger()
-		return
-	
-	# Move to optimal position
-	var best_column = _find_safest_column()
-	if best_column != current_column:
-		if best_column < current_column:
-			move_left()
-		else:
-			move_right()
-	else:
-		# Consider flipping or forcing gravity
-		if randf() < 0.3:  # 30% chance to flip
-			flip_switch_status()
-		else:
-			force_gravity.emit()
-
-# Helper functions for AI decision making
-func _count_shells_in_current_column() -> int:
-	# Simplified shell counting (you may need to adjust based on your game manager)
-	return 0  # Placeholder - implement based on your game_manager structure
-
-func _is_in_immediate_danger() -> bool:
-	var shells_count = _count_shells_in_current_column()
-	return shells_count >= Globals.NUM_ROWS - 1
-
-func _escape_danger():
-	var can_move_left = current_column > 0
-	var can_move_right = current_column < Globals.NUM_COLUMNS - 1
-	
-	if can_move_left and can_move_right:
-		if randf() < 0.5:
-			move_left()
-		else:
-			move_right()
-	elif can_move_left:
-		move_left()
-	elif can_move_right:
-		move_right()
-	else:
-		force_gravity.emit()
-
-func _find_safest_column() -> int:
-	# Simple implementation: return current column or adjacent ones
-	# You can enhance this by checking actual shell counts
-	var safe_columns = []
-	for col in range(max(0, current_column - 1), min(Globals.NUM_COLUMNS, current_column + 2)):
-		safe_columns.append(col)
-	
-	if safe_columns.size() > 0:
-		return safe_columns[randi() % safe_columns.size()]
-	return current_column
+		cpu_player = CpuPlayer.new(self)
+		add_child(cpu_player)  # Add CPU as child to ensure proper scene tree integration
+		print("CPU player initialized and added as child for ", name)
 
 
 func _on_player_paused() -> void:
 	# Pause player animations and logic
-	is_playing = false
+	player_is_active = false
 	print("Player paused")
 
 func _on_player_resumed() -> void:
 	# Resume player animations and logic
-	is_playing = true
+	player_is_active = true
 	print("Player resumed")
-
 
 func _process(_delta: float) -> void:
 	if player_type == player_dic.CPU:
 		modulate = Color(1, 0.5, 0.5)  # Change color to indicate CPU player
 	
 
-
 # Handle input for column movement (keyboard and joystick)
 func _input(event: InputEvent) -> void:
-	if !is_playing or player_type == player_dic.CPU:
+	if !player_is_active or player_type == player_dic.CPU:
 		return	
 
 	# Handle keyboard input
@@ -190,9 +73,9 @@ func _input(event: InputEvent) -> void:
 			KEY_RIGHT, KEY_D:
 				move_right()
 			KEY_UP, KEY_W:
-				flip_switch_status()
+				flip()
 			KEY_DOWN, KEY_S:
-				force_gravity.emit()
+				gravity_forced.emit()
 				#print("Force gravity activated!")
 	
 	# Handle joystick/gamepad input
@@ -203,13 +86,13 @@ func _input(event: InputEvent) -> void:
 			JOY_BUTTON_DPAD_RIGHT:
 				move_right()
 			JOY_BUTTON_DPAD_DOWN:
-				force_gravity.emit()
+				gravity_forced.emit()
 				#print("Force gravity activated!")
 			JOY_BUTTON_X:  # A button (Xbox) / Cross (PlayStation)
-				force_gravity.emit()
+				gravity_forced.emit()
 				#print("Force gravity activated!")
 			JOY_BUTTON_A:  # Y button (Xbox) / Triangle (PlayStation)
-				flip_switch_status()
+				flip()
 	
 	# Handle analog stick input
 	elif event is InputEventJoypadMotion:
@@ -222,12 +105,12 @@ func _input(event: InputEvent) -> void:
 		# Left analog stick vertical movement
 		elif event.axis == JOY_AXIS_LEFT_Y:
 			if event.axis_value < -0.5:  # Left stick moved up
-				flip_switch_status()
+				flip()
 			elif event.axis_value > 0.5:  # Left stick moved down
-				force_gravity.emit()
+				gravity_forced.emit()
 				#print("Force gravity activated!")
 
-# Move player to the left column
+# Move player to the left if possible. 
 func move_left():
 	if current_column > 0:
 		# Create a tween for smooth movement
@@ -246,7 +129,6 @@ func move_left():
 		else:
 			play("move_left_back")
 
-
 		current_column -= 1
 		emit_signal("column_changed", current_column)
 		
@@ -260,9 +142,7 @@ func move_right():
 		var tween = create_tween()
 		var start_x = initial_x + (current_column * Globals.BLOCK_SIZE)
 		var target_x = start_x + Globals.BLOCK_SIZE
-		#print ("move from ", start_x, " to ", target_x)
 
-		
 		# Animate position over 0.25 seconds
 		tween.tween_property(self, "position:x", target_x, 0.1)
 		
@@ -275,15 +155,15 @@ func move_right():
 		emit_signal("column_changed", current_column)
 
 
-func flip_switch_status():
+func flip():
 	if player_status == flip_status.FRONT:
 		player_status = flip_status.BACK
-		flip.emit(player_status)
+		player_flipped.emit(player_status)
 		play("flip_f2b")
 		#print("Player status switched to BACK")
 	else:
 		player_status = flip_status.FRONT
-		flip.emit(player_status)
+		player_flipped.emit(player_status)
 		play("flip_b2f")
 		#print("Player status switched to FRONT")
 
@@ -296,6 +176,8 @@ func get_column() -> int:
 func get_status() -> flip_status:
 	return player_status
 
+func get_shells() -> Array:
+	return player_manager.shells_grid
 
 # Handle animation finished events
 func _on_animation_finished():

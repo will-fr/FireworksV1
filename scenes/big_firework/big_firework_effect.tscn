@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://ba5naxc6y3sj5" path="res://gfx/fireworks/firework_ts.png" id="6_x78s1"]
 [ext_resource type="Texture2D" uid="uid://bf5w6o5sfao1j" path="res://gfx/fireworks/big_fireworks/Explosion_Crystals_White-sheet.png" id="7_rn6db"]
 [ext_resource type="Script" uid="uid://b2pgl65ydb6k2" path="res://scripts/big_firework_effect.gd" id="8_lrx31"]
-[ext_resource type="Texture2D" uid="uid://trxayolmwddc" path="res://gfx/light_test.png" id="8_vjlum"]
+[ext_resource type="Texture2D" uid="uid://b4ijfc4blicn4" path="res://gfx/effects/light_test.png" id="9_lrx31"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_msri2"]
 atlas = ExtResource("1_5nflj")
@@ -3368,21 +3368,19 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_1laxe")
 }],
-"loop": true,
+"loop": false,
 "name": &"white",
 "speed": 50.0
 }]
 
-[node name="big fw" type="AnimatedSprite2D"]
+[node name="big fw" type="AnimatedSprite2D" groups=["firework"]]
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_r6pu6")
-animation = &"stars"
+animation = &"blue_long"
 autoplay = "stars"
-frame = 29
-frame_progress = 1.0
 script = ExtResource("8_lrx31")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-position = Vector2(10, -28)
-scale = Vector2(12.33, 12.33)
-texture = ExtResource("8_vjlum")
+position = Vector2(3.99998, -3.05176e-05)
+scale = Vector2(7.405, 7.405)
+texture = ExtResource("9_lrx31")

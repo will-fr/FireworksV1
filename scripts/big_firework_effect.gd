@@ -7,9 +7,7 @@ func _ready():
 	animation_finished.connect(_on_animation_finished)
 
 func initialize(color_tint: int = 0):
-	if color_tint == 0:
-		pass
-	elif color_tint == 3:
+	if color_tint == 3:
 		modulate = Color.GREEN
 	elif color_tint == 4:
 		modulate = Color.RED
@@ -21,3 +19,4 @@ func initialize(color_tint: int = 0):
 # Called when the animation finishes playing
 func _on_animation_finished():
 	queue_free()  # Destroy this node
+
