@@ -1,12 +1,8 @@
 class_name Shell
 extends AnimatedSprite2D
 
-
-
-
 enum status { WAITING, FALLING, DROPPED }
 var shell_status: status
-
 var shell_type: int
 
 func initialize(column_arg:int,_shell_type_arg:int) -> void:
@@ -28,3 +24,6 @@ func set_status(new_status: status):
 
 func get_shell_type() -> int:
 	return shell_type
+
+func get_shell_name() -> String:
+	return Globals.SHELL_NAMES[shell_type]

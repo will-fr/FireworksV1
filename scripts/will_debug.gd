@@ -4,7 +4,7 @@ class_name WillDebug extends RichTextLabel
 
 
 func _process(_delta: float) -> void:
-	update_text(player_manager.shells_grid, player_manager.player, player_manager.even_loop)
+	update_text(player_manager.get_shells_grid(), player_manager.player, player_manager.even_loop)
 
 
 # Update the debug display with current game state
@@ -35,12 +35,10 @@ func update_text(shells_grid: Array, player: Player, even_loop: bool):
 
 	# Display the current player position and status below the grid
 	var current_player_column = player.get_column()
-	var current_player_status = player.get_status()
 	display_text += "  "
 	for i in current_player_column:
 		display_text += "   "  # Spacing to align with player column
 	display_text+= "<-"
-	display_text += "Fr" if current_player_status == Player.flip_status.FRONT else "Ba"  # F or B status
 	display_text+= "->\n"
 
 	text = display_text

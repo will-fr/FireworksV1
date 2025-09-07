@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://djlhqrfva1ktq"]
+
+[ext_resource type="Texture2D" uid="uid://g5jqtgv6y3c7" path="res://gfx/shells/plate.png" id="1_u60wi"]
+
+[node name="plate_5" type="Sprite2D"]
+texture = ExtResource("1_u60wi")
+centered = false

@@ -30,11 +30,11 @@ func _on_player2_game_over():
 
 # When Player 1 scores, send junk to Player 2's board
 func _on_player1_points_added(_points:int, pos_x:int, pos_y:int) -> void:
-	player_manager_2.increase_junk(1, pos_x, pos_y)
+	player_manager_2.shells_grid.increase_junk(1, pos_x, pos_y)
 
 # When Player 2 scores, send junk to Player 1's board
 func _on_player2_points_added(_points:int, pos_x:int, pos_y:int) -> void:
-	player_manager_1.increase_junk(1, pos_x, pos_y)
+	player_manager_1.shells_grid.increase_junk(1, pos_x, pos_y)
 
 # Display the winner and handle end-game sequence
 func display_winner(winner: int) -> void:
