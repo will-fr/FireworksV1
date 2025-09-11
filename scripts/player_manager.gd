@@ -62,7 +62,14 @@ func _on_player_dropped():
 
 
 func get_shells_grid() -> Array:
+	if shells_grid == null:
+		print("PlayerManager: Error - shells_grid is null!")
+		return []
+	if shells_grid.shells_grid == null:
+		print("PlayerManager: Error - shells_grid.shells_grid is null!")
+		return []
 	return shells_grid.shells_grid
+
 
 func set_player_pause():
 	player_active = false

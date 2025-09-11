@@ -272,7 +272,7 @@ animations = [{
 
 [node name="Shell" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_8ool0")
-animation = &"1_falling"
+animation = &"3_falling"
 autoplay = "2_dropped"
 centered = false
 script = ExtResource("2_6fq18")

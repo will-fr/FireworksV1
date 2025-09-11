@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cx511hdhtnbv2"]
+[gd_scene load_steps=25 format=3 uid="uid://cx511hdhtnbv2"]
 
 [ext_resource type="Script" uid="uid://ceftwxcfqbqh0" path="res://scripts/title.gd" id="1_yql1r"]
 [ext_resource type="Texture2D" uid="uid://ddrd1qnbvwyme" path="res://gfx/title/background_sky2.png" id="8_81wt4"]
@@ -6,44 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c7822n53fiq5n" path="res://gfx/title/background_wall_contour.png" id="10_81wt4"]
 [ext_resource type="Texture2D" uid="uid://r6jdua6x0qce" path="res://gfx/title/pyropop_title.png" id="11_6civk"]
 [ext_resource type="Texture2D" uid="uid://bp0b5c11ei16b" path="res://gfx/title/background_mountains.png" id="11_81wt4"]
-[ext_resource type="Texture2D" uid="uid://l2hc2oubtw5a" path="res://gfx/character/sprBlockyVictory.png" id="14_81wt4"]
 [ext_resource type="Texture2D" uid="uid://cgr2gqu8o5joi" path="res://gfx/ui/Complete_UI_Essential_Pack_Free/Complete_UI_Essential_Pack_Free/01_Flat_Theme/Spritesheets/Spritesheet_UI_Flat_Animated.png" id="15_kcc3o"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_blk4q"]
-atlas = ExtResource("14_81wt4")
-region = Rect2(0, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8magm"]
-atlas = ExtResource("14_81wt4")
-region = Rect2(16, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fgbvm"]
-atlas = ExtResource("14_81wt4")
-region = Rect2(32, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vjr5h"]
-atlas = ExtResource("14_81wt4")
-region = Rect2(48, 0, 16, 24)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_pmcd8"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_blk4q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8magm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fgbvm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vjr5h")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pmcd8"]
 atlas = ExtResource("15_kcc3o")
@@ -248,11 +211,6 @@ centered = false
 [node name="PyropopTitle" type="Sprite2D" parent="."]
 position = Vector2(81, 62)
 texture = ExtResource("11_6civk")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="PyropopTitle"]
-position = Vector2(51, -49)
-sprite_frames = SubResource("SpriteFrames_pmcd8")
-autoplay = "default"
 
 [node name="Selection" type="Node2D" parent="."]
 z_index = 100

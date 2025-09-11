@@ -2,7 +2,18 @@ class_name CpuPlayer extends Node
 
 # FireworksV1 Game Rules
 # Game Overview
-# FireworksV1 is a Tetris-like puzzle game where players match colored shells to create firework explosions and earn points. The goal is to prevent your grid from filling up while creating spectacular firework displays.
+# FireworksV1 is a Tetris-like puzzle game wher## Called when the node is ready and added to the scene
+## Sets up the strategy update timer that drives the CPU decision-making
+func _ready():
+	# Create and configure the strategy update timer
+	update_timer = Timer.new()                        # Create new timer instance
+	update_timer.wait_time = 0.5                     # OPTIMIZED: Update strategy every 1.0 seconds (reduced frequency)
+	update_timer.timeout.connect(update_strategy)     # Connect timeout signal to our strategy function
+	add_child(update_timer)                           # Add timer to scene tree
+	update_timer.start()                              # Start the timer immediately
+	print("CPU: Timer started - Strategy will update every 1.0 seconds")
+
+# FireworksV1 is a Tetris-like puzzle game where players
 
 # Game Grid & Setup
 # Grid Size: 7 columns × 8 rows
@@ -76,7 +87,7 @@ class_name CpuPlayer extends Node
 # Rocket Building: Combine TOP_SHELL + BOTTOM_SHELL for maximum impact
 
 
-# the top_dropped_shells array is just the current top dropped shells for all columns, based on the shell_grids. 
+# the top_dropped_shells array is just the current top dropped shells for all columns, based on the cpu_shell_grids. 
 # so by lifting and moving the columns, you will update the top_dropped_shells array as well.. 
 # IMPORTANT: The match will only happen if the waiting shells and top dropped shells are aligned correctly, meaning their index
 # in the array must correspond.
@@ -93,66 +104,128 @@ class_name CpuPlayer extends Node
 # 3. Choose the best arrangement and execute the necessary actions to achieve it.
 
 
-var player_manager : PlayerManager
-var timer : Timer
-var player  # player object for executing moves
+# ================================
+# CLASS VARIABLES
+# ================================
 
-# OPTIMIZATION: Cache for arrangement evaluations to avoid recalculating
-var arrangement_cache = {}
+var timer : Timer                    # Timer for periodic strategy updates
+var player : Player                  # Reference to the player object for executing moves
+var player_manager : PlayerManager   # Reference to player manager for accessing game state
+var falling_shells : Array = []     # Array of currently falling shells (one per column)
+var top_dropped_shells : Array = [] # Array of topmost dropped shells (one per column)
+var rockets_sizes : Array = []      # Array of sizes of the biggest rocket possible (one per column)
+var cpu_shells_grid : Array = []    # CPU's internal representation of the game grid
+var current_column : int             # Current column position of the player
+var update_timer : Timer             # Timer that triggers strategy updates every 1.0 seconds
 
-# Strategy variables
-var falling_shells
-var top_dropped_shells
-var shells_grid
-var current_column
-var update_timer
+# PERFORMANCE OPTIMIZATIONS
+var arrangement_cache : Dictionary = {}      # Cache for arrangement evaluations
+var last_game_state_hash : int = 0         # Hash of last processed game state
+var cached_arrangements : Array = []        # Cached arrangements for repeated states
 
 
+# ================================
+# INITIALIZATION FUNCTIONS
+# ================================
+
+## Constructor - Initialize the CPU player with a reference to the game player
+## @param player_arg: The Player object this CPU will control
 func _init(player_arg: Player):
 	print("CPU: Initializing CpuPlayer...")
-	player = player_arg
-	player_manager = player.get_parent()
+	player = player_arg                    # Store reference to the player we're controlling
+	player_manager = player.get_parent()   # Get reference to the PlayerManager for game state access
+	init_cpu_shell_grid()                  # Initialize our internal grid representation
 
-func _ready():
-	# Set up timer for updating strategy every 0.1 seconds
-	update_timer = Timer.new()
-	update_timer.wait_time = 0.5
-	update_timer.timeout.connect(update_strategy)
-	add_child(update_timer)
-	update_timer.start()
-	print("CPU: Timer started")
 
-# Basic CPU Strategy Implementation following updated comments
+
+# This duplicate _ready function is removed - using the optimized version above
+
+
+## Initialize the CPU's internal grid representation
+## Creates a 2D array structure matching the game grid (7 columns × 8 rows)
+## All cells are initialized to null (empty)
+func init_cpu_shell_grid():
+	cpu_shells_grid.clear()                          # Clear any existing data
+	for column in Globals.NUM_COLUMNS:               # For each of the 7 columns
+		var column_array = []                        # Create array for this column
+		for row in Globals.NUM_ROWS:                 # For each of the 8 rows
+			column_array.append(null)                # Initialize cell as empty
+		cpu_shells_grid.append(column_array)         # Add column to grid
+	
+
+## Update and return the CPU's internal representation of the game grid
+## Converts the game's Shell objects into simple integer representations:
+## - Positive numbers: DROPPED shells (stable, can be matched with)
+## - Negative numbers: FALLING shells (still moving, will land somewhere)
+## - null: Empty cells
+## @return Array: 2D array representing the current game state
+func get_cpu_shell_grid():
+	var shells_grid = player_manager.get_shells_grid()  # Get current game state
+	
+	# Convert each shell to our simplified representation
+	for i in range(Globals.NUM_COLUMNS):                # For each column (0-6)
+		for j in range(Globals.NUM_ROWS):               # For each row (0-7)
+			if shells_grid[i][j] != null:               # If there's a shell in this cell
+				if shells_grid[i][j].get_status() == Shell.status.DROPPED:
+					# Positive number = settled shell that can be matched
+					cpu_shells_grid[i][j] = shells_grid[i][j].get_shell_type()
+				elif shells_grid[i][j].get_status() == Shell.status.FALLING:
+					# Negative number = falling shell (not yet settled)
+					cpu_shells_grid[i][j] = -shells_grid[i][j].get_shell_type()
+			else:
+				cpu_shells_grid[i][j] = null            # Empty cell
+
+	return cpu_shells_grid
+
+
+# ================================
+# MAIN STRATEGY FUNCTION
+# ================================
+
+## Main CPU strategy function - called every 0.5 seconds by the timer
+## Implements a three-step strategy:
+## 1. Identify possible column arrangements (what moves are available)
+## 2. Evaluate each arrangement (score the potential outcomes)
+## 3. Execute the best arrangement (perform the necessary column swaps)
 func update_strategy():		
 	print("CPU : *****************************************************")
 	
-	# Get current game state
-	falling_shells = player_manager.shells_grid.get_falling_shells()
-	top_dropped_shells = player_manager.shells_grid.get_top_dropped_shells()
-	shells_grid = player_manager.get_shells_grid()
-	current_column = player.get_column()
+	# ===== STEP 0: Update Current Game State =====
+	cpu_shells_grid = get_cpu_shell_grid()        # Get full grid state with shell types
+	falling_shells = get_falling_shells()         # Get currently falling shells per column
+	print ("CPU: Falling shells: ", falling_shells)
+	rockets_sizes = get_rocket_sizes()			   # Get size of the biggest rocket possible
+	print ("CPU: Rocket sizes: ", rockets_sizes)
+	top_dropped_shells = get_top_dropped_shells() # Get topmost settled shells per column
+	current_column = player.get_column()          # Get player's current position
 
-	# OPTIMIZATION: Clear cache periodically to prevent memory bloat
-	if arrangement_cache.size() > 100:  # Limit cache size
-		arrangement_cache.clear()
-		print("CPU: OPTIMIZATION - Cache cleared to prevent memory bloat")
-
+	# OPTIMIZATION: Check if game state changed since last update
+	var current_state_hash = get_game_state_hash()
+	var possible_arrangements
 	
-	# Step 1: Identify all possible arrangements for the 7 columns
-	var possible_arrangements = identify_possible_arrangements(Globals.NUM_COLUMNS)
-	print ("CPU : Possible Arrangements : ", possible_arrangements.size())
+	if current_state_hash == last_game_state_hash and cached_arrangements.size() > 0:
+		print("CPU: OPTIMIZATION - Game state unchanged, using cached arrangements")
+		possible_arrangements = cached_arrangements
+	else:
+		# ===== STEP 1: Identify Possible Arrangements =====
+		# Generate strategic column arrangements based on current game state
+		possible_arrangements = identify_possible_arrangements(Globals.NUM_COLUMNS)
+		cached_arrangements = possible_arrangements
+		last_game_state_hash = current_state_hash
+		print ("CPU : Generated ", possible_arrangements.size(), " new arrangements")
 
-	# Step 2: For each arrangement, evaluate its potential to create matches and avoid losing the game
+	# ===== STEP 2: Evaluate Each Arrangement =====
+	# Score each possible arrangement based on match potential and game safety
 	var best_arrangement = null
 	
-	# Initialize best_score with the score of the current arrangement [0,1,2,3,4,5,6]
+	# Start with the current arrangement [0,1,2,3,4,5,6] as baseline
 	var current_arrangement = []
 	for i in range(Globals.NUM_COLUMNS):
 		current_arrangement.append(i)
 	var best_score = evaluate_arrangement(current_arrangement)
 	
-	# OPTIMIZATION: Early exit if we find a perfect match
-	var perfect_score_threshold = 300  # Adjust based on game balance
+	# Test each possible arrangement and keep track of the best one
+	var excellent_score_threshold = 500  # If we find a score this high, stop searching
 	
 	for arrangement in possible_arrangements:
 		var score = evaluate_arrangement(arrangement)
@@ -161,205 +234,406 @@ func update_strategy():
 			best_arrangement = arrangement
 			
 			# OPTIMIZATION: Early exit for excellent scores
-			if score >= perfect_score_threshold:
-				print("CPU: OPTIMIZATION - Found excellent score ", score, ", stopping search early")
+			if score >= excellent_score_threshold:
+				print("CPU: OPTIMIZATION - Found excellent score ", score, ", stopping early")
 				break
 	
-	print("CPU: Current arrangement ",current_arrangement)
-	print_arrangement("CPU : current arrangement ",current_arrangement)
-	# Print the falling shells_name
-	var falling_shell_names = []
-	for shell in falling_shells:
-		if shell != null:
-			falling_shell_names.append(shell.get_shell_name())
-		else:
-			falling_shell_names.append(null)
-	print("CPU : Falling Shells : ", falling_shell_names)
-
 	print("CPU: Best arrangement score: ", best_score)
-	print("CPU: Best arrangement ",best_arrangement)
+	print("CPU: Best arrangement: ", best_arrangement)
+
+	# ===== STEP 3: Execute the Best Strategy =====
 	if best_arrangement != null:
-		print_arrangement("CPU : Best Arrangement : ", best_arrangement)
-	
-	
-	# Step 3: Choose the best arrangement and execute the necessary actions to achieve it
-	if best_arrangement != null:
+		# Calculate the sequence of column swaps needed to achieve the best arrangement
 		var actions_needed = calculate_actions_to_achieve_arrangement(best_arrangement)
 		print("CPU: Executing ", actions_needed.size(), " actions to achieve best arrangement")
+		
+		# Execute each action (column swap) in sequence immediately
 		for action in actions_needed:
 			execute_action(action)
-			print("CPU ** Doing action: ", action)
 	else :
-		# force gravity
+		# If no better arrangement is found, just force gravity to speed up the game
+		print("CPU: No better arrangement found, forcing gravity")
 		player.force_gravity()
+# ================================
+# HELPER FUNCTIONS - Game State Analysis
+# ================================
+
+## Calculate the height of a specific column (number of settled shells)
+## Only counts DROPPED shells (positive values), ignoring FALLING shells
+## @param column: Column index (0-6)
+## @return int: Number of settled shells in the column
+func get_column_height(column:int) -> int:
+	var height = 0
+	for row in Globals.NUM_ROWS:
+		# Only count settled (DROPPED) shells, not falling ones
+		if cpu_shells_grid[column][row] != null and cpu_shells_grid[column][row] > 0:
+			height += 1
+	return height
+
+## Find the height of the shortest column in the grid
+## Used for strategic placement - we prefer to keep columns balanced
+## @return int: Height of the column with the fewest settled shells
+func get_lowest_column_height() -> int:
+	var min_height = Globals.NUM_ROWS              # Start with maximum possible height
+	for column in Globals.NUM_COLUMNS:	
+		var height = get_column_height(column)     # Get height of this column
+		if height < min_height:
+			min_height = height                    # Update minimum if this is shorter
+	return min_height
 
 
-func print_arrangement(print_txt:String,arrangement: Array = []):
+## Extract all currently falling shells from the grid
+## Returns an array where each index represents a column (0-6)
+## Each value is either the shell type (negative number) or null if no falling shell
+## @return Array: List of falling shells, one per column (null if no falling shell)
+func get_falling_shells() -> Array:
+	var falling_shells_list = []
+	
+	# Initialize array with null values for all columns
+	for column in Globals.NUM_COLUMNS:
+		falling_shells_list.append(null)
+	
+	# Search each column for falling shells (negative values in our representation)
+	for column in Globals.NUM_COLUMNS:
+		for row in Globals.NUM_ROWS:
+			if cpu_shells_grid[column][row] != null and cpu_shells_grid[column][row] < 0:
+				falling_shells_list[column] = cpu_shells_grid[column][row]
+				break  # Only get the first (topmost) falling shell per column
+	return falling_shells_list
+
+
+## Extract the topmost settled shell from each column
+## These are the shells that falling shells will land on and potentially match with
+## Returns an array where each index represents a column (0-6)
+## @return Array: List of topmost settled shells, one per column (null if column is empty)
+func get_top_dropped_shells() -> Array:
+	var top_dropped_shells_list = []
+	
+	# Initialize array with null values for all columns
+	for column in Globals.NUM_COLUMNS:
+		top_dropped_shells_list.append(null)
+		
+	for column in Globals.NUM_COLUMNS:
+		# Search from top to bottom to find the highest settled shell
+		for row in range(Globals.NUM_ROWS - 1, -1, -1):  # Start from top (row 7)
+			if cpu_shells_grid[column][row] != null and cpu_shells_grid[column][row] > 0:
+				top_dropped_shells_list[column] = cpu_shells_grid[column][row]
+				break  # Only get the topmost dropped shell per column
+	return top_dropped_shells_list
+
+## Determine the size of the largest possible rocket that can be built
+## A rocket requires a TOP_SHELL (2) above a BOTTOM_SHELL (1)
+## This function scans the grid to find the tallest valid rocket configuration
+## @return int: Size of the largest rocket (number of shells), or 0 if none possible
+func get_rocket_sizes() -> Array:
+	var rockets_sizes_list = []
+
+	# Initialize array with null values for all columns
+	for column in Globals.NUM_COLUMNS:
+		rockets_sizes_list.append(null)
+
+	# Check each column for potential rocket configurations
+	for column in Globals.NUM_COLUMNS:
+		var bottom_shell_row = null
+
+		# Find the bottom shell (1) and top shell (2) in this column
+		for row in Globals.NUM_ROWS:
+			if cpu_shells_grid[column][row] == Globals.BOTTOM_SHELL:
+				bottom_shell_row = row
+				break
+		
+		if bottom_shell_row != null:
+			rockets_sizes_list[column] = get_column_height(column) - bottom_shell_row
+		else :
+			rockets_sizes_list[column] = 0
+
+	return rockets_sizes_list
+
+
+## Generate a hash of the current game state for caching optimization
+## Creates a unique identifier for the current configuration of shells
+## @return int: Hash representing the current game state
+func get_game_state_hash() -> int:
+	var hash_string = ""
+	
+	# Include falling shells in hash
+	for shell in falling_shells:
+		hash_string += str(shell if shell != null else "null") + "|"
+	
+	# Include top dropped shells in hash
+	for shell in top_dropped_shells:
+		hash_string += str(shell if shell != null else "null") + "|"
+	
+	return hash_string.hash()
+
+## Debug function to print a visual representation of an arrangement
+## Shows what the top row would look like after applying the arrangement
+## @param print_txt: Prefix text for the debug output
+## @param arrangement: Array representing the column arrangement to visualize
+func print_arrangement(print_txt:String, arrangement: Array = []):
 	if arrangement == null:
 		return
 
+	# Build visual representation of the arrangement
 	for i in arrangement.size():
 		var target_column = arrangement[i]
 		if top_dropped_shells[target_column] != null:
-			print_txt += "< " + top_dropped_shells[target_column].get_shell_name() + ">"
+			print_txt += "< " + str(top_dropped_shells[target_column]) + ">"
 		else:
-			print_txt += " <***> "
+			print_txt += " <***> "  # Empty column indicator
 	print (print_txt)
 
 
-# Step 1: Identify all possible arrangements for the 7 columns
-# This function will return a set of possible arrangements for the columns as an array of integers. 
-# Doing nothing will return the current arrangement [0,1,2,3,4,5,6]
-# Doing a switch between the first and second columns will return [1,0,2,3,4,5,6]
+# ================================
+# ARRANGEMENT GENERATION - Step 1 of Strategy
+# ================================
+
+## Generate all possible column arrangements the CPU can achieve
+## An arrangement is represented as an array of column indices [0,1,2,3,4,5,6]
+## where each position represents which original column goes in that position.
+##
+## Example arrangements:
+## - [0,1,2,3,4,5,6]: No change (current state)
+## - [1,0,2,3,4,5,6]: Swap columns 0 and 1
+## - [0,2,1,3,4,5,6]: Swap columns 1 and 2
+##
+## OPTIMIZED GENERATION: Generates strategic arrangements only
+## Instead of 5040 permutations, focus on meaningful moves:
+## 1. Current state (do nothing)
+## 2. Adjacent swaps (immediate moves)
+## 3. Match-focused arrangements (only when matches are possible)
+## @param nb_columns: Number of columns in the grid (should be 7)
+## @return Array: List of strategic arrangements, each as an array of column indices
 func identify_possible_arrangements(nb_columns: int) -> Array:
 	var arrangements = []
 	
-	# OPTIMIZATION: Only generate simple arrangements instead of all 5040 permutations
-	# This reduces computation from O(n!) to O(n)
-	
-	# Start with current arrangement [0,1,2,3,4,5,6]
+	# Create base arrangement representing current state [0,1,2,3,4,5,6]
 	var base_arrangement = []
 	for i in range(nb_columns):
 		base_arrangement.append(i)
 	
-	# Add current arrangement (no action)
+	# Always include current arrangement (do nothing option)
 	arrangements.append(base_arrangement.duplicate())
 	
-	# Add only single adjacent swaps (much more practical)
+	# Add adjacent swaps (most practical moves)
 	for i in range(nb_columns - 1):
 		var swap_arrangement = base_arrangement.duplicate()
-		# Swap adjacent columns i and i+1
 		var temp = swap_arrangement[i]
 		swap_arrangement[i] = swap_arrangement[i + 1]
 		swap_arrangement[i + 1] = temp
 		arrangements.append(swap_arrangement)
 	
-	print("CPU: OPTIMIZED - Generated only ", arrangements.size(), " practical arrangements instead of ", factorial(nb_columns))
+	# OPTIMIZATION: Only add complex arrangements if matches are available
+	if has_potential_matches():
+		add_match_focused_arrangements(arrangements, base_arrangement)
 	
+	print("CPU: Generated ", arrangements.size(), " strategic arrangements (optimized from 5040)")
 	return arrangements
 
-# Helper function to calculate factorial for comparison
-func factorial(n: int) -> int:
-	if n <= 1:
-		return 1
-	return n * factorial(n - 1)
+## Check if there are potential matches available that justify complex arrangements
+## @return bool: True if there are falling shells that could match with dropped shells
+func has_potential_matches() -> bool:
+	for i in range(Globals.NUM_COLUMNS):
+		if falling_shells[i] != null:
+			# Look for matching dropped shells in other columns
+			for j in range(Globals.NUM_COLUMNS):
+				if top_dropped_shells[j] != null:
+					if abs(falling_shells[i]) == top_dropped_shells[j]:
+						return true
+	return false
 
-# Helper function to generate all permutations of an array
+## Add strategic arrangements focused on creating matches
+## Only generates arrangements that could lead to shell matches
+## @param arrangements: Array to add new arrangements to
+## @param base_arrangement: The base [0,1,2,3,4,5,6] arrangement
+func add_match_focused_arrangements(arrangements: Array, base_arrangement: Array):
+	var added_count = 0
+	var max_additional = 20  # Limit to prevent lag
+	
+	# For each falling shell, find columns where it could match
+	for falling_col in range(Globals.NUM_COLUMNS):
+		if falling_shells[falling_col] != null and added_count < max_additional:
+			for target_col in range(Globals.NUM_COLUMNS):
+				if top_dropped_shells[target_col] != null:
+					if abs(falling_shells[falling_col]) == top_dropped_shells[target_col]:
+						# Create arrangement that moves this falling shell to target
+						if falling_col != target_col:
+							var match_arrangement = base_arrangement.duplicate()
+							match_arrangement[falling_col] = target_col
+							match_arrangement[target_col] = falling_col
+							arrangements.append(match_arrangement)
+							added_count += 1
+							break
+
+## Recursive helper function to generate all permutations of an array
+## Uses Heap's algorithm with backtracking to generate all possible arrangements
+## This creates every possible way to arrange the column indices
+## @param arr: Array to permute (modified in-place during recursion)
+## @param start_index: Current position in the recursion (0 to start)
+## @param result: Array to store all generated permutations
 func generate_permutations(arr: Array, start_index: int, result: Array):
+	# Base case: if we've arranged all positions, save this permutation
 	if start_index == arr.size():
-		result.append(arr.duplicate())
+		result.append(arr.duplicate())  # Must duplicate to avoid reference issues
 		return
 	
+	# Try each remaining element in the current position
 	for i in range(start_index, arr.size()):
-		# Swap elements
+		# Swap current element to the start_index position
 		var temp = arr[start_index]
 		arr[start_index] = arr[i]
 		arr[i] = temp
 		
-		# Recurse
+		# Recursively generate permutations for remaining positions
 		generate_permutations(arr, start_index + 1, result)
 		
-		# Backtrack
+		# Backtrack: restore original order for next iteration
 		temp = arr[start_index]
 		arr[start_index] = arr[i]
 		arr[i] = temp
 
-# Step 2: Evaluate an arrangement's potential
+# ================================
+# ARRANGEMENT EVALUATION - Step 2 of Strategy
+# ================================
+
+## Evaluate the potential score of a specific arrangement
+## This is the core scoring function that determines how good an arrangement would be
+## Higher scores indicate better arrangements (more matches, better safety)
+## @param arrangement: Array representing which original column goes in each position
+## @return int: Total score for this arrangement (higher = better)
 func evaluate_arrangement(arrangement: Array) -> int:
 	# OPTIMIZATION: Check cache first
-	var cache_key = str(arrangement)
+	var cache_key = str(arrangement) + "_" + str(last_game_state_hash)
 	if arrangement_cache.has(cache_key):
 		return arrangement_cache[cache_key]
 	
 	var score = 0
 	
-	# for each column of the arrangement, evaluate the column score and sum it as the total score. 
+	# Evaluate each column position in the arrangement
+	# arrangement[i] tells us which original column would end up in position i
 	for i in range(arrangement.size()):
 		score += evaluate_column(i, arrangement[i])
 
-	# OPTIMIZATION: Store in cache before returning
+	# OPTIMIZATION: Store in cache
 	arrangement_cache[cache_key] = score
+	
+	# OPTIMIZATION: Limit cache size to prevent memory issues
+	if arrangement_cache.size() > 1000:
+		arrangement_cache.clear()
+	
 	return score
 
-# we evaluate the score as if the column in the index original_column was positionned in the index target_column_index
-# implement the following rules 
-# Rule 1 : if the shell types match, we give a bonus of 100 points. 
+## Evaluate the score for placing a specific falling shell in a target column
+## This function implements the core game strategy rules:
+## 1. Match falling shells with dropped shells of the same type (high priority)
+## 2. Place bottom shells on the shortest columns for stability
+## 3. Prefer shorter columns when no matches are available
+##
+## @param original_column_index: Which column the falling shell is currently in
+## @param target_column_index: Which column we're considering moving it to
+## @return int: Score for this shell placement (higher = better strategy)
 func evaluate_column (original_column_index : int, target_column_index : int) -> int:
 	var score = 0
 
-	# the height of the column
-	var column_height = player_manager.shells_grid.get_column_height(target_column_index)
-	var lowest_height = player_manager.shells_grid.get_lowest_column_height()
-	var has_match = false
+	# Get current game state information
+	var column_height = get_column_height(target_column_index)    # How tall is the target column
+	var lowest_height = get_lowest_column_height()               # Height of shortest column
+	var has_match = false                                        # Will this create a match?
 
-	# if it's a bottom_shell, we try to put it on the shortest column. 
+	# STRATEGY RULE 1: Bottom Shell Placement
+	# Bottom shells should go on the shortest columns for better rocket building
 	if falling_shells[original_column_index] != null:
-		if falling_shells[original_column_index].get_shell_type() == Globals.BOTTOM_SHELL:
+		if falling_shells[original_column_index] == -Globals.BOTTOM_SHELL:
 			if column_height == lowest_height:
-				score += 200
+				score += 200  # High bonus for optimal bottom shell placement
 
-	# if the shell types match, we give a bonus of 100 points. 
+	# STRATEGY RULE 2: Type Matching (Most Important)
+	# If falling shell matches the top dropped shell, we get points and clear space
 	if top_dropped_shells[target_column_index] != null and falling_shells[original_column_index] != null:
-		if top_dropped_shells[target_column_index].get_shell_type() == falling_shells[original_column_index].get_shell_type():
+		if top_dropped_shells[target_column_index] == -falling_shells[original_column_index] && falling_shells[original_column_index] != -Globals.BOTTOM_SHELL:
 			has_match = true
+			# Higher columns get bigger bonuses because matches clear more space
 			score += 100 * column_height
 
-	# if a match can't be done, try to put the falling_shell in the lowest 
+	# STRATEGY RULE 3: Height Management
+	# If no match is possible, prefer the shortest column to keep grid balanced
 	if !has_match and column_height == lowest_height:
 		score += 50 * column_height
+
+	if !has_match and rockets_sizes[target_column_index] > 0:
+		score += 1000 * rockets_sizes[target_column_index]
+
+	# STRATEGY RULE 4: IF PIECE IS A TOP SHELL, PLACE IT ON THE BIGGEST ROCKET
+	if top_dropped_shells[target_column_index] != null and falling_shells[original_column_index] != null:
+		if falling_shells[original_column_index] == -Globals.TOP_SHELL:
+			score += 40 * rockets_sizes[target_column_index]
+
+
 
 	return score
 
 
-# Step 3: Calculate actions needed to achieve a target arrangement
+# ================================
+# ACTION CALCULATION - Step 3 of Strategy
+# ================================
+
+## Calculate the sequence of column swaps needed to achieve a target arrangement
+## Uses bubble sort algorithm to determine the minimal number of adjacent swaps
+## The algorithm works backwards: sorts target arrangement to [0,1,2,3,4,5,6], 
+## then reverses the sequence to get the forward transformation
+## @param target_arrangement: The desired final arrangement of columns
+## @return Array: Sequence of column indices to swap with their right neighbors
 func calculate_actions_to_achieve_arrangement(target_arrangement: Array) -> Array:
 	var actions = []
 	
-	
-	# Start with current arrangement [0,1,2,3,4,5,6]
+	# Create the current arrangement (always starts as [0,1,2,3,4,5,6])
 	var current_arrangement = []
 	for i in range(Globals.NUM_COLUMNS):
 		current_arrangement.append(i)
 	
-	# If already at target, no actions needed
+	# If we're already at the target arrangement, no actions needed
 	if arrays_equal(target_arrangement, current_arrangement):
-
+		print("CPU: Already at target arrangement, no actions needed")
 		return actions
 	
-	# Bubble sort the target_arrangement to get back to [0,1,2,3,4,5,6]
-	# Record all the swaps, then reverse them
+	# Use bubble sort to find the sequence of swaps
+	# We sort the target_arrangement back to [0,1,2,3,4,5,6] and record each swap
 	var working_arrangement = target_arrangement.duplicate()
 	var forward_actions = []
-
 	
-	# Bubble sort to transform target_arrangement to [0,1,2,3,4,5,6]
+	# Bubble sort algorithm - each swap moves larger numbers toward the right
 	var n = working_arrangement.size()
 	for i in range(n):
 		for j in range(0, n - i - 1):
 			if working_arrangement[j] > working_arrangement[j + 1]:				
-				# Swap elements
+				# Swap adjacent elements that are out of order
 				var temp = working_arrangement[j]
 				working_arrangement[j] = working_arrangement[j + 1]
 				working_arrangement[j + 1] = temp
 				
-				# Record the swap
+				# Record this swap (j is the left column index)
 				forward_actions.append(j)
-
-	
 	
 	# Reverse the actions to get the sequence from [0,1,2,3,4,5,6] to target
+	# This gives us the actual steps the CPU needs to perform
 	forward_actions.reverse()
 	actions = forward_actions
 	
-	print("CPU: Column indexes to swap with right neighbor (reversed): ", actions)
+	print("CPU: Column swaps needed (left column of each pair): ", actions)
 	
 	return actions
 
-# Helper function to check if two arrays are equal
+## Helper function to check if two arrays contain identical elements in the same order
+## Used to determine if we're already at the target arrangement
+## @param arr1: First array to compare
+## @param arr2: Second array to compare  
+## @return bool: True if arrays are identical, false otherwise
 func arrays_equal(arr1: Array, arr2: Array) -> bool:
+	# Quick check: if sizes differ, arrays can't be equal
 	if arr1.size() != arr2.size():
 		return false
 	
+	# Compare each element at the same position
 	for i in range(arr1.size()):
 		if arr1[i] != arr2[i]:
 			return false
@@ -368,14 +642,24 @@ func arrays_equal(arr1: Array, arr2: Array) -> bool:
 
 
 
-# Execute a single action
+# ================================
+# ACTION EXECUTION
+# ================================
+
+## Execute a single column swap action
+## Takes a column index and swaps that column with its right neighbor
+## This is the actual interface to the game's player controls
+## @param action: Integer representing the left column of the pair to swap (0-5)
 func execute_action(action):
 	if typeof(action) == TYPE_INT:
-		# Action is a column index - swap this column with its right neighbor
-		var left_col = action
-		var right_col = action + 1
-		print("CPU: Executing swap of columns ", left_col, " and ", right_col)
-		player.flip_columns(left_col, right_col)
+		# Validate the action is within valid range
+		if action >= 0 and action < Globals.NUM_COLUMNS - 1:
+			var left_col = action
+			var right_col = action + 1
+			print("CPU ** Performing column swap: ", left_col, " <-> ", right_col)
+			player.flip_columns(left_col, right_col)
+		else:
+			print("CPU: Invalid column index: ", action, " (must be 0-", Globals.NUM_COLUMNS - 2, ")")
 	else:
-		print("CPU: Invalid action type: ", typeof(action), " - ", action)
+		print("CPU: Invalid action type: ", typeof(action), " - Expected integer, got: ", action)
 	

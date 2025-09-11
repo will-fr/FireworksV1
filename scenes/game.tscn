@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://csrrbgq4oiab5"]
+[gd_scene load_steps=17 format=3 uid="uid://csrrbgq4oiab5"]
 
 [ext_resource type="Script" uid="uid://4og7s3efp4o0" path="res://scripts/game_manager.gd" id="1_ir15t"]
 [ext_resource type="Script" uid="uid://bxjsqbgpo8r6y" path="res://scripts/player_manager.gd" id="2_ir15t"]
@@ -6,8 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://b8v1c0fsxfjrl" path="res://scenes/background.tscn" id="2_ssvqc"]
 [ext_resource type="Script" uid="uid://0i2qmm0j501t" path="res://scripts/game_timer.gd" id="5_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://d2mj0va8aptt7" path="res://scenes/player.tscn" id="6_37s47"]
+[ext_resource type="Texture2D" uid="uid://d18tqqviktra1" path="res://gfx/character/girl_bg.png" id="6_trtic"]
 [ext_resource type="Script" uid="uid://d1k0rapoq0sy4" path="res://scripts/shells_grid.gd" id="11_e1j6l"]
 [ext_resource type="Script" uid="uid://cajqk4votqbim" path="res://scripts/will_debug.gd" id="13_kvuet"]
+[ext_resource type="Texture2D" uid="uid://egokchivnp20" path="res://gfx/character/baldy_bg.png" id="13_trtic"]
 [ext_resource type="FontFile" uid="uid://dgj6kbvxj2hu4" path="res://fonts/pixel.ttf" id="16_ca42v"]
 [ext_resource type="FontFile" uid="uid://dh8vtie46ogmc" path="res://fonts/8-bit Arcade In.ttf" id="16_rysoc"]
 [ext_resource type="PackedScene" uid="uid://dp2yqkt023ljt" path="res://scenes/count_down.tscn" id="17_rysoc"]
@@ -133,7 +135,13 @@ script = ExtResource("5_e1j6l")
 [node name="PlayerManager1" type="Node2D" parent="."]
 script = ExtResource("2_ir15t")
 
+[node name="CharacterBg" type="Sprite2D" parent="PlayerManager1"]
+modulate = Color(1, 1, 1, 0.466667)
+position = Vector2(64, 83)
+texture = ExtResource("6_trtic")
+
 [node name="ShellsColorRect" type="ColorRect" parent="PlayerManager1"]
+visible = false
 offset_left = 8.0
 offset_top = 16.0
 offset_right = 120.0
@@ -209,10 +217,16 @@ metadata/_edit_use_anchors_ = true
 script = ExtResource("11_e1j6l")
 
 [node name="PlayerManager2" type="Node2D" parent="."]
-position = Vector2(208, 0)
+position = Vector2(192, 0)
 script = ExtResource("2_ir15t")
 
+[node name="BaldyBg" type="Sprite2D" parent="PlayerManager2"]
+modulate = Color(1, 1, 1, 0.466667)
+position = Vector2(65, 83)
+texture = ExtResource("13_trtic")
+
 [node name="ShellsColorRect2" type="ColorRect" parent="PlayerManager2"]
+visible = false
 offset_left = 8.0
 offset_top = 16.0
 offset_right = 104.0

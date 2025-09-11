@@ -164,10 +164,12 @@ func move_to_column(target_column: int):
 	
 	while current_pos < target_column:
 		move_right()
+		# insert a small delay to allow tween to complete
 		current_pos = current_column
 	
 	while current_pos > target_column:
 		move_left()
+		# insert a small delay to allow tween to complete
 		current_pos = current_column
 
 func lift_and_drop():
