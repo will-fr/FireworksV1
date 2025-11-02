@@ -49,8 +49,8 @@ func animate_backgrounds() -> void:
 	background_wall.position.y = -389
 	
 	# Animate both backgrounds simultaneously
-	wall_tween.tween_property(background_wall, "position:y", -10, 2.0)
-	mountains_tween.tween_property(background_mountains, "position:y", 0, 2.0)
+	wall_tween.tween_property(background_wall, "position:y", -10, 4.0)
+	mountains_tween.tween_property(background_mountains, "position:y", 0, 4.0)
 	
 	# When both tweens complete, animate the UI elements
 	wall_tween.tween_callback(animate_ui_elements)
@@ -89,7 +89,7 @@ func launch_fireworks() -> void:
 	if fireworks_timer == null:
 		fireworks_timer = Timer.new()
 		add_child(fireworks_timer)
-		fireworks_timer.wait_time = 1.5
+		fireworks_timer.wait_time = randf_range(1.0, 2.0)
 		fireworks_timer.one_shot = false  # Repeat continuously
 		fireworks_timer.timeout.connect(create_firework)
 		fireworks_timer.start()

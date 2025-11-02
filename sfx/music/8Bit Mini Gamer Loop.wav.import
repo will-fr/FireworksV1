@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://crvbublq7m7av"
+path="res://.godot/imported/8Bit Mini Gamer Loop.wav-c657db9f2fc905f098d30fd354aa1fba.sample"
+
+[deps]
+
+source_file="res://sfx/music/8Bit Mini Gamer Loop.wav"
+dest_files=["res://.godot/imported/8Bit Mini Gamer Loop.wav-c657db9f2fc905f098d30fd354aa1fba.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

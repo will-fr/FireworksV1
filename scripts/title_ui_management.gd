@@ -10,6 +10,9 @@ var exit_button: Button
 var menu_buttons: Control
 var selection: Node2D
 
+# Menu sound effects
+var menu_sound_player: AudioStreamPlayer
+
 # Input debouncing for joypad navigation
 var input_cooldown: float = 0.0
 var input_delay: float = 0.1  # 200ms cooldown between navigation inputs
@@ -30,12 +33,35 @@ func initialize(scene_parent: Node2D) -> void:
 	menu_buttons = scene_parent.get_node("MenuButtons")
 	selection = scene_parent.get_node("Selection")
 	
+	# Set up menu sound effects
+	setup_menu_sound()
+	
 	# Set up button functionality
 	setup_joypad_navigation()
 	connect_button_signals()
 	connect_mouse_hover_signals()
 	
 	print("TitleUIManagement: Initialized successfully")
+
+# Set up menu sound effects
+func setup_menu_sound() -> void:
+	# Create AudioStreamPlayer for menu sounds
+	menu_sound_player = AudioStreamPlayer.new()
+	parent_scene.add_child(menu_sound_player)
+	
+	# Load the menu change sound
+	var menu_sound = load("res://gfx/sound/menu_change.wav")
+	if menu_sound:
+		menu_sound_player.stream = menu_sound
+		menu_sound_player.volume_db = -5  # Adjust volume as needed
+		print("TitleUIManagement: Menu sound loaded successfully")
+	else:
+		print("TitleUIManagement: Warning - Could not load menu_change.wav")
+
+# Play menu change sound effect
+func play_menu_change_sound() -> void:
+	if menu_sound_player and menu_sound_player.stream:
+		menu_sound_player.play()
 
 # Set up joypad navigation for buttons
 func setup_joypad_navigation() -> void:
@@ -158,6 +184,9 @@ func move_focus_up() -> void:
 		p1_vs_p2_button.grab_focus()
 	elif focused == exit_button:
 		settings_button.grab_focus()
+	
+	# Play menu sound when focus changes
+	play_menu_change_sound()
 	update_selection_position()
 
 # Move focus to the next button down
@@ -171,6 +200,9 @@ func move_focus_down() -> void:
 		exit_button.grab_focus()
 	elif focused == exit_button:
 		p1_vs_cpu_button.grab_focus()  # Wrap around to first
+	
+	# Play menu sound when focus changes
+	play_menu_change_sound()
 	update_selection_position()
 
 # Update selection corners position based on focused button
@@ -204,6 +236,11 @@ func connect_mouse_hover_signals() -> void:
 
 # Called when mouse enters any button
 func _on_button_mouse_entered(button: Button) -> void:
+	# Only play sound if focus is actually changing to a different button
+	var current_focused = get_focused_button()
+	if current_focused != button:
+		play_menu_change_sound()
+	
 	# Give focus to the button that the mouse entered
 	button.grab_focus()
 	# Update visual selection to match

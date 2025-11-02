@@ -1,19 +1,9 @@
-class_name CpuPlayer extends Node
+class_name CpuPlayer extends Node2D
 
 # FireworksV1 Game Rules
 # Game Overview
 # FireworksV1 is a Tetris-like puzzle game wher## Called when the node is ready and added to the scene
-## Sets up the strategy update timer that drives the CPU decision-making
-func _ready():
-	# Create and configure the strategy update timer
-	update_timer = Timer.new()                        # Create new timer instance
-	update_timer.wait_time = 0.5                     # OPTIMIZED: Update strategy every 1.0 seconds (reduced frequency)
-	update_timer.timeout.connect(update_strategy)     # Connect timeout signal to our strategy function
-	add_child(update_timer)                           # Add timer to scene tree
-	update_timer.start()                              # Start the timer immediately
-	print("CPU: Timer started - Strategy will update every 1.0 seconds")
 
-# FireworksV1 is a Tetris-like puzzle game where players
 
 # Game Grid & Setup
 # Grid Size: 7 columns × 8 rows
@@ -117,11 +107,12 @@ var rockets_sizes : Array = []      # Array of sizes of the biggest rocket possi
 var cpu_shells_grid : Array = []    # CPU's internal representation of the game grid
 var current_column : int             # Current column position of the player
 var update_timer : Timer             # Timer that triggers strategy updates every 1.0 seconds
+var actions_needed :Array = []
 
-# PERFORMANCE OPTIMIZATIONS
-var arrangement_cache : Dictionary = {}      # Cache for arrangement evaluations
-var last_game_state_hash : int = 0         # Hash of last processed game state
-var cached_arrangements : Array = []        # Cached arrangements for repeated states
+# get the game timer from the scene tree
+@onready var game_timer: GameTimer 
+@onready var cpu_lag_timer : Timer 
+
 
 
 # ================================
@@ -134,11 +125,44 @@ func _init(player_arg: Player):
 	print("CPU: Initializing CpuPlayer...")
 	player = player_arg                    # Store reference to the player we're controlling
 	player_manager = player.get_parent()   # Get reference to the PlayerManager for game state access
+	cpu_lag_timer = player_manager.get_node("CpuLagTimer")
 	init_cpu_shell_grid()                  # Initialize our internal grid representation
 
 
+## Sets up the strategy update timer that drives the CPU decision-making
+func _ready():
+	# Create and configure the strategy update timer
+	# update_timer = Timer.new()                        # Create new timer instance
+	# update_timer.wait_time = 2                     # OPTIMIZED: Update strategy every 2.0 seconds (reduced frequency)
+	# update_timer.timeout.connect(update_strategy)     # Connect timeout signal to our strategy function
+	# add_child(update_timer)                           # Add timer to scene tree
+	# update_timer.start()                              # Start the timer immediately
+	# print("CPU: Timer started - Strategy will update every 1.0 seconds")
+	game_timer = get_tree().get_root().get_node("Game/Gui/GameTimer")
+	if game_timer != null:
+		game_timer.game_started.connect(Callable(self, "_launch_game"))
+		print("CPU: Connected to GameTimer's game_started signal.")
+	else:
+		print("CPU: ERROR - GameTimer not found in scene tree.")
+	
 
-# This duplicate _ready function is removed - using the optimized version above
+
+
+
+
+func _launch_game():
+	cpu_lag_timer.timeout.connect(_on_cpu_lag_timer_timeout)
+
+	
+func _on_cpu_lag_timer_timeout():
+	if actions_needed.size()>0:
+		var action = actions_needed.pop_front()
+		execute_action(action)
+	else:
+		update_strategy()
+
+
+
 
 
 ## Initialize the CPU's internal grid representation
@@ -203,17 +227,9 @@ func update_strategy():
 	var current_state_hash = get_game_state_hash()
 	var possible_arrangements
 	
-	if current_state_hash == last_game_state_hash and cached_arrangements.size() > 0:
-		print("CPU: OPTIMIZATION - Game state unchanged, using cached arrangements")
-		possible_arrangements = cached_arrangements
-	else:
-		# ===== STEP 1: Identify Possible Arrangements =====
-		# Generate strategic column arrangements based on current game state
-		possible_arrangements = identify_possible_arrangements(Globals.NUM_COLUMNS)
-		cached_arrangements = possible_arrangements
-		last_game_state_hash = current_state_hash
-		print ("CPU : Generated ", possible_arrangements.size(), " new arrangements")
-
+	
+	possible_arrangements = identify_possible_arrangements(Globals.NUM_COLUMNS)
+		
 	# ===== STEP 2: Evaluate Each Arrangement =====
 	# Score each possible arrangement based on match potential and game safety
 	var best_arrangement = null
@@ -223,20 +239,16 @@ func update_strategy():
 	for i in range(Globals.NUM_COLUMNS):
 		current_arrangement.append(i)
 	var best_score = evaluate_arrangement(current_arrangement)
-	
+	print ("CPU: Current arrangement score: ", best_score)
 	# Test each possible arrangement and keep track of the best one
-	var excellent_score_threshold = 500  # If we find a score this high, stop searching
 	
 	for arrangement in possible_arrangements:
 		var score = evaluate_arrangement(arrangement)
+		print ("ARRANGEMENT TESTED: ",arrangement, " scored ",score)
 		if score > best_score:
 			best_score = score
 			best_arrangement = arrangement
 			
-			# OPTIMIZATION: Early exit for excellent scores
-			if score >= excellent_score_threshold:
-				print("CPU: OPTIMIZATION - Found excellent score ", score, ", stopping early")
-				break
 	
 	print("CPU: Best arrangement score: ", best_score)
 	print("CPU: Best arrangement: ", best_arrangement)
@@ -244,16 +256,17 @@ func update_strategy():
 	# ===== STEP 3: Execute the Best Strategy =====
 	if best_arrangement != null:
 		# Calculate the sequence of column swaps needed to achieve the best arrangement
-		var actions_needed = calculate_actions_to_achieve_arrangement(best_arrangement)
+		actions_needed = calculate_actions_to_achieve_arrangement(best_arrangement)
 		print("CPU: Executing ", actions_needed.size(), " actions to achieve best arrangement")
-		
-		# Execute each action (column swap) in sequence immediately
-		for action in actions_needed:
-			execute_action(action)
+
 	else :
 		# If no better arrangement is found, just force gravity to speed up the game
 		print("CPU: No better arrangement found, forcing gravity")
 		player.force_gravity()
+		#await get_tree().create_timer(cpu_lag).timeout
+
+
+	
 # ================================
 # HELPER FUNCTIONS - Game State Analysis
 # ================================
@@ -502,10 +515,6 @@ func generate_permutations(arr: Array, start_index: int, result: Array):
 ## @param arrangement: Array representing which original column goes in each position
 ## @return int: Total score for this arrangement (higher = better)
 func evaluate_arrangement(arrangement: Array) -> int:
-	# OPTIMIZATION: Check cache first
-	var cache_key = str(arrangement) + "_" + str(last_game_state_hash)
-	if arrangement_cache.has(cache_key):
-		return arrangement_cache[cache_key]
 	
 	var score = 0
 	
@@ -513,13 +522,6 @@ func evaluate_arrangement(arrangement: Array) -> int:
 	# arrangement[i] tells us which original column would end up in position i
 	for i in range(arrangement.size()):
 		score += evaluate_column(i, arrangement[i])
-
-	# OPTIMIZATION: Store in cache
-	arrangement_cache[cache_key] = score
-	
-	# OPTIMIZATION: Limit cache size to prevent memory issues
-	if arrangement_cache.size() > 1000:
-		arrangement_cache.clear()
 	
 	return score
 
@@ -553,22 +555,20 @@ func evaluate_column (original_column_index : int, target_column_index : int) ->
 		if top_dropped_shells[target_column_index] == -falling_shells[original_column_index] && falling_shells[original_column_index] != -Globals.BOTTOM_SHELL:
 			has_match = true
 			# Higher columns get bigger bonuses because matches clear more space
-			score += 100 * column_height
+			score += 1000 * column_height
 
 	# STRATEGY RULE 3: Height Management
 	# If no match is possible, prefer the shortest column to keep grid balanced
-	if !has_match and column_height == lowest_height:
-		score += 50 * column_height
+	if !has_match:
+		score -= 300 * column_height
 
 	if !has_match and rockets_sizes[target_column_index] > 0:
-		score += 1000 * rockets_sizes[target_column_index]
+		score += 100 * rockets_sizes[target_column_index]
 
 	# STRATEGY RULE 4: IF PIECE IS A TOP SHELL, PLACE IT ON THE BIGGEST ROCKET
 	if top_dropped_shells[target_column_index] != null and falling_shells[original_column_index] != null:
 		if falling_shells[original_column_index] == -Globals.TOP_SHELL:
 			score += 40 * rockets_sizes[target_column_index]
-
-
 
 	return score
 
@@ -637,10 +637,7 @@ func arrays_equal(arr1: Array, arr2: Array) -> bool:
 	for i in range(arr1.size()):
 		if arr1[i] != arr2[i]:
 			return false
-	
 	return true
-
-
 
 # ================================
 # ACTION EXECUTION
@@ -657,9 +654,32 @@ func execute_action(action):
 			var left_col = action
 			var right_col = action + 1
 			print("CPU ** Performing column swap: ", left_col, " <-> ", right_col)
-			player.flip_columns(left_col, right_col)
+			flip_columns(left_col, right_col)
 		else:
 			print("CPU: Invalid column index: ", action, " (must be 0-", Globals.NUM_COLUMNS - 2, ")")
 	else:
 		print("CPU: Invalid action type: ", typeof(action), " - Expected integer, got: ", action)
+
+
+func flip_columns(left_column_index,right_column_index):
+	if right_column_index != left_column_index +1:
+		print ("CPU : Error, only flipping between adjacent columns")
+		return
+
+	move_to_column(left_column_index)
+
+	player.flip_right()
+	#await get_tree().create_timer(cpu_lag).timeout
+
+func move_to_column(target_column: int):
+	var current_pos = player.current_column
 	
+	while current_pos < target_column:
+		player.move_right()
+		#await get_tree().create_timer(cpu_lag).timeout
+		current_pos = player.current_column
+	
+	while current_pos > target_column:
+		player.move_left()
+		#await get_tree().create_timer(cpu_lag).timeout
+		current_pos = player.current_column

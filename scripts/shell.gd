@@ -10,7 +10,7 @@ func initialize(column_arg:int,_shell_type_arg:int) -> void:
 	shell_status = status.WAITING
 	animation = str(shell_type) +"_falling"
 	# set alpha to 0.5
-	modulate.a = 0.85
+	#modulate.a = 0.85
 	print ("Shell initialized: ", shell_type, " with animation: ", animation)
 	# Position the shell in the specified column
 	position.x = Globals.LEFT_OFFSET + column_arg * Globals.BLOCK_SIZE  # Assuming 16 pixel spacing

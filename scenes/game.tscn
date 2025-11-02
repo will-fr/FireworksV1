@@ -1,9 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://csrrbgq4oiab5"]
+[gd_scene load_steps=29 format=3 uid="uid://csrrbgq4oiab5"]
 
 [ext_resource type="Script" uid="uid://4og7s3efp4o0" path="res://scripts/game_manager.gd" id="1_ir15t"]
 [ext_resource type="Script" uid="uid://bxjsqbgpo8r6y" path="res://scripts/player_manager.gd" id="2_ir15t"]
 [ext_resource type="FontFile" uid="uid://dkd1ks3kdq65r" path="res://fonts/courier-bold.ttf" id="2_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://b8v1c0fsxfjrl" path="res://scenes/background.tscn" id="2_ssvqc"]
+[ext_resource type="Texture2D" uid="uid://c30ma6didahth" path="res://gfx/ui/lose.png" id="3_ca42v"]
+[ext_resource type="Texture2D" uid="uid://oo4nhf7kepfy" path="res://gfx/ui/win.png" id="4_rysoc"]
 [ext_resource type="Script" uid="uid://0i2qmm0j501t" path="res://scripts/game_timer.gd" id="5_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://d2mj0va8aptt7" path="res://scenes/player.tscn" id="6_37s47"]
 [ext_resource type="Texture2D" uid="uid://d18tqqviktra1" path="res://gfx/character/girl_bg.png" id="6_trtic"]
@@ -12,15 +14,24 @@
 [ext_resource type="Texture2D" uid="uid://egokchivnp20" path="res://gfx/character/baldy_bg.png" id="13_trtic"]
 [ext_resource type="FontFile" uid="uid://dgj6kbvxj2hu4" path="res://fonts/pixel.ttf" id="16_ca42v"]
 [ext_resource type="FontFile" uid="uid://dh8vtie46ogmc" path="res://fonts/8-bit Arcade In.ttf" id="16_rysoc"]
+[ext_resource type="AudioStream" uid="uid://cdfqgdghre1b0" path="res://sfx/sounds/08_Bite_04.wav" id="17_37s47"]
 [ext_resource type="PackedScene" uid="uid://dp2yqkt023ljt" path="res://scenes/count_down.tscn" id="17_rysoc"]
+[ext_resource type="AudioStream" uid="uid://cbgj33id1arew" path="res://sfx/sounds/fsshhh2.mp3" id="18_5newe"]
+[ext_resource type="AudioStream" uid="uid://4oej1k1l0sly" path="res://sfx/sounds/block_grey.wav" id="18_bt5mj"]
+[ext_resource type="AudioStream" uid="uid://dfg1ntky8mgv3" path="res://sfx/sounds/Bubble heavy 1.wav" id="19_5newe"]
+[ext_resource type="AudioStream" uid="uid://bpfgkfv6xeqrf" path="res://sfx/sounds/Drop.wav" id="19_37s47"]
+[ext_resource type="AudioStream" uid="uid://b64spl3ym8dym" path="res://sfx/music/Dragon Dance - Loop.mp3" id="21_5newe"]
+[ext_resource type="AudioStream" uid="uid://o23eyew7f34l" path="res://sfx/music/Victorious.ogg" id="22_37s47"]
 [ext_resource type="Texture2D" uid="uid://dfmysfhcn6cjk" path="res://gfx/shells/junk.png" id="23_bt5mj"]
+[ext_resource type="AudioStream" uid="uid://cbs1rsehij7pc" path="res://sfx/music/lose.ogg" id="24_e1j6l"]
+[ext_resource type="AudioStream" uid="uid://dg7cfp24rfc2g" path="res://sfx/sounds/ding.wav" id="25_pl11u"]
+[ext_resource type="Texture2D" uid="uid://capl0uorijgxd" path="res://gfx/ui/menu_button.png" id="26_bhx41"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37s47"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
-border_width_bottom = 2
 border_color = Color(0.196078, 0.196078, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bt5mj"]
@@ -28,7 +39,6 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
-border_width_bottom = 2
 border_color = Color(1, 0.196078, 0.196078, 1)
 
 [node name="Game" type="Node2D"]
@@ -42,7 +52,7 @@ position = Vector2(0, -5)
 
 [node name="Gui" type="Node2D" parent="."]
 
-[node name="LoseLabel" type="Label" parent="Gui"]
+[node name="LoseLabelOld" type="Label" parent="Gui"]
 z_index = 5
 offset_left = 216.0
 offset_top = -29.0
@@ -52,7 +62,21 @@ text = "Defeat"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="WinLabel" type="Label" parent="Gui"]
+[node name="LoseLabel" type="Sprite2D" parent="Gui"]
+z_index = 500
+position = Vector2(220, -37)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_ca42v")
+centered = false
+
+[node name="WinLabel" type="Sprite2D" parent="Gui"]
+z_index = 500
+position = Vector2(28, -46)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_rysoc")
+centered = false
+
+[node name="WinLabelOld" type="Label" parent="Gui"]
 z_index = 5
 offset_left = 8.0
 offset_top = -28.0
@@ -63,18 +87,10 @@ horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="ScoreColorRect" type="ColorRect" parent="Gui"]
-offset_left = 112.0
-offset_top = 16.0
-offset_right = 208.0
+offset_left = 126.0
+offset_top = 6.0
+offset_right = 194.0
 offset_bottom = 40.0
-color = Color(1, 1, 1, 0.196078)
-metadata/_edit_use_anchors_ = true
-
-[node name="TimerColorRect" type="ColorRect" parent="Gui"]
-offset_left = 112.0
-offset_top = 46.0
-offset_right = 208.0
-offset_bottom = 70.0
 color = Color(1, 1, 1, 0.196078)
 metadata/_edit_use_anchors_ = true
 
@@ -83,9 +99,9 @@ anchors_preset = -1
 anchor_left = -1.575
 anchor_right = -1.575
 offset_left = 140.0
-offset_top = 14.0
+offset_top = 3.0
 offset_right = 180.0
-offset_bottom = 39.0
+offset_bottom = 28.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -94,14 +110,24 @@ theme_override_font_sizes/font_size = 16
 text = "SCORE"
 metadata/_edit_use_anchors_ = true
 
+[node name="TimerColorRect" type="ColorRect" parent="Gui"]
+visible = false
+offset_left = 126.0
+offset_top = 46.0
+offset_right = 194.0
+offset_bottom = 70.0
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
+
 [node name="GameTimerLabel" type="Label" parent="Gui"]
+visible = false
 anchors_preset = -1
 anchor_left = -1.575
 anchor_right = -1.575
-offset_left = 115.0
-offset_top = 49.0
-offset_right = 155.0
-offset_bottom = 74.0
+offset_left = 122.0
+offset_top = 51.0
+offset_right = 162.0
+offset_bottom = 76.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -112,13 +138,14 @@ horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="GameTimerText" type="Label" parent="Gui"]
+visible = false
 anchors_preset = -1
 anchor_left = -1.575
 anchor_right = -1.575
-offset_left = 168.0
-offset_top = 42.0
-offset_right = 208.0
-offset_bottom = 67.0
+offset_left = 159.0
+offset_top = 44.0
+offset_right = 199.0
+offset_bottom = 69.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -129,19 +156,20 @@ horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="GameTimer" type="Timer" parent="Gui"]
-autostart = true
+unique_name_in_owner = true
 script = ExtResource("5_e1j6l")
 
 [node name="PlayerManager1" type="Node2D" parent="."]
 script = ExtResource("2_ir15t")
+skin = "spikey"
 
-[node name="CharacterBg" type="Sprite2D" parent="PlayerManager1"]
+[node name="SkinBackground" type="Sprite2D" parent="PlayerManager1"]
+visible = false
 modulate = Color(1, 1, 1, 0.466667)
 position = Vector2(64, 83)
 texture = ExtResource("6_trtic")
 
 [node name="ShellsColorRect" type="ColorRect" parent="PlayerManager1"]
-visible = false
 offset_left = 8.0
 offset_top = 16.0
 offset_right = 120.0
@@ -152,9 +180,9 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="PlayerManager1"]
 offset_left = 6.0
-offset_top = 14.0
+offset_top = 12.0
 offset_right = 121.0
-offset_bottom = 149.0
+offset_bottom = 147.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37s47")
 metadata/_edit_use_anchors_ = true
 
@@ -197,14 +225,17 @@ text = "JUNK: "
 metadata/_edit_use_anchors_ = true
 
 [node name="CountDown" parent="PlayerManager1" instance=ExtResource("17_rysoc")]
-offset_left = 46.0
-offset_right = 86.0
+offset_left = 24.0
+offset_top = 56.0
+offset_right = 104.0
+offset_bottom = 99.0
+text = "Go"
 
 [node name="Score" type="Label" parent="PlayerManager1"]
-offset_left = 114.0
-offset_top = 25.0
-offset_right = 154.0
-offset_bottom = 50.0
+offset_left = 127.0
+offset_top = 26.0
+offset_right = 167.0
+offset_bottom = 51.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -220,16 +251,16 @@ script = ExtResource("11_e1j6l")
 position = Vector2(192, 0)
 script = ExtResource("2_ir15t")
 
-[node name="BaldyBg" type="Sprite2D" parent="PlayerManager2"]
+[node name="SkinBackground" type="Sprite2D" parent="PlayerManager2"]
+visible = false
 modulate = Color(1, 1, 1, 0.466667)
-position = Vector2(65, 83)
+position = Vector2(64, 83)
 texture = ExtResource("13_trtic")
 
 [node name="ShellsColorRect2" type="ColorRect" parent="PlayerManager2"]
-visible = false
 offset_left = 8.0
 offset_top = 16.0
-offset_right = 104.0
+offset_right = 120.0
 offset_bottom = 148.0
 rotation = 0.000628789
 color = Color(1, 1, 1, 0.196078)
@@ -238,29 +269,33 @@ metadata/_edit_use_anchors_ = true
 [node name="Panel" type="Panel" parent="PlayerManager2"]
 offset_left = 6.0
 offset_top = 14.0
-offset_right = 105.0
+offset_right = 122.0
 offset_bottom = 149.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bt5mj")
 metadata/_edit_use_anchors_ = true
 
 [node name="Line2D2" type="Line2D" parent="PlayerManager2"]
 position = Vector2(37, 34)
-points = PackedVector2Array(-30, 1, 67, 1)
+points = PackedVector2Array(-30, 1, 85, 1)
 width = 2.0
 default_color = Color(1, 0.196078, 0.196078, 1)
 
 [node name="PlayerTimer" type="Timer" parent="PlayerManager2"]
-wait_time = 0.5
+wait_time = 0.1
+
+[node name="CpuLagTimer" type="Timer" parent="PlayerManager2"]
+wait_time = 0.05
+autostart = true
 
 [node name="Player" parent="PlayerManager2" instance=ExtResource("6_37s47")]
 position = Vector2(0, 143)
 player_type = 2
 
 [node name="WillDebug" type="RichTextLabel" parent="PlayerManager2"]
-offset_left = 156.0
-offset_top = 40.0
-offset_right = 227.0
-offset_bottom = 169.0
+offset_left = 133.0
+offset_top = 21.0
+offset_right = 204.0
+offset_bottom = 150.0
 theme_override_colors/table_border = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("2_lbhrr")
 theme_override_font_sizes/normal_font_size = 5
@@ -273,10 +308,10 @@ script = ExtResource("13_kvuet")
 metadata/_edit_use_anchors_ = true
 
 [node name="Score" type="Label" parent="PlayerManager2"]
-offset_left = -43.0
-offset_top = 25.0
-offset_right = 15.0
-offset_bottom = 37.0
+offset_left = -39.0
+offset_top = 14.0
+offset_right = 19.0
+offset_bottom = 26.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("16_rysoc")
@@ -285,11 +320,12 @@ text = "00000"
 metadata/_edit_use_anchors_ = true
 
 [node name="CountDown" parent="PlayerManager2" instance=ExtResource("17_rysoc")]
-offset_left = 41.0
-offset_top = 51.0
-offset_right = 81.0
-offset_bottom = 94.0
+offset_left = 28.0
+offset_top = 57.0
+offset_right = 108.0
+offset_bottom = 100.0
 theme_override_colors/font_color = Color(1, 0.196078, 0.196078, 1)
+text = "Go"
 
 [node name="Junk" type="Label" parent="PlayerManager2"]
 offset_left = 9.0
@@ -303,10 +339,79 @@ metadata/_edit_use_anchors_ = true
 
 [node name="ShellsGrid" type="Node2D" parent="PlayerManager2"]
 script = ExtResource("11_e1j6l")
+player_id = 2
 
 [node name="Junk" type="Sprite2D" parent="."]
 position = Vector2(101, 8)
 texture = ExtResource("23_bt5mj")
+
+[node name="Sfx" type="Node" parent="."]
+
+[node name="ShellPop" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("17_37s47")
+max_polyphony = 5
+
+[node name="BlockToGray" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("18_bt5mj")
+max_polyphony = 5
+
+[node name="BigFireworkLaunch" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("18_5newe")
+max_polyphony = 5
+
+[node name="ShellDrop" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("19_37s47")
+max_polyphony = 5
+
+[node name="ColumnLift" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("19_5newe")
+max_polyphony = 5
+
+[node name="ColumnDrop" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("19_5newe")
+max_polyphony = 5
+
+[node name="BackgroundMusic" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("21_5newe")
+volume_db = -5.0
+autoplay = true
+playback_type = 1
+parameters/looping = true
+
+[node name="VictoryMusic" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("22_37s47")
+volume_db = -5.0
+playback_type = 1
+parameters/looping = true
+
+[node name="DefeatMusic" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("24_e1j6l")
+playback_type = 1
+parameters/looping = true
+
+[node name="Ding" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("25_pl11u")
+playback_type = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(403, 131)
+texture = ExtResource("26_bhx41")
 
 [connection signal="timeout" from="Gui/GameTimer" to="Gui/GameTimer" method="_on_timeout"]
 [connection signal="timeout" from="PlayerManager1/PlayerTimer" to="PlayerManager1" method="_on_player_timer_timeout"]

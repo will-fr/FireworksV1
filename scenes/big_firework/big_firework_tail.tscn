@@ -1,6 +1,7 @@
-[gd_scene load_steps=54 format=3 uid="uid://73whcjs4j2vg"]
+[gd_scene load_steps=55 format=3 uid="uid://73whcjs4j2vg"]
 
 [ext_resource type="Texture2D" uid="uid://c10je1e1xr5dk" path="res://gfx/fireworks/big_fireworks/Rocket_Blue.png-sheet.png" id="1_w4yn1"]
+[ext_resource type="AudioStream" uid="uid://cbgj33id1arew" path="res://sfx/sounds/fsshhh2.mp3" id="2_4v6k2"]
 [ext_resource type="Texture2D" uid="uid://b4ijfc4blicn4" path="res://gfx/effects/light_test.png" id="2_hacob"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qypr1"]
@@ -365,6 +366,11 @@ animations = [{
 sprite_frames = SubResource("SpriteFrames_nuv07")
 autoplay = "default"
 frame_progress = 0.581835
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(0, -21)
+stream = ExtResource("2_4v6k2")
+autoplay = true
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 position = Vector2(0, -21)

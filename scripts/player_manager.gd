@@ -17,7 +17,9 @@ signal points_added
 @onready var score_label: Label = get_node("Score")  
 @onready var junk_label: Label = get_node("Junk")  
 @onready var countdown: CountDown = get_node("CountDown")  
-@onready var shells_grid: ShellsGrid = get_node("ShellsGrid") 
+@onready var shells_grid: ShellsGrid = get_node("ShellsGrid")
+@export var skin:String = "girl"
+
 
 
 func _ready() -> void:
@@ -28,6 +30,9 @@ func _ready() -> void:
 	player.player_dropped.connect(_on_player_dropped)
 	countdown.connect("countdown_finished", Callable(self, "_on_countdown_finished"))
 
+	# setup the elements depending on the skin. 
+	player.set_skin(skin)
+	get_node("SkinBackground").texture = load("res://gfx/character/"+skin+"_bg.png")
 	set_player_play()
 	main_game_loop()
 	set_player_pause()
@@ -138,10 +143,53 @@ func create_big_firework(column,top_row,bottom_row):
 func game_over(column_arg,row_arg):
 	print("Game Over! Final Score: ", score)
 	set_player_pause()
-	shells_grid.shells_grid[column_arg][row_arg].modulate = Color.GRAY # Tint the last shell gray
-	for column in Globals.NUM_COLUMNS:
-		for row in Globals.NUM_ROWS:
-			if shells_grid.shells_grid[column][row] != null:
-				var tween = create_tween()
-				tween.tween_property(shells_grid.shells_grid[column][row], "modulate", Color.DARK_VIOLET, 0.3 * (Globals.NUM_ROWS - row))
-	emit_signal("player_game_over")
+
+	# fade out the main background music in 2 seconds.
+	var background_music : AudioStreamPlayer2D = %BackgroundMusic
+	# create a tween to fade out the music
+	var music_tween = create_tween()
+	music_tween.tween_property(background_music, "volume_db", -80, 2.0)
+
+	# Immediately turn the triggering shell gray and play sound
+	shells_grid.shells_grid[column_arg][row_arg].modulate = Color.GRAY
+	var block_to_gray_sound : AudioStreamPlayer2D = %BlockToGray
+	block_to_gray_sound.play()
+	
+	# Start sequential row graying animation
+	start_row_graying_animation()
+	
+
+
+func start_row_graying_animation():
+	# Create a sequential tween for each row
+	var main_tween = create_tween()
+	
+	# Process each row from top to bottom (NUM_ROWS-1 down to 0)
+	for i in range(Globals.NUM_ROWS):
+		var row = Globals.NUM_ROWS - 1 - i  # Start from top row (7) down to bottom row (0)
+		
+		# Add 0.2 second delay before processing this row
+		if i > 0:  # No delay for the first row
+			main_tween.tween_interval(0.2)
+		
+		# Turn all shells in this row gray and play sound
+		main_tween.tween_callback(func(): turn_row_gray(row))
+
+func turn_row_gray(row: int):
+	var has_shells_in_row = false
+	
+	# Turn all shells in this row gray
+	for column in range(Globals.NUM_COLUMNS):
+		if shells_grid.shells_grid[column][row] != null:
+			shells_grid.shells_grid[column][row].modulate = Color.DARK_GOLDENROD
+			has_shells_in_row = true
+	
+	# Play sound only if there were shells in this row
+	if has_shells_in_row:
+		var block_to_gray_sound : AudioStreamPlayer2D = %BlockToGray
+		if block_to_gray_sound:
+			block_to_gray_sound.play()
+
+	if row == 0:
+		# Emit game_over signal after the last row is processed
+		emit_signal("player_game_over")

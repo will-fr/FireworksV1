@@ -3,8 +3,9 @@ class_name CountDown extends Label
 # Signal emitted when countdown is finished
 signal countdown_finished
 
-var countdown_numbers = [3, 2, 1]
+var countdown_numbers = [3, 2, 1,"Go"]
 var current_index = 0
+@onready var ding_sound : AudioStreamPlayer2D = %Ding
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,13 +26,21 @@ func show_next_number():
 		var number = countdown_numbers[current_index]
 		text = str(number)
 		print("CountDown: Showing number ", number)
+
+		# if it's the last element, play the sound on an high note and louder
+		if current_index == countdown_numbers.size() - 1:
+			ding_sound.pitch_scale = 1.5  # Increase pitch for "Go!"
+			ding_sound.volume_db = +3  # Reset volume to +3 dB
+		
+
+		ding_sound.play()
 		
 		# Reset opacity to full
 		modulate.a = 1.0
 		
 		# Create fade out tween
 		var fade_tween = create_tween()
-		fade_tween.tween_property(self, "modulate:a", 0.0, 0.8)  # Fade over 0.8 seconds
+		fade_tween.tween_property(self, "modulate:a", 0.0, 1.0)  # Fade over 1.0 seconds
 		
 		# When fade completes, show next number or finish
 		fade_tween.tween_callback(move_to_next_number)
@@ -64,4 +73,3 @@ func finish_countdown():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
-

@@ -28,4 +28,7 @@ const SHELL_NAMES = ["","BOTTOM", "TOP", "GREEN", "RED", "BLUE", "YELLOW"]
 const FIREWORK_SCORE = [20, 30, 50, 100, 300, 500, 1000]
 const POP_SCORE = 10  # Points awarded for popping shells
 
+var game_mode: String = "ENDLESS"  # Can be "NORMAL" or "ENDLESS"
+var game_difficulty: String = "EASY"  # Can be "EASY",
+
 

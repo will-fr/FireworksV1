@@ -1,4 +1,4 @@
-class_name Player  extends AnimatedSprite2D
+class_name Player  extends Node2D
 
 var initial_x:float = 0
 var is_lifting: bool = false
@@ -13,7 +13,11 @@ signal player_dropped()
 enum player_dic { P1, P2, CPU }
 @export var player_type: player_dic = player_dic.P1
 
+# Skin (from player_manager)
+var skin:String
+var skin_sprite:AnimatedSprite2D
 var player_is_active: bool = true
+var cpu_lag: float = 0.1  # Delay in seconds for CPU actions
 var current_column: int = 0  # Start in a center column (0-3 for 4 columns)
 var cpu_player : CpuPlayer
 
@@ -21,10 +25,9 @@ var cpu_player : CpuPlayer
 @onready var player_manager: PlayerManager = get_parent()
 
 func _ready() -> void:
-	animation_finished.connect(_on_animation_finished)
 	player_manager.player_paused.connect(_on_player_paused)
 	player_manager.player_resumed.connect(_on_player_resumed)
-	
+
 	# Set up CPU behavior only for CPU players
 	if player_type == player_dic.CPU:
 		cpu_player = CpuPlayer.new(self)
@@ -32,6 +35,13 @@ func _ready() -> void:
 		print("CPU player initialized and added as child for ", name)
 
 
+func set_skin(skin_arg:String) -> void:
+	skin = skin_arg
+	skin_sprite=get_node(skin)
+	skin_sprite.visible = true
+	skin_sprite.animation_finished.connect(_on_animation_finished)
+
+	
 func _on_player_paused() -> void:
 	# Pause player animations and logic
 	player_is_active = false
@@ -108,13 +118,13 @@ func move_left():
 		tween.tween_property(self, "position:x", target_x, 0.1)
 		
 		# Play the correct animation and emit lift signal if necessary.
-		flip_h = true
+		skin_sprite.flip_h = true
 		current_column -= 1
 		if is_lifting:
-			play("lift")
+			skin_sprite.play("lift")
 			player_flipped.emit()
 		else:
-			play("move")
+			skin_sprite.play("move")
 
 func force_gravity():
 	gravity_forced.emit()
@@ -130,12 +140,12 @@ func move_right():
 		tween.tween_property(self, "position:x", target_x, 0.1)
 		
 		# Play the move_left_front animation
-		flip_h = false
+		skin_sprite.flip_h = false
 		if is_lifting:
-			play("lift")
+			skin_sprite.play("lift")
 			player_flipped.emit()
 		else:
-			play("move")
+			skin_sprite.play("move")
 		
 		current_column += 1
 
@@ -157,29 +167,32 @@ func flip_columns(left_column_index,right_column_index):
 		return
 	
 	move_to_column(left_column_index)
+
+
 	flip_right()
+	await get_tree().create_timer(cpu_lag).timeout
 
 func move_to_column(target_column: int):
 	var current_pos = current_column
 	
 	while current_pos < target_column:
 		move_right()
-		# insert a small delay to allow tween to complete
+		await get_tree().create_timer(cpu_lag).timeout
 		current_pos = current_column
 	
 	while current_pos > target_column:
 		move_left()
-		# insert a small delay to allow tween to complete
+		await get_tree().create_timer(cpu_lag).timeout
 		current_pos = current_column
 
 func lift_and_drop():
 	is_lifting = !is_lifting
 
 	if (is_lifting):
-		play("idle_lift")
+		skin_sprite.play("idle_lift")
 		emit_signal("player_lifted")
 	else:
-		play("idle")
+		skin_sprite.play("idle")
 		emit_signal("player_dropped")
 
 # Get the player's current column position
@@ -193,6 +206,10 @@ func get_shells() -> Array:
 func _on_animation_finished():
 	# If the move_right_front animation just finished, return to previous animation
 	if is_lifting:
-		play("idle_lift")
+		skin_sprite.play("idle_lift")
 	else:
-		play("idle")
+		skin_sprite.play("idle")
+
+
+func _on_cpu_lag_timer_timeout() -> void:
+	pass # Replace with function body.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=486 format=3 uid="uid://c4e03l12e1vdn"]
+[gd_scene load_steps=487 format=3 uid="uid://c4e03l12e1vdn"]
 
 [ext_resource type="Texture2D" uid="uid://de5fcy8siltm3" path="res://gfx/fireworks/big_fireworks/Explosion_Crystals_Blue-sheet.png" id="1_5nflj"]
 [ext_resource type="Texture2D" uid="uid://biimxehqoouck" path="res://gfx/fireworks/big_fireworks/Explosion_Default_Blue-sheet.png" id="2_vjlum"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bf5w6o5sfao1j" path="res://gfx/fireworks/big_fireworks/Explosion_Crystals_White-sheet.png" id="7_rn6db"]
 [ext_resource type="Script" uid="uid://b2pgl65ydb6k2" path="res://scripts/big_firework_effect.gd" id="8_lrx31"]
 [ext_resource type="Texture2D" uid="uid://b4ijfc4blicn4" path="res://gfx/effects/light_test.png" id="9_lrx31"]
+[ext_resource type="AudioStream" uid="uid://xe67f0x6hv41" path="res://sfx/sounds/bang2.mp3" id="10_rhxn1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_msri2"]
 atlas = ExtResource("1_5nflj")
@@ -3376,11 +3377,16 @@ animations = [{
 [node name="big fw" type="AnimatedSprite2D" groups=["firework"]]
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_r6pu6")
-animation = &"blue_long"
+animation = &"stars"
 autoplay = "stars"
+frame = 29
+frame_progress = 1.0
 script = ExtResource("8_lrx31")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 position = Vector2(3.99998, -3.05176e-05)
 scale = Vector2(7.405, 7.405)
 texture = ExtResource("9_lrx31")
+
+[node name="FireworkSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_rhxn1")

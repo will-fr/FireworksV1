@@ -1,7 +1,8 @@
-[gd_scene load_steps=25 format=3 uid="uid://cx511hdhtnbv2"]
+[gd_scene load_steps=26 format=3 uid="uid://cx511hdhtnbv2"]
 
 [ext_resource type="Script" uid="uid://ceftwxcfqbqh0" path="res://scripts/title.gd" id="1_yql1r"]
 [ext_resource type="Texture2D" uid="uid://ddrd1qnbvwyme" path="res://gfx/title/background_sky2.png" id="8_81wt4"]
+[ext_resource type="AudioStream" uid="uid://ft8hr1yvtb2a" path="res://sfx/music/StaringAtReflections.mp3" id="8_ia1n6"]
 [ext_resource type="FontFile" uid="uid://dh8vtie46ogmc" path="res://fonts/8-bit Arcade In.ttf" id="9_w65of"]
 [ext_resource type="Texture2D" uid="uid://c7822n53fiq5n" path="res://gfx/title/background_wall_contour.png" id="10_81wt4"]
 [ext_resource type="Texture2D" uid="uid://r6jdua6x0qce" path="res://gfx/title/pyropop_title.png" id="11_6civk"]
@@ -197,7 +198,6 @@ centered = false
 
 [node name="BackgroundMountains" type="Sprite2D" parent="."]
 modulate = Color(0.501961, 0.501961, 0.501961, 1)
-z_index = -50
 position = Vector2(0, -200)
 texture = ExtResource("11_81wt4")
 centered = false
@@ -239,3 +239,9 @@ position = Vector2(97, 18)
 sprite_frames = SubResource("SpriteFrames_opmo2")
 animation = &"bottom_right"
 autoplay = "bottom_right"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(-31, 50)
+stream = ExtResource("8_ia1n6")
+autoplay = true
+parameters/looping = true

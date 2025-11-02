@@ -10,6 +10,13 @@ class_name GameManager  extends Node2D
 @onready var win_label = get_parent().get_node("Gui").get_node("WinLabel")
 @onready var lose_label = get_parent().get_node("Gui").get_node("LoseLabel")
 
+
+# Sounds & Music
+
+@onready var background_music: AudioStreamPlayer2D = %BackgroundMusic
+@onready var victory_music: AudioStreamPlayer2D = %VictoryMusic
+@onready var defeat_music: AudioStreamPlayer2D = %DefeatMusic
+
 # Initialize the game manager and connect to player events
 func _ready() -> void:
 	# Connect to player game over signals to detect when someone loses
@@ -42,25 +49,35 @@ func display_winner(winner: int) -> void:
 	player_manager_1.set_player_pause()
 	player_manager_2.set_player_pause()
 
+	# Fade out background music smoothly
+	background_music.stop()
+	defeat_music.play()
+
 	# Wait 1.5 seconds to let final effects play out
 	await get_tree().create_timer(1.5).timeout
 
 	# Position labels and play animations based on who won
 	if winner == 1:
 		# Player 1 wins - show "You Win" on left, "You Lose" on right
-		win_label.position.x = 8
-		lose_label.position.x = 216
-		player_manager_1.player.play("victory")
-		create_victory_firework(2, 100, 100)  # Green victory firework
-		player_manager_2.player.play("defeat")
+		win_label.position.x = 28
+		lose_label.position.x = 210
+		player_manager_1.player.skin_sprite.play("victory")
+		player_manager_2.player.skin_sprite.play("defeat")
 		
 	elif winner == 2:
 		# Player 2 wins - show "You Win" on right, "You Lose" on left
 		win_label.position.x = 216
 		lose_label.position.x = 8 
-		player_manager_2.player.play("victory")
-		create_victory_firework(3, 100, 100)  # Blue victory firework
-		player_manager_1.player.play("defeat")
+		# multiply both sprite size by 4 and put them in the front.
+		player_manager_2.player.skin_sprite.scale = Vector2(2, 2)
+		player_manager_1.player.skin_sprite.scale = Vector2(2, 2)
+		# move the sprites so that their feet remains on the ground.
+		player_manager_2.player.skin_sprite.position.y -= 16
+		player_manager_1.player.skin_sprite.position.y -= 16
+		player_manager_2.player.skin_sprite.z_index = 100
+		player_manager_1.player.skin_sprite.z_index = 100
+		player_manager_2.player.skin_sprite.play("victory")
+		player_manager_1.player.skin_sprite.play("defeat")
 
 	# Animate the labels moving to center screen
 	_animate_labels_to_center()

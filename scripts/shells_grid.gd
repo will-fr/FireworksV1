@@ -4,12 +4,21 @@ var shells_grid: Array = []
 var plates:Array = []
 var nb_shells_per_batch:int = 2
 var nb_junk:int = 0  # Amount of junk collected (due to other players' fireworks)
+@export var player_id: int = 1
+
+
+@onready var shell_pop_sound: AudioStreamPlayer2D = %ShellPop
+@onready var shell_drop_sound: AudioStreamPlayer2D = %ShellDrop
+@onready var column_lift_sound: AudioStreamPlayer2D = %ColumnLift
+@onready var column_drop_sound: AudioStreamPlayer2D = %ColumnDrop
+@onready var big_firework_launch_sound: AudioStreamPlayer2D = %BigFireworkLaunch
 
 # Initialize the 2D shells grid with empty cells
 func _ready():
 	init_grid()
 	create_plates()
 	fill_bottom_shells()
+
 
 # this function initialize the shells grid with empty cells. 
 func init_grid():	
@@ -28,8 +37,11 @@ func create_plates():
 		add_child(new_plate)
 		new_plate.position = Vector2(column * Globals.BLOCK_SIZE + 8, 142)
 		plates.append(new_plate)
-		# tint the plates to blue
-		new_plate.modulate = Color(0.2, 0.2, 1.0)  # Set a blue tint
+		# tint the plates
+		if player_id == 1:
+			new_plate.modulate = Color(0.2, 0.2, 1.0)  # Set a blue tint
+		else:
+			new_plate.modulate = Color(1.0, 0.2, 0.2)  # Set a red tint
 
 # this function fills the bottom row with shells, including exactly one BOTTOM_SHELL
 func fill_bottom_shells():
@@ -76,20 +88,19 @@ func drop_waiting_shells() -> void:
 			if shells_grid[column][row] != null and shells_grid[column][row].get_status() == Shell.status.WAITING:
 				shells_grid[column][row].set_status(Shell.status.FALLING)
 
-
-
-
 func lift_column(column: int):
 	for row in Globals.NUM_ROWS:
 		if shells_grid[column][row] != null and shells_grid[column][row].get_status() == Shell.status.DROPPED:
 			shells_grid[column][row].position.y -= 2
 	plates[column].position.y -= 2
+	column_lift_sound.play()
 
 func drop_column(column: int):
 	for row in Globals.NUM_ROWS:
 		if shells_grid[column][row] != null and shells_grid[column][row].get_status() == Shell.status.DROPPED:
 			shells_grid[column][row].position.y += 2
 	plates[column].position.y += 2
+	column_drop_sound.play()
 
 	# Spawn new shells at random columns every x seconds
 func add_new_shells():
@@ -127,7 +138,8 @@ func drop_shell(column: int, row: int):
 		get_parent().create_small_firework(pos_x, pos_y, shells_grid[column][row].get_shell_type())
 		remove_shell(column,row)  # Remove the current firework
 		remove_shell(column,row-1)  # Remove the matching firework below
-		get_parent().add_points(Globals.POP_SCORE, pos_x,pos_y )  # Add points for popping fireworks	
+		get_parent().add_points(Globals.POP_SCORE, pos_x,pos_y )  # Add points for popping fireworks
+		shell_pop_sound.play()
 		return
 	# IF I'M A TOP SHELL, I LOOK FOR A BOTTOM SHELL, OTHERWISE I POP ALONE.
 	if shells_grid[column][row].get_shell_type() == Globals.TOP_SHELL:
@@ -136,13 +148,16 @@ func drop_shell(column: int, row: int):
 			# If we find a BOTTOM_SHELL, we pop the big firework.
 			if shells_grid[column][row_check].get_shell_type() == Globals.BOTTOM_SHELL:
 				get_parent().create_big_firework(column,row,row_check)
+				big_firework_launch_sound.play()
 				return  # Exit after popping the whole column
 		# if not found, we just pop the TOP_SHELL alone.
 		get_parent().create_small_firework(shells_grid[column][row].position.x + float(Globals.BLOCK_SIZE) / 2.0, shells_grid[column][row].position.y + float(Globals.BLOCK_SIZE) / 2.0, Globals.TOP_SHELL)
 		remove_shell(column,row)
+		shell_drop_sound.play()
 		return  
 	# DEFAULT CASE: If the shell is not already dropped, mark it as dropped.
 	shells_grid[column][row].set_status(Shell.status.DROPPED)  # Mark as stuck
+	shell_drop_sound.play()
 	if row == Globals.NUM_ROWS - 1:
 		get_parent().game_over(column,row)
 	return

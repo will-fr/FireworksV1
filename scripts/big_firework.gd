@@ -41,11 +41,8 @@ func _create_random_firework():
 	var fireworks_shells_rand = []
 	var load_scene_one = load("res://scenes/shell.tscn")
 
-	for i in range(5):
-		
+	for i in range(2):
 		var new_instance = load_scene_one.instantiate()
-
-		
 		# Generate random shell type, but ensure top and bottom are correct
 		var shell_type: int
 		if i == 0:
@@ -53,7 +50,8 @@ func _create_random_firework():
 		elif i == 4:
 			shell_type = Globals.BOTTOM_SHELL
 		else:
-			shell_type = randi() % (Globals.TYPES_OF_BLOCK) + 1  # Random middle shell
+			shell_type = Globals.YELLOW
+			
 		
 		print("Random Shell, i=", i, ", shell_type=", shell_type)
 		
@@ -150,6 +148,9 @@ func _create_firework_bouquet():
 
 	for i in firework_shells.size():
 		var shell = firework_shells[i]
+
+		if shell.shell_type == Globals.TOP_SHELL or shell.shell_type == Globals.BOTTOM_SHELL:
+			break
 		# Create a timer for each firework with increasing delay
 		var timer = Timer.new()
 		add_child(timer)
