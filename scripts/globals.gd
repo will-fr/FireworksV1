@@ -3,7 +3,7 @@ extends Node
 # Global constants and variables for the fireworks game
 
 # Number of columns in the game grid
-const NUM_COLUMNS = 7
+const NUM_COLUMNS = 4
 
 # Number of rows in the game grid
 const NUM_ROWS = 8
