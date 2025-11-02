@@ -5,7 +5,7 @@ extends Node2D
 @onready var background_mountains: Sprite2D = $BackgroundMountains
 
 # UI elements for animation
-@onready var menu_buttons: Control = $MenuButtons
+@onready var ui: Control = %UI
 @onready var pyropop_title: Sprite2D = $PyropopTitle
 
 # Timer for repeating fireworks
@@ -16,10 +16,6 @@ var ui_manager: Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# Initialize UI management system
-	ui_manager = preload("res://scripts/title_ui_management.gd").new()
-	add_child(ui_manager)
-	ui_manager.initialize(self)
 	
 	# Set up initial states for animations
 	setup_initial_states()
@@ -29,15 +25,13 @@ func _ready() -> void:
 
 # Set up initial positions and visibility for animation elements
 func setup_initial_states() -> void:
-	# Hide menu buttons off-screen to the right
-	menu_buttons.position.x = 400  # Move off-screen to the right
 	
 	# Make title sprite invisible initially
 	pyropop_title.modulate.a = 0.0
 	
 	# Hide selection corners initially (handled by UI manager)
-	var selection = $Selection
-	selection.visible = false
+	#var selection = $Selection
+	#selection.visible = false
 
 # Animate both background elements and coordinate the sequence
 func animate_backgrounds() -> void:
@@ -61,10 +55,13 @@ func animate_ui_elements() -> void:
 	var menu_tween = create_tween()
 	var title_tween = create_tween()
 	
-	# Quickly bring menu buttons from right side (0.5 seconds)
-	menu_tween.tween_property(menu_buttons, "position:x", 205, 0.5)
+	# Bring the menu buttons from the bottom in 0.5 seconds
+	%MainMenu.position = Vector2(207, 120)
+	%MainMenu.z_index = -1
 	
-	# Fade-in the title sprite (0.5 seconds)  
+	menu_tween.tween_property(%MainMenu, "position:y", 12, 0.5)
+
+	# Fade-in the title sprite (0.5 seconds)
 	title_tween.tween_property(pyropop_title, "modulate:a", 1.0, 0.5)
 	
 	# When UI animations complete, notify the UI manager and launch fireworks
@@ -73,7 +70,7 @@ func animate_ui_elements() -> void:
 # Called when UI animations are complete
 func _on_ui_animations_complete() -> void:
 	# Notify UI manager that animations are complete
-	ui_manager.on_ui_animations_complete()
+	ui.on_ui_animations_complete()
 	
 	# Launch fireworks
 	launch_fireworks()

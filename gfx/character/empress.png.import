@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2x4nl2fiinq0"
-path="res://.godot/imported/menu_button2.png-7697ac7adc47b5eb89189e8b906b9648.ctex"
+uid="uid://dcgedupt7dv8y"
+path="res://.godot/imported/empress.png-b73fbe26279e048d3b88be7679d30031.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scripts/menu_button2.png"
-dest_files=["res://.godot/imported/menu_button2.png-7697ac7adc47b5eb89189e8b906b9648.ctex"]
+source_file="res://gfx/character/empress.png"
+dest_files=["res://.godot/imported/empress.png-b73fbe26279e048d3b88be7679d30031.ctex"]
 
 [params]
 

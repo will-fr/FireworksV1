@@ -155,7 +155,12 @@ func _launch_game():
 
 	
 func _on_cpu_lag_timer_timeout():
-	if actions_needed.size()>0:
+	#if the player is not active, I do nothing. 
+	if !player.player_is_active:
+		return
+
+	# otherwise, I perform the actions needed, or update the strategy.
+	if actions_needed.size()>0: 
 		var action = actions_needed.pop_front()
 		execute_action(action)
 	else:
@@ -560,7 +565,7 @@ func evaluate_column (original_column_index : int, target_column_index : int) ->
 	# STRATEGY RULE 3: Height Management
 	# If no match is possible, prefer the shortest column to keep grid balanced
 	if !has_match:
-		score -= 300 * column_height
+		score = -300 * column_height
 
 	if !has_match and rockets_sizes[target_column_index] > 0:
 		score += 100 * rockets_sizes[target_column_index]
@@ -569,6 +574,8 @@ func evaluate_column (original_column_index : int, target_column_index : int) ->
 	if top_dropped_shells[target_column_index] != null and falling_shells[original_column_index] != null:
 		if falling_shells[original_column_index] == -Globals.TOP_SHELL:
 			score += 40 * rockets_sizes[target_column_index]
+
+	# strategy RULE 5: AVOID PLACING SHELLS IN FULL COLUMNS
 
 	return score
 

@@ -140,9 +140,12 @@ func create_big_firework(column,top_row,bottom_row):
 
 	add_child(new_big_firework)
 
-func game_over(column_arg,row_arg):
+func game_over(column_arg=0,row_arg=0):
 	print("Game Over! Final Score: ", score)
 	set_player_pause()
+
+	# emit the game over signal
+	emit_signal("player_game_over")
 
 	# fade out the main background music in 2 seconds.
 	var background_music : AudioStreamPlayer2D = %BackgroundMusic
@@ -189,7 +192,3 @@ func turn_row_gray(row: int):
 		var block_to_gray_sound : AudioStreamPlayer2D = %BlockToGray
 		if block_to_gray_sound:
 			block_to_gray_sound.play()
-
-	if row == 0:
-		# Emit game_over signal after the last row is processed
-		emit_signal("player_game_over")

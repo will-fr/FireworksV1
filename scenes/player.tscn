@@ -955,7 +955,6 @@ autoplay = "idle"
 centered = false
 
 [node name="baldy" type="AnimatedSprite2D" parent="."]
-visible = false
 sprite_frames = SubResource("SpriteFrames_1da1t")
 animation = &"victory"
 autoplay = "idle"

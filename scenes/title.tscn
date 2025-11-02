@@ -1,6 +1,7 @@
-[gd_scene load_steps=26 format=3 uid="uid://cx511hdhtnbv2"]
+[gd_scene load_steps=27 format=3 uid="uid://cx511hdhtnbv2"]
 
 [ext_resource type="Script" uid="uid://ceftwxcfqbqh0" path="res://scripts/title.gd" id="1_yql1r"]
+[ext_resource type="Script" uid="uid://joon5256abj4" path="res://scripts/title_ui_management.gd" id="2_hiwto"]
 [ext_resource type="Texture2D" uid="uid://ddrd1qnbvwyme" path="res://gfx/title/background_sky2.png" id="8_81wt4"]
 [ext_resource type="AudioStream" uid="uid://ft8hr1yvtb2a" path="res://sfx/music/StaringAtReflections.mp3" id="8_ia1n6"]
 [ext_resource type="FontFile" uid="uid://dh8vtie46ogmc" path="res://fonts/8-bit Arcade In.ttf" id="9_w65of"]
@@ -147,49 +148,123 @@ animations = [{
 [node name="TitleScene" type="Node2D"]
 script = ExtResource("1_yql1r")
 
-[node name="MenuButtons" type="VBoxContainer" parent="."]
-z_index = 100
-offset_left = 205.0
-offset_top = 9.0
-offset_right = 305.0
-offset_bottom = 115.0
+[node name="UI" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+focus_mode = 2
+mouse_default_cursor_shape = 2
+script = ExtResource("2_hiwto")
+
+[node name="MainMenu" type="VBoxContainer" parent="UI"]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 0
+offset_left = 332.0
+offset_top = 5.0
+offset_right = 432.0
+offset_bottom = 116.0
 theme_override_constants/separation = 10
+alignment = 1
 
-[node name="P1vsCPUButton" type="Button" parent="MenuButtons"]
+[node name="OnePlayerButton" type="Button" parent="UI/MainMenu" groups=["menu_button"]]
+unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_top = NodePath("../ExitButton")
-focus_neighbor_bottom = NodePath("../P1vsP2Button")
-focus_next = NodePath("../P1vsP2Button")
-focus_previous = NodePath("../ExitButton")
+focus_neighbor_left = NodePath("../TwoPlayersButton")
+focus_neighbor_top = NodePath("../TwoPlayersButton")
+focus_neighbor_right = NodePath("../TwoPlayersButton")
+focus_neighbor_bottom = NodePath("../TwoPlayersButton")
+focus_next = NodePath("../TwoPlayersButton")
+focus_previous = NodePath("../TwoPlayersButton")
 theme_override_fonts/font = ExtResource("9_w65of")
-text = "P1 vs CPU"
+text = "1 PLAYER"
 
-[node name="P1vsP2Button" type="Button" parent="MenuButtons"]
+[node name="TwoPlayersButton" type="Button" parent="UI/MainMenu" groups=["menu_button"]]
+unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_top = NodePath("../P1vsCPUButton")
-focus_neighbor_bottom = NodePath("../SettingsButton")
-focus_next = NodePath("../SettingsButton")
-focus_previous = NodePath("../P1vsCPUButton")
+focus_neighbor_left = NodePath("../OnePlayerButton")
+focus_neighbor_top = NodePath("../OnePlayerButton")
+focus_neighbor_right = NodePath("../OnePlayerButton")
+focus_neighbor_bottom = NodePath("../OnePlayerButton")
+focus_next = NodePath("../OnePlayerButton")
+focus_previous = NodePath("../OnePlayerButton")
 theme_override_fonts/font = ExtResource("9_w65of")
-text = "P1 vs P2"
+text = "2 PLAYERS"
 
-[node name="SettingsButton" type="Button" parent="MenuButtons"]
-layout_mode = 2
-focus_neighbor_top = NodePath("../P1vsP2Button")
-focus_neighbor_bottom = NodePath("../ExitButton")
-focus_next = NodePath("../ExitButton")
-focus_previous = NodePath("../P1vsP2Button")
-theme_override_fonts/font = ExtResource("9_w65of")
-text = "Settings"
+[node name="OnePlayerMenu" type="VBoxContainer" parent="UI"]
+unique_name_in_owner = true
+z_index = 2
+layout_mode = 0
+offset_left = 440.0
+offset_top = 6.0
+offset_right = 540.0
+offset_bottom = 117.0
+theme_override_constants/separation = 3
+alignment = 1
 
-[node name="ExitButton" type="Button" parent="MenuButtons"]
+[node name="EasyButton" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_top = NodePath("../SettingsButton")
-focus_neighbor_bottom = NodePath("../P1vsCPUButton")
-focus_next = NodePath("../P1vsCPUButton")
-focus_previous = NodePath("../SettingsButton")
+focus_neighbor_left = NodePath("../Back")
+focus_neighbor_top = NodePath("../Back")
+focus_neighbor_right = NodePath("../Hard")
+focus_neighbor_bottom = NodePath("../Hard")
+focus_next = NodePath("../Hard")
+focus_previous = NodePath("../Back")
 theme_override_fonts/font = ExtResource("9_w65of")
-text = "Exit"
+text = "Easy"
+
+[node name="Hard" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../EasyButton")
+focus_neighbor_top = NodePath("../EasyButton")
+focus_neighbor_right = NodePath("../Legendary")
+focus_neighbor_bottom = NodePath("../Legendary")
+focus_next = NodePath("../Legendary")
+focus_previous = NodePath("../EasyButton")
+theme_override_fonts/font = ExtResource("9_w65of")
+disabled = true
+text = "Hard"
+
+[node name="Legendary" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../Hard")
+focus_neighbor_top = NodePath("../Hard")
+focus_neighbor_right = NodePath("../Impossible")
+focus_neighbor_bottom = NodePath("../Impossible")
+focus_next = NodePath("../Impossible")
+focus_previous = NodePath("../Hard")
+theme_override_fonts/font = ExtResource("9_w65of")
+disabled = true
+text = "Legendary"
+
+[node name="Impossible" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../Legendary")
+focus_neighbor_top = NodePath("../Legendary")
+focus_neighbor_right = NodePath("../Back")
+focus_neighbor_bottom = NodePath("../Back")
+focus_next = NodePath("../Back")
+focus_previous = NodePath("../Legendary")
+theme_override_fonts/font = ExtResource("9_w65of")
+disabled = true
+text = "Impossible"
+
+[node name="Back" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../Impossible")
+focus_neighbor_top = NodePath("../Impossible")
+focus_neighbor_right = NodePath("../EasyButton")
+focus_neighbor_bottom = NodePath("../EasyButton")
+focus_next = NodePath("../EasyButton")
+focus_previous = NodePath("../Impossible")
+theme_override_fonts/font = ExtResource("9_w65of")
+text = "Back"
 
 [node name="BackgroundSky" type="Sprite2D" parent="."]
 z_index = -100
@@ -213,8 +288,10 @@ position = Vector2(81, 62)
 texture = ExtResource("11_6civk")
 
 [node name="Selection" type="Node2D" parent="."]
+unique_name_in_owner = true
+visible = false
 z_index = 100
-position = Vector2(205, 9)
+position = Vector2(204, 25)
 
 [node name="corner_top_left" type="AnimatedSprite2D" parent="Selection"]
 position = Vector2(3, 1)
@@ -240,8 +317,12 @@ sprite_frames = SubResource("SpriteFrames_opmo2")
 animation = &"bottom_right"
 autoplay = "bottom_right"
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="BackgroundMusic" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(-31, 50)
 stream = ExtResource("8_ia1n6")
 autoplay = true
 parameters/looping = true
+
+[connection signal="pressed" from="UI/MainMenu/OnePlayerButton" to="UI" method="_on_one_player_button_pressed"]
+[connection signal="pressed" from="UI/OnePlayerMenu/EasyButton" to="UI" method="_on_easy_button_pressed"]
+[connection signal="pressed" from="UI/OnePlayerMenu/Back" to="UI" method="_on_back_pressed"]

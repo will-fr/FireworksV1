@@ -25,6 +25,11 @@ var cpu_player : CpuPlayer
 @onready var player_manager: PlayerManager = get_parent()
 
 func _ready() -> void:
+	$girl.visible = false
+	$baldy.visible = false
+	$spikey.visible = false
+
+
 	player_manager.player_paused.connect(_on_player_paused)
 	player_manager.player_resumed.connect(_on_player_resumed)
 

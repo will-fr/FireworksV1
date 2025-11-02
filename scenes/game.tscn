@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://csrrbgq4oiab5"]
+[gd_scene load_steps=28 format=3 uid="uid://csrrbgq4oiab5"]
 
 [ext_resource type="Script" uid="uid://4og7s3efp4o0" path="res://scripts/game_manager.gd" id="1_ir15t"]
 [ext_resource type="Script" uid="uid://bxjsqbgpo8r6y" path="res://scripts/player_manager.gd" id="2_ir15t"]
@@ -25,13 +25,13 @@
 [ext_resource type="Texture2D" uid="uid://dfmysfhcn6cjk" path="res://gfx/shells/junk.png" id="23_bt5mj"]
 [ext_resource type="AudioStream" uid="uid://cbs1rsehij7pc" path="res://sfx/music/lose.ogg" id="24_e1j6l"]
 [ext_resource type="AudioStream" uid="uid://dg7cfp24rfc2g" path="res://sfx/sounds/ding.wav" id="25_pl11u"]
-[ext_resource type="Texture2D" uid="uid://capl0uorijgxd" path="res://gfx/ui/menu_button.png" id="26_bhx41"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37s47"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
+border_width_bottom = 2
 border_color = Color(0.196078, 0.196078, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bt5mj"]
@@ -39,6 +39,7 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
+border_width_bottom = 2
 border_color = Color(1, 0.196078, 0.196078, 1)
 
 [node name="Game" type="Node2D"]
@@ -48,43 +49,23 @@ rotation = -0.000955061
 script = ExtResource("1_ir15t")
 
 [node name="Background2" parent="." instance=ExtResource("2_ssvqc")]
-position = Vector2(0, -5)
+position = Vector2(0, -6)
 
 [node name="Gui" type="Node2D" parent="."]
 
-[node name="LoseLabelOld" type="Label" parent="Gui"]
-z_index = 5
-offset_left = 216.0
-offset_top = -29.0
-offset_right = 311.0
-offset_bottom = -6.0
-text = "Defeat"
-horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
-
 [node name="LoseLabel" type="Sprite2D" parent="Gui"]
 z_index = 500
-position = Vector2(220, -37)
+position = Vector2(25, -30)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_ca42v")
 centered = false
 
 [node name="WinLabel" type="Sprite2D" parent="Gui"]
 z_index = 500
-position = Vector2(28, -46)
+position = Vector2(226, -27)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("4_rysoc")
 centered = false
-
-[node name="WinLabelOld" type="Label" parent="Gui"]
-z_index = 5
-offset_left = 8.0
-offset_top = -28.0
-offset_right = 103.0
-offset_bottom = -5.0
-text = "Victory!"
-horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
 
 [node name="ScoreColorRect" type="ColorRect" parent="Gui"]
 offset_left = 126.0
@@ -180,9 +161,9 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="PlayerManager1"]
 offset_left = 6.0
-offset_top = 12.0
+offset_top = 14.0
 offset_right = 121.0
-offset_bottom = 147.0
+offset_bottom = 149.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37s47")
 metadata/_edit_use_anchors_ = true
 
@@ -190,8 +171,8 @@ metadata/_edit_use_anchors_ = true
 wait_time = 0.5
 
 [node name="Player" parent="PlayerManager1" instance=ExtResource("6_37s47")]
-z_index = 5
-position = Vector2(0, 143)
+z_index = 200
+position = Vector2(0, 144)
 
 [node name="WillDebug" type="RichTextLabel" parent="PlayerManager1"]
 offset_left = -68.0
@@ -288,7 +269,8 @@ wait_time = 0.05
 autostart = true
 
 [node name="Player" parent="PlayerManager2" instance=ExtResource("6_37s47")]
-position = Vector2(0, 143)
+z_index = 200
+position = Vector2(67.5, 144)
 player_type = 2
 
 [node name="WillDebug" type="RichTextLabel" parent="PlayerManager2"]
@@ -396,22 +378,16 @@ unique_name_in_owner = true
 stream = ExtResource("22_37s47")
 volume_db = -5.0
 playback_type = 1
-parameters/looping = true
 
 [node name="DefeatMusic" type="AudioStreamPlayer2D" parent="Sfx"]
 unique_name_in_owner = true
 stream = ExtResource("24_e1j6l")
 playback_type = 1
-parameters/looping = true
 
 [node name="Ding" type="AudioStreamPlayer2D" parent="Sfx"]
 unique_name_in_owner = true
 stream = ExtResource("25_pl11u")
 playback_type = 1
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(403, 131)
-texture = ExtResource("26_bhx41")
 
 [connection signal="timeout" from="Gui/GameTimer" to="Gui/GameTimer" method="_on_timeout"]
 [connection signal="timeout" from="PlayerManager1/PlayerTimer" to="PlayerManager1" method="_on_player_timer_timeout"]

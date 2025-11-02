@@ -27,6 +27,11 @@ func _ready() -> void:
 	player_manager_1.connect("points_added", Callable(self, "_on_player1_points_added"))
 	player_manager_2.connect("points_added", Callable(self, "_on_player2_points_added"))
 
+	# debug: wait 5 seconds and then trigger a win for player 1
+	await get_tree().create_timer(5.0).timeout
+	player_manager_2.game_over()
+	#_on_player1_game_over()
+
 # Handle when Player 1 loses - Player 2 wins
 func _on_player1_game_over():
 	display_winner(2)
@@ -48,36 +53,30 @@ func display_winner(winner: int) -> void:
 	# Pause both players to stop gameplay
 	player_manager_1.set_player_pause()
 	player_manager_2.set_player_pause()
-
-	# Fade out background music smoothly
-	background_music.stop()
-	defeat_music.play()
-
+	
 	# Wait 1.5 seconds to let final effects play out
 	await get_tree().create_timer(1.5).timeout
 
 	# Position labels and play animations based on who won
 	if winner == 1:
 		# Player 1 wins - show "You Win" on left, "You Lose" on right
-		win_label.position.x = 28
-		lose_label.position.x = 210
+		win_label.position.x = 34
+		lose_label.position.x = 220
 		player_manager_1.player.skin_sprite.play("victory")
 		player_manager_2.player.skin_sprite.play("defeat")
+		victory_music.play()
+		victory_music.finished.connect(_show_game_over_modal.bind(winner), CONNECT_ONE_SHOT)
 		
 	elif winner == 2:
 		# Player 2 wins - show "You Win" on right, "You Lose" on left
-		win_label.position.x = 216
-		lose_label.position.x = 8 
-		# multiply both sprite size by 4 and put them in the front.
-		player_manager_2.player.skin_sprite.scale = Vector2(2, 2)
-		player_manager_1.player.skin_sprite.scale = Vector2(2, 2)
-		# move the sprites so that their feet remains on the ground.
-		player_manager_2.player.skin_sprite.position.y -= 16
-		player_manager_1.player.skin_sprite.position.y -= 16
+		win_label.position.x = 226
+		lose_label.position.x = 25
 		player_manager_2.player.skin_sprite.z_index = 100
 		player_manager_1.player.skin_sprite.z_index = 100
 		player_manager_2.player.skin_sprite.play("victory")
 		player_manager_1.player.skin_sprite.play("defeat")
+		defeat_music.play()
+		defeat_music.finished.connect(_show_game_over_modal.bind(winner), CONNECT_ONE_SHOT)
 
 	# Animate the labels moving to center screen
 	_animate_labels_to_center()
@@ -91,13 +90,12 @@ func _animate_labels_to_center():
 	
 	# Create tween animation for the win label moving to center
 	var win_tween = create_tween()
-	win_tween.tween_property(win_label, "position:y", screen_center_y, 5.0)
+	win_tween.tween_property(win_label, "position:y", 72, 5.0)
 	# When animation completes, reload the scene to restart the game
-	win_tween.tween_callback(_reload_scene)
 
 	# Create tween animation for the lose label moving to center
 	var lose_tween = create_tween()
-	lose_tween.tween_property(lose_label, "position:y", screen_center_y, 5.0)
+	lose_tween.tween_property(lose_label, "position:y", 72, 5.0)
 
 # Create a big firework effect to celebrate victory
 func create_victory_firework(color_tint: int, fw_x: float, fw_y: float):
@@ -117,3 +115,15 @@ func create_victory_firework(color_tint: int, fw_x: float, fw_y: float):
 # Reload the current scene to restart the game
 func _reload_scene():
 	get_tree().reload_current_scene()
+
+
+func _show_game_over_modal(winner:int):
+	print("GameManager: Showing game over modal for winner: ", winner)
+	var modal_scene = load("res://scenes/modal_empress.tscn")
+	var modal_instance = modal_scene.instantiate()
+	
+	# Initialize the modal with the winner information
+	#modal_instance.initialize(winner)
+	
+	# Add the modal to the scene tree
+	get_parent().add_child(modal_instance)

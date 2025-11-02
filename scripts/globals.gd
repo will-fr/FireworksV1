@@ -3,7 +3,7 @@ extends Node
 # Global constants and variables for the fireworks game
 
 # Number of columns in the game grid
-const NUM_COLUMNS = 4
+const NUM_COLUMNS = 7
 
 # Number of rows in the game grid
 const NUM_ROWS = 8
@@ -28,7 +28,11 @@ const SHELL_NAMES = ["","BOTTOM", "TOP", "GREEN", "RED", "BLUE", "YELLOW"]
 const FIREWORK_SCORE = [20, 30, 50, 100, 300, 500, 1000]
 const POP_SCORE = 10  # Points awarded for popping shells
 
-var game_mode: String = "ENDLESS"  # Can be "NORMAL" or "ENDLESS"
-var game_difficulty: String = "EASY"  # Can be "EASY",
+const EASY_LEVEL = 1
+const HARD_LEVEL = 2
+const LEGENDARY_LEVEL = 3
+const IMPOSSIBLE_LEVEL = 4
+
+var difficulty_level = Globals.EASY_LEVEL
 
 
