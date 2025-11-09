@@ -1,17 +1,14 @@
-[gd_scene load_steps=28 format=3 uid="uid://csrrbgq4oiab5"]
+[gd_scene load_steps=24 format=3 uid="uid://csrrbgq4oiab5"]
 
 [ext_resource type="Script" uid="uid://4og7s3efp4o0" path="res://scripts/game_manager.gd" id="1_ir15t"]
 [ext_resource type="Script" uid="uid://bxjsqbgpo8r6y" path="res://scripts/player_manager.gd" id="2_ir15t"]
-[ext_resource type="FontFile" uid="uid://dkd1ks3kdq65r" path="res://fonts/courier-bold.ttf" id="2_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://b8v1c0fsxfjrl" path="res://scenes/background.tscn" id="2_ssvqc"]
 [ext_resource type="Texture2D" uid="uid://c30ma6didahth" path="res://gfx/ui/lose.png" id="3_ca42v"]
 [ext_resource type="Texture2D" uid="uid://oo4nhf7kepfy" path="res://gfx/ui/win.png" id="4_rysoc"]
 [ext_resource type="Script" uid="uid://0i2qmm0j501t" path="res://scripts/game_timer.gd" id="5_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://d2mj0va8aptt7" path="res://scenes/player.tscn" id="6_37s47"]
-[ext_resource type="Texture2D" uid="uid://d18tqqviktra1" path="res://gfx/character/girl_bg.png" id="6_trtic"]
 [ext_resource type="Script" uid="uid://d1k0rapoq0sy4" path="res://scripts/shells_grid.gd" id="11_e1j6l"]
-[ext_resource type="Script" uid="uid://cajqk4votqbim" path="res://scripts/will_debug.gd" id="13_kvuet"]
-[ext_resource type="Texture2D" uid="uid://egokchivnp20" path="res://gfx/character/baldy_bg.png" id="13_trtic"]
+[ext_resource type="Script" uid="uid://cjv00vcpqedt7" path="res://scripts/junk_manager.gd" id="12_bhx41"]
 [ext_resource type="FontFile" uid="uid://dgj6kbvxj2hu4" path="res://fonts/pixel.ttf" id="16_ca42v"]
 [ext_resource type="FontFile" uid="uid://dh8vtie46ogmc" path="res://fonts/8-bit Arcade In.ttf" id="16_rysoc"]
 [ext_resource type="AudioStream" uid="uid://cdfqgdghre1b0" path="res://sfx/sounds/08_Bite_04.wav" id="17_37s47"]
@@ -22,7 +19,6 @@
 [ext_resource type="AudioStream" uid="uid://bpfgkfv6xeqrf" path="res://sfx/sounds/Drop.wav" id="19_37s47"]
 [ext_resource type="AudioStream" uid="uid://b64spl3ym8dym" path="res://sfx/music/Dragon Dance - Loop.mp3" id="21_5newe"]
 [ext_resource type="AudioStream" uid="uid://o23eyew7f34l" path="res://sfx/music/Victorious.ogg" id="22_37s47"]
-[ext_resource type="Texture2D" uid="uid://dfmysfhcn6cjk" path="res://gfx/shells/junk.png" id="23_bt5mj"]
 [ext_resource type="AudioStream" uid="uid://cbs1rsehij7pc" path="res://sfx/music/lose.ogg" id="24_e1j6l"]
 [ext_resource type="AudioStream" uid="uid://dg7cfp24rfc2g" path="res://sfx/sounds/ding.wav" id="25_pl11u"]
 
@@ -49,7 +45,7 @@ rotation = -0.000955061
 script = ExtResource("1_ir15t")
 
 [node name="Background2" parent="." instance=ExtResource("2_ssvqc")]
-position = Vector2(0, -6)
+position = Vector2(0, 1)
 
 [node name="Gui" type="Node2D" parent="."]
 
@@ -68,6 +64,7 @@ texture = ExtResource("4_rysoc")
 centered = false
 
 [node name="ScoreColorRect" type="ColorRect" parent="Gui"]
+visible = false
 offset_left = 126.0
 offset_top = 6.0
 offset_right = 194.0
@@ -76,6 +73,7 @@ color = Color(1, 1, 1, 0.196078)
 metadata/_edit_use_anchors_ = true
 
 [node name="ScoreText" type="Label" parent="Gui"]
+visible = false
 anchors_preset = -1
 anchor_left = -1.575
 anchor_right = -1.575
@@ -142,28 +140,27 @@ script = ExtResource("5_e1j6l")
 
 [node name="PlayerManager1" type="Node2D" parent="."]
 script = ExtResource("2_ir15t")
-skin = "spikey"
-
-[node name="SkinBackground" type="Sprite2D" parent="PlayerManager1"]
-visible = false
-modulate = Color(1, 1, 1, 0.466667)
-position = Vector2(64, 83)
-texture = ExtResource("6_trtic")
 
 [node name="ShellsColorRect" type="ColorRect" parent="PlayerManager1"]
 offset_left = 8.0
-offset_top = 16.0
+offset_top = 22.0
 offset_right = 120.0
-offset_bottom = 148.0
+offset_bottom = 154.0
 rotation = 0.000628789
 color = Color(1, 1, 1, 0.196078)
 metadata/_edit_use_anchors_ = true
 
+[node name="Line2D" type="Line2D" parent="PlayerManager1"]
+position = Vector2(32, 38)
+points = PackedVector2Array(-24, 1, 88, 1)
+width = 2.0
+default_color = Color(0.196078, 0.196078, 1, 1)
+
 [node name="Panel" type="Panel" parent="PlayerManager1"]
 offset_left = 6.0
-offset_top = 14.0
+offset_top = 20.0
 offset_right = 121.0
-offset_bottom = 149.0
+offset_bottom = 155.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37s47")
 metadata/_edit_use_anchors_ = true
 
@@ -172,34 +169,18 @@ wait_time = 0.5
 
 [node name="Player" parent="PlayerManager1" instance=ExtResource("6_37s47")]
 z_index = 200
-position = Vector2(0, 144)
+position = Vector2(0, 150)
 
-[node name="WillDebug" type="RichTextLabel" parent="PlayerManager1"]
-offset_left = -68.0
-offset_top = 19.0
-offset_right = 3.0
-offset_bottom = 148.0
-theme_override_fonts/normal_font = ExtResource("2_lbhrr")
-theme_override_font_sizes/normal_font_size = 5
-bbcode_enabled = true
-text = "<0><1>   <1>
-------------
-"
-scroll_active = false
-script = ExtResource("13_kvuet")
-metadata/_edit_use_anchors_ = true
-
-[node name="Line2D" type="Line2D" parent="PlayerManager1"]
-position = Vector2(32, 32)
-points = PackedVector2Array(-24, 1, 88, 1)
-width = 2.0
-default_color = Color(0.196078, 0.196078, 1, 1)
+[node name="JunkManager" type="Node2D" parent="PlayerManager1"]
+position = Vector2(9, 13)
+script = ExtResource("12_bhx41")
 
 [node name="Junk" type="Label" parent="PlayerManager1"]
-offset_left = 8.0
-offset_top = 2.0
-offset_right = 56.0
-offset_bottom = 25.0
+visible = false
+offset_left = 36.0
+offset_top = -3.0
+offset_right = 84.0
+offset_bottom = 20.0
 theme_override_fonts/font = ExtResource("16_ca42v")
 theme_override_font_sizes/font_size = 6
 text = "JUNK: "
@@ -207,16 +188,16 @@ metadata/_edit_use_anchors_ = true
 
 [node name="CountDown" parent="PlayerManager1" instance=ExtResource("17_rysoc")]
 offset_left = 24.0
-offset_top = 56.0
+offset_top = 62.0
 offset_right = 104.0
-offset_bottom = 99.0
+offset_bottom = 105.0
 text = "Go"
 
 [node name="Score" type="Label" parent="PlayerManager1"]
-offset_left = 127.0
-offset_top = 26.0
-offset_right = 167.0
-offset_bottom = 51.0
+offset_left = 78.0
+offset_top = 6.0
+offset_right = 118.0
+offset_bottom = 31.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -226,74 +207,59 @@ text = "00000"
 metadata/_edit_use_anchors_ = true
 
 [node name="ShellsGrid" type="Node2D" parent="PlayerManager1"]
+position = Vector2(0, 6)
 script = ExtResource("11_e1j6l")
 
 [node name="PlayerManager2" type="Node2D" parent="."]
 position = Vector2(192, 0)
 script = ExtResource("2_ir15t")
-
-[node name="SkinBackground" type="Sprite2D" parent="PlayerManager2"]
-visible = false
-modulate = Color(1, 1, 1, 0.466667)
-position = Vector2(64, 83)
-texture = ExtResource("13_trtic")
+skin = "spikey"
+is_left_player = false
 
 [node name="ShellsColorRect2" type="ColorRect" parent="PlayerManager2"]
 offset_left = 8.0
-offset_top = 16.0
+offset_top = 22.0
 offset_right = 120.0
-offset_bottom = 148.0
+offset_bottom = 154.0
 rotation = 0.000628789
 color = Color(1, 1, 1, 0.196078)
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="PlayerManager2"]
 offset_left = 6.0
-offset_top = 14.0
+offset_top = 20.0
 offset_right = 122.0
-offset_bottom = 149.0
+offset_bottom = 155.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bt5mj")
 metadata/_edit_use_anchors_ = true
 
-[node name="Line2D2" type="Line2D" parent="PlayerManager2"]
-position = Vector2(37, 34)
+[node name="Line2D" type="Line2D" parent="PlayerManager2"]
+position = Vector2(37, 40)
 points = PackedVector2Array(-30, 1, 85, 1)
 width = 2.0
 default_color = Color(1, 0.196078, 0.196078, 1)
 
+[node name="JunkManager" type="Node2D" parent="PlayerManager2"]
+position = Vector2(54, 13)
+script = ExtResource("12_bhx41")
+
 [node name="PlayerTimer" type="Timer" parent="PlayerManager2"]
-wait_time = 0.1
+wait_time = 0.5
 
 [node name="CpuLagTimer" type="Timer" parent="PlayerManager2"]
-wait_time = 0.05
+wait_time = 0.5
 autostart = true
 
 [node name="Player" parent="PlayerManager2" instance=ExtResource("6_37s47")]
 z_index = 200
-position = Vector2(67.5, 144)
+position = Vector2(-1, 151)
 player_type = 2
 
-[node name="WillDebug" type="RichTextLabel" parent="PlayerManager2"]
-offset_left = 133.0
-offset_top = 21.0
-offset_right = 204.0
-offset_bottom = 150.0
-theme_override_colors/table_border = Color(0, 0, 0, 1)
-theme_override_fonts/normal_font = ExtResource("2_lbhrr")
-theme_override_font_sizes/normal_font_size = 5
-bbcode_enabled = true
-text = "<0><1>   <1>
-------------
-"
-scroll_active = false
-script = ExtResource("13_kvuet")
-metadata/_edit_use_anchors_ = true
-
 [node name="Score" type="Label" parent="PlayerManager2"]
-offset_left = -39.0
-offset_top = 14.0
-offset_right = 19.0
-offset_bottom = 26.0
+offset_left = 10.0
+offset_top = 6.0
+offset_right = 68.0
+offset_bottom = 18.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("16_rysoc")
@@ -303,29 +269,26 @@ metadata/_edit_use_anchors_ = true
 
 [node name="CountDown" parent="PlayerManager2" instance=ExtResource("17_rysoc")]
 offset_left = 28.0
-offset_top = 57.0
+offset_top = 63.0
 offset_right = 108.0
-offset_bottom = 100.0
+offset_bottom = 106.0
 theme_override_colors/font_color = Color(1, 0.196078, 0.196078, 1)
 text = "Go"
 
 [node name="Junk" type="Label" parent="PlayerManager2"]
-offset_left = 9.0
-offset_top = 2.0
-offset_right = 57.0
-offset_bottom = 25.0
+visible = false
+offset_left = 44.0
+offset_right = 92.0
+offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("16_ca42v")
 theme_override_font_sizes/font_size = 6
 text = "JUNK: "
 metadata/_edit_use_anchors_ = true
 
 [node name="ShellsGrid" type="Node2D" parent="PlayerManager2"]
+position = Vector2(0, 6)
 script = ExtResource("11_e1j6l")
 player_id = 2
-
-[node name="Junk" type="Sprite2D" parent="."]
-position = Vector2(101, 8)
-texture = ExtResource("23_bt5mj")
 
 [node name="Sfx" type="Node" parent="."]
 

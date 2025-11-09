@@ -1,40 +1,40 @@
 class_name BigFirework extends Node2D
 
 signal firework_completed(type: int, colors: Array)
-signal points_to_add (additional_points,pos_x,pos_y)
+signal points_to_add (additional_points: int, firework_global_position: Vector2)
 
 
 #var player_manager 
+var is_title_firework: bool = false
 var firework_shells : Array = []
-
 var position_x: float
 var initial_y: float= 145.0 # initial position of the tail, outside the screen.
 var target_y: float
-
 var destroy_timer: Timer
 
 func _init(firework_shells_arg=null):
 	
+	# if the firework shells are not provided, this is because we are creating a random firework for the title screen.
 	if firework_shells_arg == null:
 		firework_shells = _create_random_firework()
 		position_x = randf_range(30, 290 )
 		target_y = randf_range(50, 80 )
 		z_index = -1
-	
 		_create_and_animate_tail()
+		is_title_firework = true
 	else:
 		print("Firework shells created: ", firework_shells_arg)
 		firework_shells = firework_shells_arg
 
-	# we mark the top shell as being dropped, and light the bottom shell, with a connector on bottom shell's animation.
+		# we mark the top shell as being dropped, and light the bottom shell, with a connector on bottom shell's animation.
 		firework_shells[0].set_status(Shell.status.DROPPED)
 		firework_shells[-1].play("1_light")
 		firework_shells[-1].animation_finished.connect(_on_big_rocket_assembled)
 
+		# position the firework on the other side of the screen depending on which player created it.
 		position_x = firework_shells[0].position.x + 8
-
+		print ("BigFirework: init at position : X = : ", position_x, " Y = ", initial_y)		
 		target_y = randf_range(50, 80 )
-		z_index = -1
 	
 # This function creates a random firework. Useful for title screen. 
 func _create_random_firework():
@@ -52,7 +52,6 @@ func _create_random_firework():
 		else:
 			shell_type = Globals.YELLOW
 			
-		
 		print("Random Shell, i=", i, ", shell_type=", shell_type)
 		
 		# Position the shell correctly in the stack (16 pixels apart)
@@ -91,17 +90,18 @@ func create_flashing_effect():
 		flash_tween.set_loops(3)  # Flash 3 times
 		
 		# Flash by modulating between normal and bright white
-		flash_tween.tween_property(shell, "modulate", Color.WHITE * 2.0, 0.1)  # Bright flash
-		flash_tween.tween_property(shell, "modulate", Color.WHITE, 0.1)  # Back to normal
+		flash_tween.tween_property(shell, "modulate", Color.WHITE * 2.0, 0.05)  # Bright flash
+		flash_tween.tween_property(shell, "modulate", Color.WHITE, 0.05)  # Back to normal
 	
 	# Wait for flashing to complete before launching
 	var launch_timer = Timer.new()
 	add_child(launch_timer)
-	launch_timer.wait_time = 0.05  # Wait for 3 flashes to complete
+	launch_timer.wait_time = 0.2  # Wait for 3 flashes to complete
 	launch_timer.one_shot = true
 	launch_timer.timeout.connect(launch_rocket_shells)
 	launch_timer.start()
 
+# Launch the rocket shells upwards and make it disappear from the screen.
 func launch_rocket_shells():
 	print("BigFirework: Launching rocket shells after flashing")
 	
@@ -126,7 +126,7 @@ func _create_and_animate_tail():
 	# Create a tween to move it up to (252, 50) in 0.8 seconds
 	var tween = create_tween()
 	tween.tween_property(tail_instance, "position:y", target_y, 0.8)
-	
+
 	# After the movement, make it disappear
 	tween.tween_callback(_make_tail_disappear.bind(tail_instance))
 
@@ -138,7 +138,7 @@ func _make_tail_disappear(tail_instance: Node):
 
 func _create_firework_bouquet():	
 	# Create fireworks with staggered timing
-	var delay = 0.05
+	var delay = 0.1
 	var new_x = position_x
 	var new_y = target_y
 
@@ -160,8 +160,8 @@ func _create_firework_bouquet():
 		timer.start()
 		
 		# Place it at the final position where the tail disappeared with random offset
-		new_x = 64 + randi() % 96 - 48  # Random offset between -30 and +30
-		new_y = target_y + randi() % 60 - 30  # Random offset between -15 and +15
+		new_x = position_x + randi() % 60 - 30  # Random offset between -30 and +30
+		new_y = target_y + randi() % 30 - 15  # Random offset between -15 and +15
 		delay += 0.4  # Increase delay for next firework
 
 
@@ -174,22 +174,45 @@ func _create_individual_firework(shell_rank,color_tint,fw_x,fw_y):
 	add_child(effect_instance)
 
 	var additional_points=Globals.FIREWORK_SCORE[shell_rank]
-	points_to_add.emit(additional_points, fw_x, fw_y)
+	points_to_add.emit(additional_points, effect_instance.global_position)
 	
-	# Create shaking effect for the player_manager parent
+	# Create shaking effect for the other player ! 
+
 	create_screen_shake()
 
 func create_screen_shake():
-	# Find the player_manager parent node
-	var player_manager = get_parent()
-	if player_manager == null or player_manager is not PlayerManager:
-		print("BigFirework: No parent found for screen shake")
+	# Skip screen shake for title screen fireworks
+	if is_title_firework:
+		print("BigFirework: Skipping screen shake for title firework")
 		return
 	
-	print("BigFirework: Creating screen shake effect on ", player_manager.name)
+	# Find the current player_manager (the one who created this firework)
+	var current_player_manager = get_parent()
+	if current_player_manager == null or current_player_manager is not PlayerManager:
+		print("BigFirework: No parent PlayerManager found for screen shake")
+		return
+	
+	# Find the GameManager to get access to both players
+	var game_manager = current_player_manager.get_parent().get_node("GameManager")
+	if game_manager == null:
+		print("BigFirework: GameManager not found")
+		return
+	
+	# Determine which player to shake (the OTHER player)
+	var target_player_manager = null
+	if current_player_manager.name == "PlayerManager1":
+		target_player_manager = current_player_manager.get_parent().get_node("PlayerManager2")
+	elif current_player_manager.name == "PlayerManager2":
+		target_player_manager = current_player_manager.get_parent().get_node("PlayerManager1")
+	
+	if target_player_manager == null:
+		print("BigFirework: Could not find target player manager")
+		return
+	
+	print("BigFirework: Creating screen shake effect on OTHER player: ", target_player_manager.name)
 	
 	# Store original position
-	var original_position = player_manager.position
+	var original_position = target_player_manager.position
 	print("BigFirework: Original position stored - ", original_position)
 	
 	# Create shake tween without loops to have better control
@@ -205,24 +228,22 @@ func create_screen_shake():
 		var random_y = randf_range(-shake_intensity, shake_intensity)
 		var shake_offset = Vector2(random_x, random_y)
 		
-		shake_tween.tween_property(player_manager, "position", original_position + shake_offset, shake_duration)
+		shake_tween.tween_property(target_player_manager, "position", original_position + shake_offset, shake_duration)
 	
 	# Ensure we return to exact original position at the end
-	shake_tween.tween_property(player_manager, "position", original_position, shake_duration)
+	shake_tween.tween_property(target_player_manager, "position", original_position, shake_duration)
 	
 	# Add callback to confirm position reset
-	shake_tween.tween_callback(_confirm_position_reset.bind(player_manager, original_position))
+	shake_tween.tween_callback(_confirm_position_reset.bind(target_player_manager, original_position))
 
-func _confirm_position_reset(player_manager: Node, original_position: Vector2):
+func _confirm_position_reset(target_player_manager: Node, original_position: Vector2):
 	print("BigFirework: Shake complete, confirming position reset")
-	print("BigFirework: Current position - ", player_manager.position)
+	print("BigFirework: Current position - ", target_player_manager.position)
 	print("BigFirework: Target position - ", original_position)
 	
 	# Force exact position if there's any drift
-	player_manager.position = original_position
+	target_player_manager.position = original_position
 	print("BigFirework: Position forcibly reset to original")
-
-
 
 
 # Start a 5-second timer to call destroy_me function
@@ -240,7 +261,6 @@ func destroy_me():
 	print("DESTROY ME CALLED")
 	#we remove the sprites once they're off screen. 
 	for i in range(firework_shells.size()):
-		firework_shells[i].queue_free()
-		
+		firework_shells[i].queue_free()	
 	# Queue this node for deletion
 	queue_free()         

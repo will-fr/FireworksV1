@@ -3,7 +3,6 @@ class_name Player  extends Node2D
 var initial_x:float = 0
 var is_lifting: bool = false
 
-
 signal player_flipped()
 signal gravity_forced
 signal player_lifted()
@@ -17,7 +16,6 @@ enum player_dic { P1, P2, CPU }
 var skin:String
 var skin_sprite:AnimatedSprite2D
 var player_is_active: bool = true
-var cpu_lag: float = 0.1  # Delay in seconds for CPU actions
 var current_column: int = 0  # Start in a center column (0-3 for 4 columns)
 var cpu_player : CpuPlayer
 
@@ -28,7 +26,6 @@ func _ready() -> void:
 	$girl.visible = false
 	$baldy.visible = false
 	$spikey.visible = false
-
 
 	player_manager.player_paused.connect(_on_player_paused)
 	player_manager.player_resumed.connect(_on_player_resumed)
@@ -166,29 +163,28 @@ func flip_left():
 	move_left()
 	lift_and_drop()
 
-func flip_columns(left_column_index,right_column_index):
-	if right_column_index != left_column_index +1:
-		print ("CPU : Error, only flipping between adjacent columns")
-		return
-	
-	move_to_column(left_column_index)
+# func flip_columns(left_column_index,right_column_index):
+# 	if right_column_index != left_column_index +1:
+# 		print ("CPU : Error, only flipping between adjacent columns")
+# 		return
+# 	await move_to_column(left_column_index)
 
 
-	flip_right()
-	await get_tree().create_timer(cpu_lag).timeout
+# 	flip_right()
+# 	await get_tree().create_timer(cpu_lag).timeout
 
-func move_to_column(target_column: int):
-	var current_pos = current_column
+# func move_to_column(target_column: int):
+# 	var current_pos = current_column
 	
-	while current_pos < target_column:
-		move_right()
-		await get_tree().create_timer(cpu_lag).timeout
-		current_pos = current_column
+# 	while current_pos < target_column:
+# 		move_right()
+# 		await get_tree().create_timer(cpu_lag).timeout
+# 		current_pos = current_column
 	
-	while current_pos > target_column:
-		move_left()
-		await get_tree().create_timer(cpu_lag).timeout
-		current_pos = current_column
+# 	while current_pos > target_column:
+# 		move_left()
+# 		await get_tree().create_timer(cpu_lag).timeout
+# 		current_pos = current_column
 
 func lift_and_drop():
 	is_lifting = !is_lifting
@@ -216,5 +212,5 @@ func _on_animation_finished():
 		skin_sprite.play("idle")
 
 
-func _on_cpu_lag_timer_timeout() -> void:
-	pass # Replace with function body.
+# func _on_cpu_lag_timer_timeout() -> void:
+# 	pass # Replace with function body.

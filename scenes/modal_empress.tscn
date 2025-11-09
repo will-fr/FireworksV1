@@ -12,9 +12,10 @@ unique_name_in_owner = true
 wait_time = 0.05
 
 [node name="BlackBackground" type="ColorRect" parent="."]
+unique_name_in_owner = true
 offset_right = 320.0
 offset_bottom = 180.0
-color = Color(0, 0, 0, 0.65882355)
+color = Color(0, 0, 0, 1)
 
 [node name="ModalContent" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -26,7 +27,7 @@ offset_right = 130.0
 offset_bottom = 57.0
 metadata/_edit_use_anchors_ = true
 
-[node name="EmpressText" type="Label" parent="ModalContent"]
+[node name="Modal" type="Label" parent="ModalContent"]
 unique_name_in_owner = true
 offset_left = 6.5
 offset_top = 1.0
@@ -36,24 +37,25 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 1
 theme_override_fonts/font = ExtResource("1_257i2")
 theme_override_font_sizes/font_size = 6
-text = "YOU STILL HAVE A LOT
-TO LEARN TO BECOME
-A FIREWORKS MASTER"
+text = "You still have a lot 
+to learn to become 
+a firework master"
 metadata/_edit_use_anchors_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="ModalContent"]
 position = Vector2(66, 19)
 texture = ExtResource("2_lhihe")
 
-[node name="BackToTitle" type="Label" parent="."]
+[node name="AnyKey" type="Label" parent="."]
 unique_name_in_owner = true
-visible = false
 offset_left = 87.0
 offset_top = 124.0
 offset_right = 235.0
 offset_bottom = 147.0
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("1_257i2")
 theme_override_font_sizes/font_size = 6
-text = "Press any Key or Button to restart"
+text = "You shoulDN'T SEE THIS TEXT, LOL"
+horizontal_alignment = 1
 
 [connection signal="timeout" from="CharTimer" to="." method="_on_char_timer_timeout"]

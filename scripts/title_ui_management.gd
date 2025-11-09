@@ -37,6 +37,16 @@ func on_ui_animations_complete() -> void:
 
 func _on_one_player_button_pressed() -> void:
 	print("TitleUIManagement: One Player vs CPU selected - Starting transition to Game scene")
+
+	# we define which difficulty levels buttons are available
+	if Globals.max_difficulty_level >= Globals.HARD_LEVEL:
+		%HardButton.disabled = false
+	if Globals.max_difficulty_level >= Globals.LEGENDARY_LEVEL:
+		%LegendaryButton.disabled = false
+	if Globals.max_difficulty_level >= Globals.IMPOSSIBLE_LEVEL:
+		%ImpossibleButton.disabled = false
+
+
 	# Start transition effect instead of immediate scene change
 	# move the MenuButtons node offscreen to the top in 0.5 seconds
 	selection.visible = false
@@ -49,15 +59,12 @@ func _on_one_player_button_pressed() -> void:
 	# when the tween is done, set focus to EasyButton
 	move_tween.finished.connect(%EasyButton.grab_focus)
 
-	#start_scene_transition("res://scenes/game.tscn")
 
 
 func _on_two_players_button_pressed() -> void:
 	print("TitleUIManagement: Two Players vs Player selected - Starting transition to Game scene")
 	pass
 	
-
-
 
 func _on_back_pressed() -> void:
 	print("TitleUIManagement: Back to main menu")
@@ -75,6 +82,30 @@ func _on_easy_button_pressed() -> void:
 	Globals.difficulty_level = Globals.EASY_LEVEL
 	# fade the scene to black over 0.5 seconds, then change to game scene
 	print("TitleUIManagement: Easy difficulty selected - Starting transition to Game scene")
+	var fade_tween = get_parent().create_tween()
+	fade_tween.tween_property(get_parent(), "modulate:a", 0.0, 0.5)
+	fade_tween.finished.connect(_start_game_scene)
+
+func _on_hard_button_pressed() -> void:
+	Globals.difficulty_level = Globals.HARD_LEVEL
+	# fade the scene to black over 0.5 seconds, then change to game scene
+	print("TitleUIManagement: Hard difficulty selected - Starting transition to Game scene")
+	var fade_tween = get_parent().create_tween()
+	fade_tween.tween_property(get_parent(), "modulate:a", 0.0, 0.5)
+	fade_tween.finished.connect(_start_game_scene)
+
+func _on_legendary_button_pressed() -> void:
+	Globals.difficulty_level = Globals.LEGENDARY_LEVEL
+	# fade the scene to black over 0.5 seconds, then change to game scene
+	print("TitleUIManagement: Legendary difficulty selected - Starting transition to Game scene")
+	var fade_tween = get_parent().create_tween()
+	fade_tween.tween_property(get_parent(), "modulate:a", 0.0, 0.5)
+	fade_tween.finished.connect(_start_game_scene)
+
+func _on_impossible_button_pressed() -> void:
+	Globals.difficulty_level = Globals.IMPOSSIBLE_LEVEL
+	# fade the scene to black over 0.5 seconds, then change to game scene
+	print("TitleUIManagement: Impossible difficulty selected - Starting transition to Game scene")
 	var fade_tween = get_parent().create_tween()
 	fade_tween.tween_property(get_parent(), "modulate:a", 0.0, 0.5)
 	fade_tween.finished.connect(_start_game_scene)

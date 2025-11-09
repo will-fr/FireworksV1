@@ -105,3 +105,4 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if ui_manager:
 		ui_manager.process_input(delta)
+

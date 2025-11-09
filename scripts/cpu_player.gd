@@ -2,7 +2,7 @@ class_name CpuPlayer extends Node2D
 
 # FireworksV1 Game Rules
 # Game Overview
-# FireworksV1 is a Tetris-like puzzle game wher## Called when the node is ready and added to the scene
+# FireworksV1 is a Tetris-like puzzle game wher
 
 
 # Game Grid & Setup
@@ -131,13 +131,6 @@ func _init(player_arg: Player):
 
 ## Sets up the strategy update timer that drives the CPU decision-making
 func _ready():
-	# Create and configure the strategy update timer
-	# update_timer = Timer.new()                        # Create new timer instance
-	# update_timer.wait_time = 2                     # OPTIMIZED: Update strategy every 2.0 seconds (reduced frequency)
-	# update_timer.timeout.connect(update_strategy)     # Connect timeout signal to our strategy function
-	# add_child(update_timer)                           # Add timer to scene tree
-	# update_timer.start()                              # Start the timer immediately
-	# print("CPU: Timer started - Strategy will update every 1.0 seconds")
 	game_timer = get_tree().get_root().get_node("Game/Gui/GameTimer")
 	if game_timer != null:
 		game_timer.game_started.connect(Callable(self, "_launch_game"))
@@ -159,15 +152,17 @@ func _on_cpu_lag_timer_timeout():
 	if !player.player_is_active:
 		return
 
-	# otherwise, I perform the actions needed, or update the strategy.
+	print("CPU: *****************************************************")
+	print("CPU: Wait time of the cpu lag timer at time ", cpu_lag_timer.wait_time)
+	
+	# otherwise, I perform the actions needed, or update the strategy if there's nothing to do.
 	if actions_needed.size()>0: 
-		var action = actions_needed.pop_front()
-		execute_action(action)
+		print("CPU: TimeOut: still " + str(actions_needed.size()) + " actions to execute, Executing action flipping column ", actions_needed[0])
+		# get the first elements from the actions_needed array and execute it.
+		var action = actions_needed[0]
+		await execute_action(action)
 	else:
 		update_strategy()
-
-
-
 
 
 ## Initialize the CPU's internal grid representation
@@ -217,7 +212,8 @@ func get_cpu_shell_grid():
 ## 2. Evaluate each arrangement (score the potential outcomes)
 ## 3. Execute the best arrangement (perform the necessary column swaps)
 func update_strategy():		
-	print("CPU : *****************************************************")
+	
+	print("CPU : Updating strategy.... Time is ", Time.get_ticks_msec())
 	
 	# ===== STEP 0: Update Current Game State =====
 	cpu_shells_grid = get_cpu_shell_grid()        # Get full grid state with shell types
@@ -228,11 +224,8 @@ func update_strategy():
 	top_dropped_shells = get_top_dropped_shells() # Get topmost settled shells per column
 	current_column = player.get_column()          # Get player's current position
 
-	# OPTIMIZATION: Check if game state changed since last update
-	var current_state_hash = get_game_state_hash()
 	var possible_arrangements
-	
-	
+		
 	possible_arrangements = identify_possible_arrangements(Globals.NUM_COLUMNS)
 		
 	# ===== STEP 2: Evaluate Each Arrangement =====
@@ -368,22 +361,6 @@ func get_rocket_sizes() -> Array:
 	return rockets_sizes_list
 
 
-## Generate a hash of the current game state for caching optimization
-## Creates a unique identifier for the current configuration of shells
-## @return int: Hash representing the current game state
-func get_game_state_hash() -> int:
-	var hash_string = ""
-	
-	# Include falling shells in hash
-	for shell in falling_shells:
-		hash_string += str(shell if shell != null else "null") + "|"
-	
-	# Include top dropped shells in hash
-	for shell in top_dropped_shells:
-		hash_string += str(shell if shell != null else "null") + "|"
-	
-	return hash_string.hash()
-
 ## Debug function to print a visual representation of an arrangement
 ## Shows what the top row would look like after applying the arrangement
 ## @param print_txt: Prefix text for the debug output
@@ -399,7 +376,7 @@ func print_arrangement(print_txt:String, arrangement: Array = []):
 			print_txt += "< " + str(top_dropped_shells[target_column]) + ">"
 		else:
 			print_txt += " <***> "  # Empty column indicator
-	print (print_txt)
+	print ("CPU: Arrangement : " + print_txt)
 
 
 # ================================
@@ -655,38 +632,27 @@ func arrays_equal(arr1: Array, arr2: Array) -> bool:
 ## This is the actual interface to the game's player controls
 ## @param action: Integer representing the left column of the pair to swap (0-5)
 func execute_action(action):
-	if typeof(action) == TYPE_INT:
-		# Validate the action is within valid range
-		if action >= 0 and action < Globals.NUM_COLUMNS - 1:
-			var left_col = action
-			var right_col = action + 1
-			print("CPU ** Performing column swap: ", left_col, " <-> ", right_col)
-			flip_columns(left_col, right_col)
-		else:
-			print("CPU: Invalid column index: ", action, " (must be 0-", Globals.NUM_COLUMNS - 2, ")")
-	else:
-		print("CPU: Invalid action type: ", typeof(action), " - Expected integer, got: ", action)
-
-
-func flip_columns(left_column_index,right_column_index):
-	if right_column_index != left_column_index +1:
-		print ("CPU : Error, only flipping between adjacent columns")
+	if typeof(action) != TYPE_INT:
+		print("CPU: ERROR - Action must be an integer column index, got: ", action)
 		return
 
-	move_to_column(left_column_index)
+	if action < 0 or action > Globals.NUM_COLUMNS - 1:
+		print("CPU: ERROR - Action out of range: ", action)
+		return
 
-	player.flip_right()
-	#await get_tree().create_timer(cpu_lag).timeout
-
-func move_to_column(target_column: int):
-	var current_pos = player.current_column
-	
-	while current_pos < target_column:
+	if player.get_column() < action:
+		print("CPU: Moving right from column ", player.get_column(), " to column ", action)
 		player.move_right()
-		#await get_tree().create_timer(cpu_lag).timeout
-		current_pos = player.current_column
+		return
 	
-	while current_pos > target_column:
+	if player.get_column() > action:
+		print("CPU: Moving left from column ", player.get_column(), " to column ", action)
 		player.move_left()
-		#await get_tree().create_timer(cpu_lag).timeout
-		current_pos = player.current_column
+		return
+	
+	if player.get_column() == action:
+		print ("CPU: Flipping column ", action, " with column ", action + 1)
+		player.flip_right()
+		# remove the executed action from the list
+		actions_needed.remove_at(0)
+		return

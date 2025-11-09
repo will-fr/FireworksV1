@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5mp87y2q56it"]
+
+[ext_resource type="Texture2D" uid="uid://dfmysfhcn6cjk" path="res://gfx/shells/junk.png" id="1_5gtx8"]
+
+[node name="Junk" type="Sprite2D"]
+texture = ExtResource("1_5gtx8")

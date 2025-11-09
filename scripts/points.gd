@@ -1,8 +1,8 @@
 extends Label
 
-func initialize(increment:int, pos_x:int, pos_y:int ) -> void:
+func initialize(increment:int, firework_global_position:Vector2) -> void:
 	self.text = str(increment)
-	self.position = Vector2(pos_x, pos_y)
+	self.global_position = firework_global_position
 	z_index = 100  # Ensure it's on top
 	# Start the animation immediately after initialization
 	animate_and_destroy()

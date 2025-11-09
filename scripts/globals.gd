@@ -3,7 +3,7 @@ extends Node
 # Global constants and variables for the fireworks game
 
 # Number of columns in the game grid
-const NUM_COLUMNS = 7
+const NUM_COLUMNS = 4
 
 # Number of rows in the game grid
 const NUM_ROWS = 8
@@ -33,6 +33,8 @@ const HARD_LEVEL = 2
 const LEGENDARY_LEVEL = 3
 const IMPOSSIBLE_LEVEL = 4
 
+#The current difficulty level
 var difficulty_level = Globals.EASY_LEVEL
 
-
+# The maximum difficulty level selectable in the game.
+var max_difficulty_level = Globals.EASY_LEVEL

@@ -14,13 +14,14 @@ signal points_added
 # Reference to the player node for signal connections and position tracking
 @onready var player : Player = get_node("Player")  
 @onready var player_timer: Timer = get_node("PlayerTimer")  
+@onready var junk_manager : JunkManager = get_node("JunkManager")
 @onready var score_label: Label = get_node("Score")  
-@onready var junk_label: Label = get_node("Junk")  
+#@onready var junk_label: Label = get_node("Junk")  
 @onready var countdown: CountDown = get_node("CountDown")  
 @onready var shells_grid: ShellsGrid = get_node("ShellsGrid")
 @export var skin:String = "girl"
-
-
+#todo : leverage this to indicate if left or right player
+@export var is_left_player: bool = true
 
 func _ready() -> void:
 	# connect the signals. 
@@ -32,10 +33,12 @@ func _ready() -> void:
 
 	# setup the elements depending on the skin. 
 	player.set_skin(skin)
-	get_node("SkinBackground").texture = load("res://gfx/character/"+skin+"_bg.png")
 	set_player_play()
 	main_game_loop()
 	set_player_pause()
+
+
+	
 
 func _on_countdown_finished():
 	print("PlayerManager: Countdown finished, starting game.")
@@ -106,7 +109,7 @@ func main_game_loop():
 
 	even_loop = !even_loop
 
-func add_points(increment:int,pos_x:float=100.0,pos_y:float=100.0):
+func add_points(increment:int,firework_global_position:Vector2) -> void:
 	# Increment the score by a specified amount
 	score += increment
 	if score_label:
@@ -115,10 +118,10 @@ func add_points(increment:int,pos_x:float=100.0,pos_y:float=100.0):
 	var points_scene = load("res://scenes/points.tscn")
 	var new_instance = points_scene.instantiate()
 	add_child(new_instance)
-	new_instance.initialize(increment, pos_x, pos_y)
+	new_instance.initialize(increment, firework_global_position)
 
 	# Emit the points_added signal with the new points
-	points_added.emit(increment,pos_x,pos_y)
+	points_added.emit(increment, firework_global_position)
 
 func create_small_firework(x_arg,y_arg,shell_type_arg):
 	print ("  -- Creating firework at [", x_arg, "][", y_arg, "]")
@@ -161,8 +164,6 @@ func game_over(column_arg=0,row_arg=0):
 	# Start sequential row graying animation
 	start_row_graying_animation()
 	
-
-
 func start_row_graying_animation():
 	# Create a sequential tween for each row
 	var main_tween = create_tween()

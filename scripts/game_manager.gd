@@ -27,10 +27,46 @@ func _ready() -> void:
 	player_manager_1.connect("points_added", Callable(self, "_on_player1_points_added"))
 	player_manager_2.connect("points_added", Callable(self, "_on_player2_points_added"))
 
+	# Wait for the next frame to ensure all @onready variables are initialized
+	await get_tree().process_frame
+	
+	# set difficulty settings after all nodes are ready
+	set_difficulty_settings()
+
 	# debug: wait 5 seconds and then trigger a win for player 1
-	await get_tree().create_timer(5.0).timeout
-	player_manager_2.game_over()
-	#_on_player1_game_over()
+	# if (Globals.difficulty_level == Globals.EASY_LEVEL):
+	# 	await get_tree().create_timer(5.0).timeout
+	# 	player_manager_2.game_over()
+
+func set_difficulty_settings() -> void:
+	# Safety check to ensure player_manager_2 and its player are valid
+	if player_manager_2 == null:
+		print("GameManager: ERROR - player_manager_2 is null")
+		return
+	
+	if player_manager_2.player == null:
+		print("GameManager: ERROR - player_manager_2.player is null")
+		return
+	
+	print("GameManager: Setting difficulty level: ", Globals.difficulty_level)
+	
+	match Globals.difficulty_level:
+		Globals.EASY_LEVEL:
+			player_manager_1.get_node("PlayerTimer").wait_time = 0.5
+			player_manager_2.get_node("CpuLagTimer").wait_time = 1.0
+			print("GameManager: Set EASY difficulty - CPU lag: 1.0")
+		Globals.HARD_LEVEL:
+			player_manager_1.get_node("PlayerTimer").wait_time = 0.4
+			player_manager_2.get_node("CpuLagTimer").wait_time = 0.4
+			print("GameManager: Set HARD difficulty - CPU lag: 0.4")
+		Globals.LEGENDARY_LEVEL:
+			player_manager_1.get_node("PlayerTimer").wait_time = 0.3
+			player_manager_2.get_node("CpuLagTimer").wait_time = 0.1
+			print("GameManager: Set LEGENDARY difficulty - CPU lag: 0.1")
+		Globals.IMPOSSIBLE_LEVEL:
+			player_manager_1.get_node("PlayerTimer").wait_time = 0.05
+			player_manager_2.get_node("CpuLagTimer").wait_time = 0.05
+			print("GameManager: Set IMPOSSIBLE difficulty - CPU lag: 0.05")
 
 # Handle when Player 1 loses - Player 2 wins
 func _on_player1_game_over():
@@ -41,12 +77,12 @@ func _on_player2_game_over():
 	display_winner(1)
 
 # When Player 1 scores, send junk to Player 2's board
-func _on_player1_points_added(_points:int, pos_x:int, pos_y:int) -> void:
-	player_manager_2.shells_grid.increase_junk(1, pos_x, pos_y)
+func _on_player1_points_added(points:int, firework_global_position:Vector2) -> void:
+	player_manager_2.junk_manager.increase_junk(points, firework_global_position)
 
 # When Player 2 scores, send junk to Player 1's board
-func _on_player2_points_added(_points:int, pos_x:int, pos_y:int) -> void:
-	player_manager_1.shells_grid.increase_junk(1, pos_x, pos_y)
+func _on_player2_points_added(points:int, firework_global_position:Vector2) -> void:
+	player_manager_1.junk_manager.increase_junk(points, firework_global_position)
 
 # Display the winner and handle end-game sequence
 func display_winner(winner: int) -> void:
@@ -112,15 +148,11 @@ func create_victory_firework(color_tint: int, fw_x: float, fw_y: float):
 	# Add to the scene tree to display the effect
 	add_child(effect_instance)
 
-# Reload the current scene to restart the game
-func _reload_scene():
-	get_tree().reload_current_scene()
-
-
 func _show_game_over_modal(winner:int):
 	print("GameManager: Showing game over modal for winner: ", winner)
 	var modal_scene = load("res://scenes/modal_empress.tscn")
 	var modal_instance = modal_scene.instantiate()
+	modal_instance.set_text(winner)
 	
 	# Initialize the modal with the winner information
 	#modal_instance.initialize(winner)

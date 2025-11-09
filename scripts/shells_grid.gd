@@ -18,7 +18,7 @@ func _ready():
 	init_grid()
 	create_plates()
 	fill_bottom_shells()
-
+	#super_fill_shells()
 
 # this function initialize the shells grid with empty cells. 
 func init_grid():	
@@ -133,12 +133,12 @@ func add_new_shells():
 func drop_shell(column: int, row: int):
 	# IF I STACK ON THE SAME SHELL THAN ME, I POP.  
 	if row > 0 and shells_grid[column][row-1] != null and shells_grid[column][row-1].get_shell_type() == shells_grid[column][row].get_shell_type():
-		var pos_x :float = float(shells_grid[column][row].position.x) + float(Globals.BLOCK_SIZE) / 2.0
-		var pos_y :int = int(shells_grid[column][row-1].position.y)
-		get_parent().create_small_firework(pos_x, pos_y, shells_grid[column][row].get_shell_type())
+		#var pos_x :float = float(shells_grid[column][row].position.x) + float(Globals.BLOCK_SIZE) / 2.0
+		#var pos_y :int = int(shells_grid[column][row-1].position.y)
+		get_parent().create_small_firework(shells_grid[column][row].global_position.x + float(Globals.BLOCK_SIZE) / 2.0, shells_grid[column][row-1].global_position.y, shells_grid[column][row].get_shell_type())
+		get_parent().add_points(Globals.POP_SCORE, shells_grid[column][row].global_position)  # Add points for popping fireworks
 		remove_shell(column,row)  # Remove the current firework
 		remove_shell(column,row-1)  # Remove the matching firework below
-		get_parent().add_points(Globals.POP_SCORE, pos_x,pos_y )  # Add points for popping fireworks
 		shell_pop_sound.play()
 		return
 	# IF I'M A TOP SHELL, I LOOK FOR A BOTTOM SHELL, OTHERWISE I POP ALONE.
@@ -246,12 +246,63 @@ func switch_plates(left_column: int, right_column: int):
 	plates[right_column] = temp_plate
 
 # this function is created when the player collects junk (due to other players' fireworks)
-func increase_junk(amount:int,_pos_x:int,_pos_y:int) -> void:
+func increase_junk(amount:int) -> void:
 	# Add junk to the player's inventory
 	nb_junk += amount
-	get_parent().junk_label.text = "Junk: " + str(nb_junk)
+	get_parent().get_node("Junk").text = "Junk: " + str(nb_junk)
 
 func decrease_junk(amount:int) -> void:
 	# Subtract junk from the player's inventory
 	nb_junk -= amount
-	get_parent().junk_label.text = "Junk: " + str(nb_junk)
+	get_parent().get_node("Junk").text = "Junk: " + str(nb_junk)
+	get_parent().get_node("JunkManager").decrease_junk_visuals(amount)
+
+
+func get_total_junk() -> int:
+	return nb_junk
+
+# Fill the entire shells grid without BOTTOM_SHELL and TOP_SHELL, no vertical duplicates
+func super_fill_shells():
+	var load_scene_one = load("res://scenes/shell.tscn")
+	
+	# Available shell types (excluding BOTTOM_SHELL and TOP_SHELL)
+	# Only colored shells: GREEN=3, RED=4, BLUE=5, YELLOW=6
+	var available_types = [Globals.GREEN, Globals.GREEN + 1, Globals.GREEN + 2, Globals.GREEN + 3]
+	
+	# Clear existing shells first
+	for column in Globals.NUM_COLUMNS:
+		for row in Globals.NUM_ROWS:
+			if shells_grid[column][row] != null:
+				shells_grid[column][row].queue_free()
+				shells_grid[column][row] = null
+	
+	# Fill each column from bottom to top
+	for column in Globals.NUM_COLUMNS:
+		var previous_shell_type = -1  # Track previous shell type to avoid duplicates
+		
+		for row in Globals.NUM_ROWS -2:
+			var new_instance = load_scene_one.instantiate()
+			add_child(new_instance)
+			
+			# Choose a shell type that's different from the one below it
+			var valid_types = available_types.duplicate()
+			if previous_shell_type != -1:
+				valid_types.erase(previous_shell_type)  # Remove previous type to avoid stacking
+			
+			# Select random type from remaining valid types
+			var shell_type = valid_types[randi() % valid_types.size()]
+			previous_shell_type = shell_type
+			
+			# Initialize and position the shell
+			new_instance.initialize(column, shell_type)
+			new_instance.set_status(Shell.status.DROPPED)  # Set as stable/dropped
+			new_instance.z_index = 1	
+			
+			# Position calculation: bottom row is at highest y value
+			var y_position = (Globals.NUM_ROWS - row) * Globals.BLOCK_SIZE
+			new_instance.position.y = y_position
+			
+			# Store in grid
+			shells_grid[column][row] = new_instance
+	
+	print("Super fill completed - grid completely filled with only colored shells (no BOTTOM_SHELL or TOP_SHELL) and no vertical duplicates")

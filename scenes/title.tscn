@@ -208,48 +208,48 @@ unique_name_in_owner = true
 layout_mode = 2
 focus_neighbor_left = NodePath("../Back")
 focus_neighbor_top = NodePath("../Back")
-focus_neighbor_right = NodePath("../Hard")
-focus_neighbor_bottom = NodePath("../Hard")
-focus_next = NodePath("../Hard")
+focus_neighbor_right = NodePath("../HardButton")
+focus_neighbor_bottom = NodePath("../HardButton")
+focus_next = NodePath("../HardButton")
 focus_previous = NodePath("../Back")
 theme_override_fonts/font = ExtResource("9_w65of")
 text = "Easy"
 
-[node name="Hard" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+[node name="HardButton" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
 unique_name_in_owner = true
 layout_mode = 2
 focus_neighbor_left = NodePath("../EasyButton")
 focus_neighbor_top = NodePath("../EasyButton")
-focus_neighbor_right = NodePath("../Legendary")
-focus_neighbor_bottom = NodePath("../Legendary")
-focus_next = NodePath("../Legendary")
+focus_neighbor_right = NodePath("../LegendaryButton")
+focus_neighbor_bottom = NodePath("../LegendaryButton")
+focus_next = NodePath("../LegendaryButton")
 focus_previous = NodePath("../EasyButton")
 theme_override_fonts/font = ExtResource("9_w65of")
 disabled = true
 text = "Hard"
 
-[node name="Legendary" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+[node name="LegendaryButton" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath("../Hard")
-focus_neighbor_top = NodePath("../Hard")
-focus_neighbor_right = NodePath("../Impossible")
-focus_neighbor_bottom = NodePath("../Impossible")
-focus_next = NodePath("../Impossible")
-focus_previous = NodePath("../Hard")
+focus_neighbor_left = NodePath("../HardButton")
+focus_neighbor_top = NodePath("../HardButton")
+focus_neighbor_right = NodePath("../ImpossibleButton")
+focus_neighbor_bottom = NodePath("../ImpossibleButton")
+focus_next = NodePath("../ImpossibleButton")
+focus_previous = NodePath("../HardButton")
 theme_override_fonts/font = ExtResource("9_w65of")
 disabled = true
 text = "Legendary"
 
-[node name="Impossible" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
+[node name="ImpossibleButton" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath("../Legendary")
-focus_neighbor_top = NodePath("../Legendary")
+focus_neighbor_left = NodePath("../LegendaryButton")
+focus_neighbor_top = NodePath("../LegendaryButton")
 focus_neighbor_right = NodePath("../Back")
 focus_neighbor_bottom = NodePath("../Back")
 focus_next = NodePath("../Back")
-focus_previous = NodePath("../Legendary")
+focus_previous = NodePath("../LegendaryButton")
 theme_override_fonts/font = ExtResource("9_w65of")
 disabled = true
 text = "Impossible"
@@ -257,12 +257,12 @@ text = "Impossible"
 [node name="Back" type="Button" parent="UI/OnePlayerMenu" groups=["menu_button"]]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath("../Impossible")
-focus_neighbor_top = NodePath("../Impossible")
+focus_neighbor_left = NodePath("../ImpossibleButton")
+focus_neighbor_top = NodePath("../ImpossibleButton")
 focus_neighbor_right = NodePath("../EasyButton")
 focus_neighbor_bottom = NodePath("../EasyButton")
 focus_next = NodePath("../EasyButton")
-focus_previous = NodePath("../Impossible")
+focus_previous = NodePath("../ImpossibleButton")
 theme_override_fonts/font = ExtResource("9_w65of")
 text = "Back"
 
@@ -325,4 +325,8 @@ parameters/looping = true
 
 [connection signal="pressed" from="UI/MainMenu/OnePlayerButton" to="UI" method="_on_one_player_button_pressed"]
 [connection signal="pressed" from="UI/OnePlayerMenu/EasyButton" to="UI" method="_on_easy_button_pressed"]
+[connection signal="pressed" from="UI/OnePlayerMenu/HardButton" to="." method="_on_hard_button_pressed"]
+[connection signal="pressed" from="UI/OnePlayerMenu/HardButton" to="UI" method="_on_hard_pressed"]
+[connection signal="pressed" from="UI/OnePlayerMenu/LegendaryButton" to="UI" method="_on_legendary_button_pressed"]
+[connection signal="pressed" from="UI/OnePlayerMenu/ImpossibleButton" to="UI" method="_on_impossible_button_pressed"]
 [connection signal="pressed" from="UI/OnePlayerMenu/Back" to="UI" method="_on_back_pressed"]
