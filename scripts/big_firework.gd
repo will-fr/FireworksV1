@@ -39,7 +39,7 @@ func _init(firework_shells_arg=null):
 # This function creates a random firework. Useful for title screen. 
 func _create_random_firework():
 	var fireworks_shells_rand = []
-	var load_scene_one = load("res://scenes/shell.tscn")
+	var load_scene_one = load("res://scenes/entities/shells/shell.tscn")
 
 	for i in range(2):
 		var new_instance = load_scene_one.instantiate()
@@ -116,7 +116,7 @@ func launch_rocket_shells():
 
 func _create_and_animate_tail():
 	# Create an instance of the big_firework_tail scene
-	var tail_scene = load("res://scenes/big_firework/big_firework_tail.tscn")
+	var tail_scene = load("res://scenes/entities/fireworks/big_firework_tail.tscn")
 	var tail_instance = tail_scene.instantiate()
 	
 	# Place it at the starting position (252, 207)
@@ -167,7 +167,7 @@ func _create_firework_bouquet():
 
 func _create_individual_firework(shell_rank,color_tint,fw_x,fw_y):
 	# Create an instance of the big_firework_effect scene
-	var effect_scene = load("res://scenes/big_firework/big_firework_effect.tscn")
+	var effect_scene = load("res://scenes/entities/fireworks/big_firework_effect.tscn")
 	var effect_instance = effect_scene.instantiate()
 	effect_instance.initialize(color_tint)
 	effect_instance.position = Vector2(fw_x, fw_y)

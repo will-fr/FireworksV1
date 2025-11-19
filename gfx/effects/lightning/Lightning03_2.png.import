@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bi17830n7eod4"
-path="res://.godot/imported/hairy_spritesheet.png-144bb9221b714d91c5bea3c100a10a2b.ctex"
+uid="uid://bhkfg3kyq1gmd"
+path="res://.godot/imported/Lightning03_2.png-242834c6b286431e4cd196b101ef6517.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gfx/character/hairy_spritesheet.png"
-dest_files=["res://.godot/imported/hairy_spritesheet.png-144bb9221b714d91c5bea3c100a10a2b.ctex"]
+source_file="res://gfx/effects/lightning/Lightning03_2.png"
+dest_files=["res://.godot/imported/Lightning03_2.png-242834c6b286431e4cd196b101ef6517.ctex"]
 
 [params]
 

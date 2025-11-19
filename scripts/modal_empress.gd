@@ -3,7 +3,7 @@ extends Node2D
 var char_index: int = 0
 var modal_text: String = ""
 var any_key_text: String = ""
-var next_scene: String = "res://scenes/title.tscn"
+var next_scene: String = "res://scenes/title/title.tscn"
 
 var winner: int = 0  # 1 for player 1 win, 2 for player 2 win
 
@@ -28,30 +28,31 @@ func _ready() -> void:
 func set_text(winner_arg) -> void:
 	# Set the full text based on the winner
 	winner = winner_arg
+	#todo: properly manager NUM_COLUMNS
 	if (winner == 1):
 		if (Globals.difficulty_level == Globals.EASY_LEVEL):
 			modal_text = "That was EASY,  BUT\nTHE NEXT OPPONENT\nSHOULD BE A BETTER\nCHALLENGE FOR YOU"
 			any_key_text = "Press any key to start the HARD challenge"
-			next_scene = "res://scenes/game.tscn"
+			next_scene = "res://scenes/game/game.tscn"
 			Globals.difficulty_level = Globals.HARD_LEVEL
 		elif (Globals.difficulty_level == Globals.HARD_LEVEL):
 			modal_text = "You'RE GETTING BETTER ! \nBUT I'M SURE THE \nNEXT OPPONENT WILL \nOUTSMART YOU ! "
 			any_key_text = "Press any key to start the LEGENDARY challenge"
-			next_scene = "res://scenes/game.tscn"
+			next_scene = "res://scenes/game/game.tscn"
 			Globals.difficulty_level = Globals.LEGENDARY_LEVEL
 		elif (Globals.difficulty_level == Globals.LEGENDARY_LEVEL):
 			modal_text = "IMPRESSIVE ! ONLY ONE\nCHALLENGE LEFT TO\nPROVE YOU ARE THE\nFIREWORKS MASTER! "
 			any_key_text = "Press any key to start the IMPOSSIBLE challenge"
-			next_scene = "res://scenes/game.tscn"
+			next_scene = "res://scenes/game/game.tscn"
 			Globals.difficulty_level = Globals.IMPOSSIBLE_LEVEL
 		elif (Globals.difficulty_level == Globals.IMPOSSIBLE_LEVEL):
 			modal_text = "NO DOUBT, YOU ARE\nTHE FIREWORKS MASTER\nI WAS LOOKING FOR.\nTHANK YOU SO MUCH!"
 			any_key_text = "Press any key to go to the title screen"
-			next_scene = "res://scenes/title.tscn"
+			next_scene = "res://scenes/title/title.tscn"
 	else:
 		modal_text = "You still have a lot\n to learn to become \na firework master"
 		any_key_text = "Press any key to go to the title screen"
-		next_scene = "res://scenes/title.tscn"
+		next_scene = "res://scenes/title/title.tscn"
 
 	# Update the max difficulty level if needed
 	if (Globals.max_difficulty_level <= Globals.difficulty_level):

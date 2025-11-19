@@ -88,15 +88,13 @@ func _on_easy_button_pressed() -> void:
 
 func _on_hard_button_pressed() -> void:
 	Globals.difficulty_level = Globals.HARD_LEVEL
-	# fade the scene to black over 0.5 seconds, then change to game scene
 	print("TitleUIManagement: Hard difficulty selected - Starting transition to Game scene")
 	var fade_tween = get_parent().create_tween()
 	fade_tween.tween_property(get_parent(), "modulate:a", 0.0, 0.5)
 	fade_tween.finished.connect(_start_game_scene)
 
 func _on_legendary_button_pressed() -> void:
-	Globals.difficulty_level = Globals.LEGENDARY_LEVEL
-	# fade the scene to black over 0.5 seconds, then change to game scene
+	Globals.difficulty_level = Globals.LEGENDARY_LEVEL 
 	print("TitleUIManagement: Legendary difficulty selected - Starting transition to Game scene")
 	var fade_tween = get_parent().create_tween()
 	fade_tween.tween_property(get_parent(), "modulate:a", 0.0, 0.5)
@@ -112,4 +110,4 @@ func _on_impossible_button_pressed() -> void:
 
 func _start_game_scene() -> void:
 	print("TitleUIManagement: Transition complete - Changing to Game scene")
-	get_tree().change_scene_to_file("res://scenes/game.tscn")	
+	get_tree().change_scene_to_file("res://scenes/game/game.tscn")	

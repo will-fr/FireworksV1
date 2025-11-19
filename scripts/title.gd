@@ -14,6 +14,11 @@ var fireworks_timer: Timer
 # UI Management system
 var ui_manager: Node
 
+# Cheat code system (Konami code: up, up, down, down, left, right, left, right)
+var cheat_sequence: Array = [KEY_UP, KEY_UP, KEY_DOWN, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_LEFT, KEY_RIGHT]
+var current_input_sequence: Array = []
+var cheat_timeout_timer: Timer
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	
@@ -22,6 +27,9 @@ func _ready() -> void:
 	
 	# Start background animations
 	animate_backgrounds()
+	
+	# Initialize cheat code timer
+	setup_cheat_timer()
 
 # Set up initial positions and visibility for animation elements
 func setup_initial_states() -> void:
@@ -96,10 +104,60 @@ func create_firework() -> void:
 	var new_big_firework = BigFirework.new()
 	add_child(new_big_firework)
 
-# Delegate input handling to UI manager
+# Setup cheat code timeout timer
+func setup_cheat_timer() -> void:
+	cheat_timeout_timer = Timer.new()
+	add_child(cheat_timeout_timer)
+	cheat_timeout_timer.wait_time = 2.0  # Reset sequence after 2 seconds of no input
+	cheat_timeout_timer.one_shot = true
+	cheat_timeout_timer.timeout.connect(_on_cheat_timeout)
+
+# Handle input for cheat code detection and delegate to UI manager
 func _input(event: InputEvent) -> void:
+	# Handle cheat code input first
+	if event is InputEventKey and event.pressed:
+		# Add the key to current sequence
+		current_input_sequence.append(event.keycode)
+		
+		# Restart the timeout timer
+		cheat_timeout_timer.stop()
+		cheat_timeout_timer.start()
+		
+		# Check if sequence is getting too long
+		if current_input_sequence.size() > cheat_sequence.size():
+			current_input_sequence.clear()
+		
+		# Check if we have the correct sequence
+		if current_input_sequence.size() == cheat_sequence.size():
+			if arrays_equal(current_input_sequence, cheat_sequence):
+				activate_cheat()
+			current_input_sequence.clear()
+	
+	# Delegate to UI manager
 	if ui_manager and ui_manager.handle_input(event):
 		get_viewport().set_input_as_handled()
+
+# Reset cheat sequence on timeout
+func _on_cheat_timeout() -> void:
+	current_input_sequence.clear()
+
+# Check if two arrays are equal
+func arrays_equal(arr1: Array, arr2: Array) -> bool:
+	if arr1.size() != arr2.size():
+		return false
+	for i in range(arr1.size()):
+		if arr1[i] != arr2[i]:
+			return false
+	return true
+
+# Activate the cheat code
+func activate_cheat() -> void:
+	print("CHEAT ACTIVATED: Maximum difficulty unlocked!")
+	Globals.max_difficulty_level = Globals.IMPOSSIBLE_LEVEL
+	# Optional: Add visual feedback
+	pyropop_title.modulate = Color.GOLD
+	var tween = create_tween()
+	tween.tween_property(pyropop_title, "modulate", Color.WHITE, 1.0)
 
 # Delegate process to UI manager for input cooldown
 func _process(delta: float) -> void:

@@ -31,11 +31,11 @@ func init_grid():
 
 # this function fills the bottom row with plates. 
 func create_plates():
-	var plate_scene = load("res://scenes/plate.tscn")
+	var plate_scene = load("res://scenes/game/plate.tscn")
 	for column in Globals.NUM_COLUMNS:
 		var new_plate = plate_scene.instantiate()
 		add_child(new_plate)
-		new_plate.position = Vector2(column * Globals.BLOCK_SIZE + 8, 142)
+		new_plate.position = Vector2(column * Globals.BLOCK_SIZE, 128)
 		plates.append(new_plate)
 		# tint the plates
 		if player_id == 1:
@@ -45,7 +45,7 @@ func create_plates():
 
 # this function fills the bottom row with shells, including exactly one BOTTOM_SHELL
 func fill_bottom_shells():
-	var load_scene_one = load("res://scenes/shell.tscn")
+	var load_scene_one = load("res://scenes/entities/shells/shell.tscn")
 	var bottom_row_index = 0  # Bottom row is index 0
 	
 	# Choose a random column for the BOTTOM_SHELL
@@ -64,7 +64,7 @@ func fill_bottom_shells():
 		new_instance.set_status(Shell.status.DROPPED)  # Set as dropped (stable)
 		new_instance.z_index = 1
 		shells_grid[column][bottom_row_index] = new_instance
-		shells_grid[column][bottom_row_index].position.y = Globals.NUM_ROWS * Globals.BLOCK_SIZE  # Position at bottom row
+		shells_grid[column][bottom_row_index].position.y = (Globals.NUM_ROWS -1 ) * Globals.BLOCK_SIZE  # Position at bottom row
 
 func count_waiting_shells() -> int:
 	var waiting_shells = 0
@@ -120,7 +120,7 @@ func add_new_shells():
 			selected_columns.append(random_column)
 	
 	# Create random shells in the selected columns
-	var load_scene_one = load("res://scenes/shell.tscn")
+	var load_scene_one = load("res://scenes/entities/shells/shell.tscn")
 	for column in selected_columns:
 		var new_instance = load_scene_one.instantiate()
 		add_child(new_instance) 
@@ -135,7 +135,7 @@ func drop_shell(column: int, row: int):
 	if row > 0 and shells_grid[column][row-1] != null and shells_grid[column][row-1].get_shell_type() == shells_grid[column][row].get_shell_type():
 		#var pos_x :float = float(shells_grid[column][row].position.x) + float(Globals.BLOCK_SIZE) / 2.0
 		#var pos_y :int = int(shells_grid[column][row-1].position.y)
-		get_parent().create_small_firework(shells_grid[column][row].global_position.x + float(Globals.BLOCK_SIZE) / 2.0, shells_grid[column][row-1].global_position.y, shells_grid[column][row].get_shell_type())
+		get_parent().create_small_firework(shells_grid[column][row].position.x + float(Globals.BLOCK_SIZE) / 2.0, shells_grid[column][row-1].position.y, shells_grid[column][row].get_shell_type())
 		get_parent().add_points(Globals.POP_SCORE, shells_grid[column][row].global_position)  # Add points for popping fireworks
 		remove_shell(column,row)  # Remove the current firework
 		remove_shell(column,row-1)  # Remove the matching firework below
@@ -175,13 +175,13 @@ func switch_cells(left_column: int, right_column: int, row: int):
 	
 	# i move the left one to the right
 	if shells_grid[left_column][row] != null:
-		var initial_x = Globals.LEFT_OFFSET + left_column * Globals.BLOCK_SIZE
+		var initial_x = left_column * Globals.BLOCK_SIZE
 		var tween = create_tween()
 		tween.tween_property(shells_grid[left_column][row], "position:x", initial_x + Globals.BLOCK_SIZE, 0.1)
 
 	# i move the right block to the left.
 	if shells_grid[right_column][row] != null:
-		var initial_x = Globals.LEFT_OFFSET + right_column * Globals.BLOCK_SIZE
+		var initial_x = right_column * Globals.BLOCK_SIZE
 		var tween = create_tween()
 		tween.tween_property(shells_grid[right_column][row], "position:x", initial_x - Globals.BLOCK_SIZE, 0.1)
 	
@@ -231,12 +231,12 @@ func switch_columns(left_column: int, right_column: int):
 
 # switch the plates between the 2 columns and create a movement tween
 func switch_plates(left_column: int, right_column: int):
-	var initial_x = Globals.LEFT_OFFSET + left_column * Globals.BLOCK_SIZE
+	var initial_x = left_column * Globals.BLOCK_SIZE
 	var tween = create_tween()
 	tween.tween_property(plates[left_column], "position:x", initial_x + Globals.BLOCK_SIZE, 0.1)
 
 	# i move the right block to the left.
-	initial_x = Globals.LEFT_OFFSET + right_column * Globals.BLOCK_SIZE
+	initial_x = right_column * Globals.BLOCK_SIZE
 	tween = create_tween()
 	tween.tween_property(plates[right_column], "position:x", initial_x - Globals.BLOCK_SIZE, 0.1)
 

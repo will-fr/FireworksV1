@@ -17,8 +17,27 @@ class_name GameManager  extends Node2D
 @onready var victory_music: AudioStreamPlayer2D = %VictoryMusic
 @onready var defeat_music: AudioStreamPlayer2D = %DefeatMusic
 
+func _init() -> void:
+	match Globals.difficulty_level:
+		Globals.EASY_LEVEL:			
+			Globals.NUM_COLUMNS = 5 
+		Globals.HARD_LEVEL:
+			Globals.NUM_COLUMNS = 6 
+		Globals.LEGENDARY_LEVEL:
+			Globals.NUM_COLUMNS = 7
+		Globals.IMPOSSIBLE_LEVEL:
+			Globals.NUM_COLUMNS = 8
+
+	Globals.SIZE_CONTAINER = Globals.NUM_COLUMNS * Globals.BLOCK_SIZE #todo: fix the const/var mess.
+	Globals.LEFT_OFFSET = (136.0 -Globals.SIZE_CONTAINER) / 2.0
+
+
+
 # Initialize the game manager and connect to player events
 func _ready() -> void:
+
+
+
 	# Connect to player game over signals to detect when someone loses
 	player_manager_1.connect("player_game_over", Callable(self, "_on_player1_game_over"))
 	player_manager_2.connect("player_game_over", Callable(self, "_on_player2_game_over"))
@@ -96,8 +115,9 @@ func display_winner(winner: int) -> void:
 	# Position labels and play animations based on who won
 	if winner == 1:
 		# Player 1 wins - show "You Win" on left, "You Lose" on right
-		win_label.position.x = 34
-		lose_label.position.x = 220
+		win_label.position.x = 38
+		lose_label.position.x = 215
+		get_node("Thunder").global_position.x = player_manager_2.player.global_position.x +10
 		player_manager_1.player.skin_sprite.play("victory")
 		player_manager_2.player.skin_sprite.play("defeat")
 		victory_music.play()
@@ -105,8 +125,9 @@ func display_winner(winner: int) -> void:
 		
 	elif winner == 2:
 		# Player 2 wins - show "You Win" on right, "You Lose" on left
-		win_label.position.x = 226
-		lose_label.position.x = 25
+		win_label.position.x = 220
+		lose_label.position.x = 30
+		get_node("Thunder").global_position.x = player_manager_1.player.global_position.x +10
 		player_manager_2.player.skin_sprite.z_index = 100
 		player_manager_1.player.skin_sprite.z_index = 100
 		player_manager_2.player.skin_sprite.play("victory")
@@ -136,7 +157,7 @@ func _animate_labels_to_center():
 # Create a big firework effect to celebrate victory
 func create_victory_firework(color_tint: int, fw_x: float, fw_y: float):
 	# Load the big firework effect scene
-	var effect_scene = load("res://scenes/big_firework/big_firework_effect.tscn")
+	var effect_scene = load("res://scenes/entities/fireworks/big_firework_effect.tscn")
 	var effect_instance = effect_scene.instantiate()
 	
 	# Initialize with specified color (2=green, 3=blue, etc.)
@@ -150,7 +171,7 @@ func create_victory_firework(color_tint: int, fw_x: float, fw_y: float):
 
 func _show_game_over_modal(winner:int):
 	print("GameManager: Showing game over modal for winner: ", winner)
-	var modal_scene = load("res://scenes/modal_empress.tscn")
+	var modal_scene = load("res://scenes/game/modal_empress.tscn")
 	var modal_instance = modal_scene.instantiate()
 	modal_instance.set_text(winner)
 	

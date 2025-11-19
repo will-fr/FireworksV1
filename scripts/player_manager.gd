@@ -4,7 +4,6 @@ var score:int = 0  # Initialize score variable
 var even_loop = true
 var player_active: bool = false
 
-
 # signals
 signal player_paused
 signal player_resumed
@@ -24,6 +23,27 @@ signal points_added
 @export var is_left_player: bool = true
 
 func _ready() -> void:
+	# sets the proper offsets for the shells containers
+	var target_width = Globals.NUM_COLUMNS * Globals.BLOCK_SIZE
+
+	# Adjust container elements based on number of columns
+	get_node("OuterBorder").size.x = target_width
+	get_node("TopBorder").size.x = target_width
+	get_node("Background").size.x = target_width
+
+	# Center the countdown on Outerborder node. 
+	get_node("CountDown").size.x = target_width
+
+
+
+	if (is_left_player):
+		position.x = Globals.LEFT_OFFSET
+	else:
+		position.x = Globals.LEFT_OFFSET + 184
+
+	get_node("CountDown").position.x = 38 - Globals.LEFT_OFFSET
+	print("PlayerManager: Setting position.x to ", position.x)
+	
 	# connect the signals. 
 	player.player_flipped.connect(_on_player_flip)
 	player.gravity_forced.connect(_on_player_forced_gravity)
@@ -115,7 +135,7 @@ func add_points(increment:int,firework_global_position:Vector2) -> void:
 	if score_label:
 		score_label.text = "%05d" % score  # Format score as 5-digit string with leading zeros
 
-	var points_scene = load("res://scenes/points.tscn")
+	var points_scene = load("res://scenes/game/points.tscn")
 	var new_instance = points_scene.instantiate()
 	add_child(new_instance)
 	new_instance.initialize(increment, firework_global_position)
@@ -125,7 +145,7 @@ func add_points(increment:int,firework_global_position:Vector2) -> void:
 
 func create_small_firework(x_arg,y_arg,shell_type_arg):
 	print ("  -- Creating firework at [", x_arg, "][", y_arg, "]")
-	var load_scene_one = load("res://scenes/small_firework.tscn")
+	var load_scene_one = load("res://scenes/entities/fireworks/small_firework.tscn")
 	var new_instance = load_scene_one.instantiate()
 	new_instance.position = Vector2(x_arg, y_arg)  # Set initial position
 	add_child(new_instance) 

@@ -1,0 +1,459 @@
+[gd_scene load_steps=39 format=3 uid="uid://cbuqapmxehkmi"]
+
+[ext_resource type="Script" uid="uid://4og7s3efp4o0" path="res://scripts/game_manager.gd" id="1_ir15t"]
+[ext_resource type="Script" uid="uid://bxjsqbgpo8r6y" path="res://scripts/player_manager.gd" id="2_ir15t"]
+[ext_resource type="PackedScene" uid="uid://b8v1c0fsxfjrl" path="res://scenes/entities/background/background.tscn" id="2_ssvqc"]
+[ext_resource type="Texture2D" uid="uid://c30ma6didahth" path="res://gfx/ui/lose.png" id="3_ca42v"]
+[ext_resource type="Texture2D" uid="uid://oo4nhf7kepfy" path="res://gfx/ui/win.png" id="4_rysoc"]
+[ext_resource type="Script" path="res://scripts/game_timer.gd" id="5_e1j6l"]
+[ext_resource type="PackedScene" uid="uid://b736f1dqo3pyg" path="res://scenes/entities/player/player.tscn" id="6_37s47"]
+[ext_resource type="Script" uid="uid://d1k0rapoq0sy4" path="res://scripts/shells_grid.gd" id="11_e1j6l"]
+[ext_resource type="Script" uid="uid://cjv00vcpqedt7" path="res://scripts/junk_manager.gd" id="12_bhx41"]
+[ext_resource type="FontFile" uid="uid://dgj6kbvxj2hu4" path="res://fonts/pixel.ttf" id="16_ca42v"]
+[ext_resource type="FontFile" uid="uid://dh8vtie46ogmc" path="res://fonts/8-bit Arcade In.ttf" id="16_rysoc"]
+[ext_resource type="AudioStream" uid="uid://cdfqgdghre1b0" path="res://sfx/sounds/08_Bite_04.wav" id="17_37s47"]
+[ext_resource type="PackedScene" uid="uid://drl03my64jlbr" path="res://scenes/game/count_down.tscn" id="17_rysoc"]
+[ext_resource type="AudioStream" uid="uid://cbgj33id1arew" path="res://sfx/sounds/fsshhh2.mp3" id="18_5newe"]
+[ext_resource type="AudioStream" uid="uid://4oej1k1l0sly" path="res://sfx/sounds/block_grey.wav" id="18_bt5mj"]
+[ext_resource type="AudioStream" uid="uid://dfg1ntky8mgv3" path="res://sfx/sounds/Bubble heavy 1.wav" id="19_5newe"]
+[ext_resource type="AudioStream" uid="uid://bpfgkfv6xeqrf" path="res://sfx/sounds/Drop.wav" id="19_37s47"]
+[ext_resource type="AudioStream" uid="uid://b64spl3ym8dym" path="res://sfx/music/Dragon Dance - Loop.mp3" id="21_5newe"]
+[ext_resource type="AudioStream" uid="uid://o23eyew7f34l" path="res://sfx/music/Victorious.ogg" id="22_37s47"]
+[ext_resource type="Texture2D" uid="uid://bhkfg3kyq1gmd" path="res://gfx/effects/lightning/Lightning03_2.png" id="22_h48ew"]
+[ext_resource type="Texture2D" uid="uid://dd27tdlcvghd1" path="res://gfx/effects/lightning/Lightning03_4.png" id="23_fty5b"]
+[ext_resource type="AudioStream" uid="uid://cbs1rsehij7pc" path="res://sfx/music/lose.ogg" id="24_e1j6l"]
+[ext_resource type="Texture2D" uid="uid://dfikwfjyyby85" path="res://gfx/effects/lightning/Lightning03_5.png" id="24_l2dhg"]
+[ext_resource type="Texture2D" uid="uid://bre6opdc8wyqr" path="res://gfx/effects/lightning/Lightning03_6.png" id="25_firvq"]
+[ext_resource type="AudioStream" uid="uid://dg7cfp24rfc2g" path="res://sfx/sounds/ding.wav" id="25_pl11u"]
+[ext_resource type="Texture2D" uid="uid://bw5n4sjawg72y" path="res://gfx/effects/lightning/Lightning03_7.png" id="26_8krtj"]
+[ext_resource type="Texture2D" uid="uid://b5kdacul2bo2r" path="res://gfx/effects/lightning/Lightning03_8.png" id="27_fydea"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_af6p5"]
+atlas = ExtResource("22_h48ew")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mumkj"]
+atlas = ExtResource("22_h48ew")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2vph8"]
+atlas = ExtResource("23_fty5b")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0gkf7"]
+atlas = ExtResource("24_l2dhg")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ehwc"]
+atlas = ExtResource("25_firvq")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tyhjx"]
+atlas = ExtResource("26_8krtj")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5q2xh"]
+atlas = ExtResource("27_fydea")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sikks"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_af6p5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mumkj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2vph8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0gkf7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ehwc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tyhjx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5q2xh")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bt5mj"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.19607843, 0.19607843, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5newe"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.19607843, 0.19607843, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37s47"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.19607843, 0.19607843, 1)
+
+[node name="Game" type="Node2D"]
+
+[node name="GameManager" type="Node2D" parent="."]
+rotation = -0.000955061
+script = ExtResource("1_ir15t")
+
+[node name="Thunder" type="AnimatedSprite2D" parent="GameManager"]
+z_index = 500
+position = Vector2(410.90527, 99.39248)
+scale = Vector2(1.2750001, 1.2750001)
+sprite_frames = SubResource("SpriteFrames_sikks")
+autoplay = "default"
+frame_progress = 0.9179825
+
+[node name="Background2" parent="." instance=ExtResource("2_ssvqc")]
+position = Vector2(0, 1)
+
+[node name="Gui" type="Node2D" parent="."]
+
+[node name="LoseLabel" type="Sprite2D" parent="Gui"]
+z_index = 500
+position = Vector2(32, -29)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_ca42v")
+centered = false
+
+[node name="WinLabel" type="Sprite2D" parent="Gui"]
+z_index = 500
+position = Vector2(222, -27)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_rysoc")
+centered = false
+
+[node name="ScoreColorRect" type="ColorRect" parent="Gui"]
+visible = false
+offset_left = 126.0
+offset_top = 6.0
+offset_right = 194.0
+offset_bottom = 40.0
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
+
+[node name="ScoreText" type="Label" parent="Gui"]
+visible = false
+anchors_preset = -1
+anchor_left = -1.575
+anchor_right = -1.575
+offset_left = 140.0
+offset_top = 3.0
+offset_right = 180.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "SCORE"
+metadata/_edit_use_anchors_ = true
+
+[node name="TimerColorRect" type="ColorRect" parent="Gui"]
+visible = false
+offset_left = 126.0
+offset_top = 46.0
+offset_right = 194.0
+offset_bottom = 70.0
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
+
+[node name="GameTimerLabel" type="Label" parent="Gui"]
+visible = false
+anchors_preset = -1
+anchor_left = -1.575
+anchor_right = -1.575
+offset_left = 122.0
+offset_top = 51.0
+offset_right = 162.0
+offset_bottom = 76.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "Time"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="GameTimerText" type="Label" parent="Gui"]
+visible = false
+anchors_preset = -1
+anchor_left = -1.575
+anchor_right = -1.575
+offset_left = 159.0
+offset_top = 44.0
+offset_right = 199.0
+offset_bottom = 69.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "1'30"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="GameTimer" type="Timer" parent="Gui"]
+unique_name_in_owner = true
+script = ExtResource("5_e1j6l")
+
+[node name="DebugGrid" type="Node2D" parent="Gui"]
+visible = false
+
+[node name="Line2D" type="Line2D" parent="Gui/DebugGrid"]
+points = PackedVector2Array(160, 0, 160, 180)
+width = 1.0
+
+[node name="Line2D2" type="Line2D" parent="Gui/DebugGrid"]
+points = PackedVector2Array(68, 0, 68, 180)
+width = 1.0
+
+[node name="Line2D3" type="Line2D" parent="Gui/DebugGrid"]
+points = PackedVector2Array(184, 0, 184, 180)
+width = 1.0
+
+[node name="Line2D5" type="Line2D" parent="Gui/DebugGrid"]
+points = PackedVector2Array(252, 0, 252, 180)
+width = 1.0
+
+[node name="Line2D4" type="Line2D" parent="Gui/DebugGrid"]
+points = PackedVector2Array(136, 0, 136, 180)
+width = 1.0
+
+[node name="PlayerManager1" type="Node2D" parent="."]
+position = Vector2(12, 22)
+script = ExtResource("2_ir15t")
+
+[node name="Background" type="ColorRect" parent="PlayerManager1"]
+offset_right = 112.0
+offset_bottom = 135.0
+rotation = 0.000628789
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
+
+[node name="OuterBorder" type="Panel" parent="PlayerManager1"]
+offset_right = 112.0
+offset_bottom = 135.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bt5mj")
+metadata/_edit_use_anchors_ = true
+
+[node name="TopBorder" type="Panel" parent="PlayerManager1"]
+offset_top = 16.0
+offset_right = 112.0
+offset_bottom = 18.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bt5mj")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerTimer" type="Timer" parent="PlayerManager1"]
+wait_time = 0.5
+
+[node name="Player" parent="PlayerManager1" instance=ExtResource("6_37s47")]
+z_index = 200
+position = Vector2(0, 128)
+
+[node name="JunkManager" type="Node2D" parent="PlayerManager1"]
+position = Vector2(5, -8)
+script = ExtResource("12_bhx41")
+
+[node name="Junk" type="Label" parent="PlayerManager1"]
+visible = false
+offset_left = 36.0
+offset_top = -3.0
+offset_right = 84.0
+offset_bottom = 20.0
+theme_override_fonts/font = ExtResource("16_ca42v")
+theme_override_font_sizes/font_size = 6
+text = "JUNK: "
+metadata/_edit_use_anchors_ = true
+
+[node name="CountDown" parent="PlayerManager1" instance=ExtResource("17_rysoc")]
+layout_direction = 2
+offset_left = 0.0
+offset_top = 50.0
+offset_right = 112.0
+offset_bottom = 93.0
+size_flags_horizontal = 4
+text = "Go"
+autowrap_mode = 0
+
+[node name="Score" type="Label" parent="PlayerManager1"]
+visible = false
+offset_left = 72.0
+offset_top = -14.0
+offset_right = 112.0
+offset_bottom = 11.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "00000"
+metadata/_edit_use_anchors_ = true
+
+[node name="ShellsGrid" type="Node2D" parent="PlayerManager1"]
+script = ExtResource("11_e1j6l")
+
+[node name="PlayerManager2" type="Node2D" parent="."]
+position = Vector2(196, 22)
+script = ExtResource("2_ir15t")
+skin = "spikey"
+is_left_player = false
+
+[node name="Background" type="ColorRect" parent="PlayerManager2"]
+offset_right = 112.0
+offset_bottom = 135.0
+rotation = 0.000628789
+color = Color(1, 1, 1, 0.196078)
+metadata/_edit_use_anchors_ = true
+
+[node name="OuterBorder" type="Panel" parent="PlayerManager2"]
+offset_right = 112.0
+offset_bottom = 135.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5newe")
+metadata/_edit_use_anchors_ = true
+
+[node name="TopBorder" type="Panel" parent="PlayerManager2"]
+offset_top = 16.0
+offset_right = 112.0
+offset_bottom = 18.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_37s47")
+metadata/_edit_use_anchors_ = true
+
+[node name="JunkManager" type="Node2D" parent="PlayerManager2"]
+position = Vector2(5, -8)
+script = ExtResource("12_bhx41")
+
+[node name="PlayerTimer" type="Timer" parent="PlayerManager2"]
+wait_time = 0.5
+
+[node name="CpuLagTimer" type="Timer" parent="PlayerManager2"]
+wait_time = 0.5
+autostart = true
+
+[node name="Player" parent="PlayerManager2" instance=ExtResource("6_37s47")]
+z_index = 200
+position = Vector2(-2, 128)
+player_type = 2
+
+[node name="Score" type="Label" parent="PlayerManager2"]
+visible = false
+offset_left = 4.0
+offset_top = -14.0
+offset_right = 62.0
+offset_bottom = -2.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("16_rysoc")
+theme_override_font_sizes/font_size = 16
+text = "00000"
+metadata/_edit_use_anchors_ = true
+
+[node name="CountDown" parent="PlayerManager2" instance=ExtResource("17_rysoc")]
+offset_left = 0.0
+offset_top = 50.0
+offset_right = 112.0
+offset_bottom = 93.0
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.196078, 0.196078, 1)
+autowrap_trim_flags = 0
+justification_flags = 0
+
+[node name="Junk" type="Label" parent="PlayerManager2"]
+visible = false
+offset_left = 44.0
+offset_right = 92.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("16_ca42v")
+theme_override_font_sizes/font_size = 6
+text = "JUNK: "
+metadata/_edit_use_anchors_ = true
+
+[node name="ShellsGrid" type="Node2D" parent="PlayerManager2"]
+script = ExtResource("11_e1j6l")
+player_id = 2
+
+[node name="Sfx" type="Node" parent="."]
+
+[node name="ShellPop" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("17_37s47")
+max_polyphony = 5
+
+[node name="BlockToGray" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("18_bt5mj")
+max_polyphony = 5
+
+[node name="BigFireworkLaunch" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("18_5newe")
+max_polyphony = 5
+
+[node name="ShellDrop" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("19_37s47")
+max_polyphony = 5
+
+[node name="ColumnLift" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("19_5newe")
+max_polyphony = 5
+
+[node name="ColumnDrop" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+position = Vector2(-135, 122)
+stream = ExtResource("19_5newe")
+max_polyphony = 5
+
+[node name="BackgroundMusic" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("21_5newe")
+volume_db = -5.0
+autoplay = true
+playback_type = 1
+parameters/looping = true
+
+[node name="VictoryMusic" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("22_37s47")
+volume_db = -5.0
+playback_type = 1
+
+[node name="DefeatMusic" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("24_e1j6l")
+playback_type = 1
+
+[node name="Ding" type="AudioStreamPlayer2D" parent="Sfx"]
+unique_name_in_owner = true
+stream = ExtResource("25_pl11u")
+playback_type = 1
+
+[connection signal="timeout" from="Gui/GameTimer" to="Gui/GameTimer" method="_on_timeout"]
+[connection signal="timeout" from="PlayerManager1/PlayerTimer" to="PlayerManager1" method="_on_player_timer_timeout"]
+[connection signal="timeout" from="PlayerManager2/PlayerTimer" to="PlayerManager2" method="_on_player_timer_timeout"]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bi17830n7eod4"
-path="res://.godot/imported/hairy_spritesheet.png-144bb9221b714d91c5bea3c100a10a2b.ctex"
+uid="uid://df5i5sfoy0m1n"
+path="res://.godot/imported/hourglass.png-7ddb3f12622b73636affd7921186585e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gfx/character/hairy_spritesheet.png"
-dest_files=["res://.godot/imported/hairy_spritesheet.png-144bb9221b714d91c5bea3c100a10a2b.ctex"]
+source_file="res://gfx/effects/hourglass.png"
+dest_files=["res://.godot/imported/hourglass.png-7ddb3f12622b73636affd7921186585e.ctex"]
 
 [params]
 
